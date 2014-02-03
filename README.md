@@ -7,3 +7,4 @@ Members:
 Drew Owen
 Jeff Klier
 Brayden Tidwell
+Miguel Salazar
