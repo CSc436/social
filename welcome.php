@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" type="text/css" href="social.css">
 	<style type="text/css">
 	html { height: 100% }
 	body { height: 100%; margin: 0; padding: 0 }
@@ -42,6 +43,15 @@ google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 </head>
 <body>
-	<div id="map-canvas"/>
+	<div id="wrapper">
+		<div id="sidebar-main">
+			<div id="sidebar-links-wrapper">
+				<ul id="sidebar-links">
+					<li class="sidebar-link"><a href="">Events</a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="map-canvas"/>
+	</div>
 </body>
 </html>

@@ -1,0 +1,19 @@
+#wrapper {
+   position:relative;
+   height:100%;
+}
+
+/* Sidebar Styles */
+#sidebar-main {
+   background-color:gray;
+   position:absolute;
+   top:0px;
+   height:100%;
+   width:300px;
+   z-index:99;
+}
+
+/* Map Styles */
+#map-canvas {
+   left:300px;
+}
