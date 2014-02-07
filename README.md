@@ -5,7 +5,7 @@ Social app for Drew Owen's group
 
 Members:
 Drew Owen
-Jeff Klier
+Jeffrey Klier
 Brayden Tidwell
 Miguel Salazar
 Ryan Baldwin
