@@ -12,6 +12,7 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&sensor=true">
 	</script>
 	<script type="text/javascript">
+	var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 	function initialize() {
 		var mapOptions = {
 			center: new google.maps.LatLng(-34.397, 150.644),
@@ -37,6 +38,15 @@
   else {
   	browserSupportFlag = false;
   	handleNoGeolocation(browserSupportFlag);
+  }
+   function handleNoGeolocation(errorFlag) {
+    if (errorFlag == true) {
+      alert("Geolocation service failed.");
+    } else {
+      alert("Your browser doesn't support geolocation. We've placed you in NYC.");
+    }
+    initialLocation = newyork;   
+    map.setCenter(initialLocation);
   }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
