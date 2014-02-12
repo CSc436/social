@@ -9,7 +9,7 @@
 	#map-canvas { height: 100% }
 	</style>
 	<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&sensor=true">
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&libraries=drawing&sensor=true">
 	</script>
 	<script type="text/javascript">
 	var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
@@ -30,6 +30,8 @@
 					title: 'Your Location',
 					map: map
 				});
+				var drawingManager = new google.maps.drawing.DrawingManager();
+				drawingManager.setMap(map);
 			}, function() {
 				handleNoGeolocation(browserSupportFlag);
 			});
@@ -48,6 +50,21 @@
     initialLocation = newyork;   
     map.setCenter(initialLocation);
   }
+
+	function placeMarker(location) {
+ 	  new google.maps.Marker({
+      	position: location,
+      	map: map,
+      	title: "mouseclick"
+    });
+  
+}
+
+google.maps.event.addListener(map, 'click', function(event) {
+  placeMarker(event.latLng);
+	});
+
+
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 </script>
