@@ -9,11 +9,12 @@
    position:absolute;
    top:0px;
    height:100%;
-   width:300px;
+   width:18%;
    z-index:99;
 }
 
 /* Map Styles */
 #map-canvas {
-   left:300px;
+   left:18%;
+   width:82%;
 }
