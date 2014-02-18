@@ -116,7 +116,7 @@ $('#add-event').click(function() {
 function normal_map() {
 	google.maps.event.clearListeners(map, 'click');
 	controlDiv.style.display = "none";
-	map.setOptions({ draggableCursor: 'open-hand ', dragginCursor: 'open-hand '});
+	map.setOptions({ draggableCursor: null, dragginCursor: null});
 	$('#add-event').css("font-weight","normal");
 }
 
