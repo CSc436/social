@@ -35,6 +35,18 @@
     width: 100%;   
 }
 
+#showhide {
+    position: absolute;
+    background-color: #FF0000;
+    top: 0px;
+    left: 20%;
+    top: 45%;
+    height: 10%;
+    width: 1%;
+    z-index: 99;
+    /*padding: 5px;*/
+}
+
 a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
 a:visited {color:#F8F8F8; text-decoration: none;}  /* visited link */
 a:hover {color:#F8F8F8; text-decoration: none;}  /* mouse over link */
@@ -42,6 +54,6 @@ a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
 
 /* Map Styles */
 #map-canvas {
-    left: 20%;
-    width: 80%;
+   /* left: 20%;
+    width: 80%; */
 }

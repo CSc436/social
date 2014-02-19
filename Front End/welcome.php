@@ -25,7 +25,11 @@
 			disableDefaultUI: true,
 			panControl: true,
   			zoomControl: true,
+  			panControlOptions: {
+  				position: google.maps.ControlPosition.TOP_RIGHT
+  			},
 			zoomControlOptions: {
+				position: google.maps.ControlPosition.TOP_RIGHT,
 				style: google.maps.ZoomControlStyle.SMALL
 			}
 		};
@@ -127,7 +131,7 @@
 	controlText.style.paddingRight = '4px';
 	controlText.innerHTML = '<strong>X</strong>';
 	controlUI.appendChild(controlText);
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
+	map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 	controlDiv.style.display = "none";
 
 var addEventOpen = false;
@@ -155,6 +159,9 @@ $('#add-event').click(function() {
 	}
 });
 
+$('#showhide').click(function() {
+	$("#sidebar-main").animate({width: "toggle"}, "fast");
+});
 //return map settings to normal
 function normal_map() {
 	google.maps.event.clearListeners(map, 'click');
@@ -181,6 +188,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				</ul>
 			</div>
 		</div>
+		<div id="showhide"></div>
 		<div id="map-canvas"/>
 	</div>
 </body>
