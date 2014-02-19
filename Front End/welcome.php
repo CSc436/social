@@ -79,6 +79,7 @@
       		title: "mouseclick"
  	   	});
 
+<<<<<<< HEAD
  		var contentstring = 	"<form action='submit.php' method='post'>"+
  								"<input type ='hidden' name='user' value='me' >" +
  								"Event Title: <input type='text' name='title'><br>"+
@@ -89,6 +90,55 @@
 								"</select><br>"+
 								"<input type='submit'>" +
 								"</form>";
+=======
+		
+		var controlTitleText = document.createElement("textarea");
+		controlTitleText.setAttribute('innterHTML', "party name:");
+		controlTitleText.setAttribute('')
+	
+
+		var controlInput = document.createElement("input"); //input element, text
+		controlInput.setAttribute('type',"text");
+		controlInput.setAttribute('name',"username");
+		controlInput.style.fontFamily = 'Arial,sans-serif';
+		controlInput.style.fontSize = '15px';
+		controlInput.style.paddingLeft = '4px';
+		controlInput.style.paddingRight = '4px';
+
+		var controlSubmit = document.createElement("input"); //input element, Submit button
+		controlSubmit.setAttribute('type',"submit");
+		controlSubmit.setAttribute('value',"Submit");
+
+		controlForm.appendChild(controlTitleText);
+		controlForm.appendChild(controlInput);
+		controlForm.appendChild(controlSubmit);
+		
+		return inputDiv;
+	}
+
+
+
+	//create the X control
+	var controlDiv = document.createElement('div');
+	controlDiv.style.padding = '5px';
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = 'white';
+	controlUI.style.borderStyle = 'solid';
+	controlUI.style.borderWidth = '2px';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Cancel adding an Event';
+	controlDiv.appendChild(controlUI);
+	var controlText = document.createElement('div');
+	controlText.style.fontFamily = 'Arial,sans-serif';
+	controlText.style.fontSize = '34px';
+	controlText.style.paddingLeft = '4px';
+	controlText.style.paddingRight = '4px';
+	controlText.innerHTML = '<strong>X</strong>';
+	controlUI.appendChild(controlText);
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
+	controlDiv.style.display = "none";
+>>>>>>> bc297f0ea15456deb324d9670012604a67d1b329
 
  	   	var infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
@@ -137,9 +187,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<div id="sidebar-main">
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
-					<li class="sidebar-link"><a href="#">Events</a></li>
-					<li class="sidebar-link" id="add-event"><a href="#">Create</a></li>
-					
+					<li class="sidebar-link"><a class="sidebar-link-button" href="#">Events</a></li>
+					<li class="sidebar-link" id="add-event"><a class="sidebar-link-button" href="#">Create</a></li>
+					<li class="sidebar-link" id="my-account"><a class="sidebar-link-button" href="#">My Account</a></li>
+                    <li class="sidebar-link"><a class="sidebar-link-button" href="#">Settings</a></li>
 				</ul>
 			</div>
 		</div>
