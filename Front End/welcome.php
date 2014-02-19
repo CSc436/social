@@ -86,14 +86,27 @@
 		controlUI.appendChild(controlForm);
 
 		
-		controlForm.innerHTML = "Event Title: <input type='text' name='title'><br>"+
-								"Description: <input type='textarea' name='description'><br>"+
-								"Category: <select>"+
-									"<option value='sports'>sports</option>"+
-									"<option value='music'>music</option>"+
-								"</select><br>"+
-								"<input type='submit'>";
+		var controlTitleText = document.createElement("textarea");
+		controlTitleText.setAttribute('innterHTML', "party name:");
+		controlTitleText.setAttribute('')
+	
 
+		var controlInput = document.createElement("input"); //input element, text
+		controlInput.setAttribute('type',"text");
+		controlInput.setAttribute('name',"username");
+		controlInput.style.fontFamily = 'Arial,sans-serif';
+		controlInput.style.fontSize = '15px';
+		controlInput.style.paddingLeft = '4px';
+		controlInput.style.paddingRight = '4px';
+
+		var controlSubmit = document.createElement("input"); //input element, Submit button
+		controlSubmit.setAttribute('type',"submit");
+		controlSubmit.setAttribute('value',"Submit");
+
+		controlForm.appendChild(controlTitleText);
+		controlForm.appendChild(controlInput);
+		controlForm.appendChild(controlSubmit);
+		
 		return inputDiv;
 	}
 
@@ -164,9 +177,10 @@ google.maps.event.addDomListener(window, 'load', initialize);
 		<div id="sidebar-main">
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
-					<li class="sidebar-link"><a href="#">Events</a></li>
-					<li class="sidebar-link" id="add-event"><a href="#">Create</a></li>
-					
+					<li class="sidebar-link"><a class="sidebar-link-button" href="#">Events</a></li>
+					<li class="sidebar-link" id="add-event"><a class="sidebar-link-button" href="#">Create</a></li>
+					<li class="sidebar-link" id="my-account"><a class="sidebar-link-button" href="#">My Account</a></li>
+                    <li class="sidebar-link"><a class="sidebar-link-button" href="#">Settings</a></li>
 				</ul>
 			</div>
 		</div>
