@@ -86,27 +86,14 @@
 		controlUI.appendChild(controlForm);
 
 		
-		var controlTitleText = document.createElement("textarea");
-		controlTitleText.setAttribute('innterHTML', "party name:");
-		controlTitleText.setAttribute('')
-	
+		controlForm.innerHTML = "Event Title: <input type='text' name='title'><br>"+
+								"Description: <input type='textarea' name='description'><br>"+
+								"Category: <select>"+
+									"<option value='sports'>sports</option>"+
+									"<option value='music'>music</option>"+
+								"</select><br>"+
+								"<input type='submit'>";
 
-		var controlInput = document.createElement("input"); //input element, text
-		controlInput.setAttribute('type',"text");
-		controlInput.setAttribute('name',"username");
-		controlInput.style.fontFamily = 'Arial,sans-serif';
-		controlInput.style.fontSize = '15px';
-		controlInput.style.paddingLeft = '4px';
-		controlInput.style.paddingRight = '4px';
-
-		var controlSubmit = document.createElement("input"); //input element, Submit button
-		controlSubmit.setAttribute('type',"submit");
-		controlSubmit.setAttribute('value',"Submit");
-
-		controlForm.appendChild(controlTitleText);
-		controlForm.appendChild(controlInput);
-		controlForm.appendChild(controlSubmit);
-		
 		return inputDiv;
 	}
 
