@@ -35,7 +35,6 @@
 			browserSupportFlag = true;
 			navigator.geolocation.getCurrentPosition(function(position) {
 				initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-				getGeocode(initialLocation);
 				map.setCenter(initialLocation);
 				var marker = new google.maps.Marker({
 					position: initialLocation,
@@ -82,7 +81,6 @@
       		title: "mouseclick"
  	   	});
 
-<<<<<<< HEAD
  		var contentstring = 	"<form action='submit.php' method='post'>"+
  								"<input type ='hidden' name='user' value='me' >" +
  								"Event Title: <input type='text' name='title'><br>"+
@@ -93,30 +91,12 @@
 								"</select><br>"+
 								"<input type='submit'>" +
 								"</form>";
-=======
+
+		var infowindow = new google.maps.InfoWindow({
+ 	   		content: contentstring
+ 	   	});
+ 	   	infowindow.open(map,marker);
 		
-		var controlTitleText = document.createElement("textarea");
-		controlTitleText.setAttribute('innterHTML', "party name:");
-		controlTitleText.setAttribute('')
-	
-
-		var controlInput = document.createElement("input"); //input element, text
-		controlInput.setAttribute('type',"text");
-		controlInput.setAttribute('name',"username");
-		controlInput.style.fontFamily = 'Arial,sans-serif';
-		controlInput.style.fontSize = '15px';
-		controlInput.style.paddingLeft = '4px';
-		controlInput.style.paddingRight = '4px';
-
-		var controlSubmit = document.createElement("input"); //input element, Submit button
-		controlSubmit.setAttribute('type',"submit");
-		controlSubmit.setAttribute('value',"Submit");
-
-		controlForm.appendChild(controlTitleText);
-		controlForm.appendChild(controlInput);
-		controlForm.appendChild(controlSubmit);
-		
-		return inputDiv;
 	}
 
 
@@ -141,13 +121,8 @@
 	controlUI.appendChild(controlText);
 	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
 	controlDiv.style.display = "none";
->>>>>>> bc297f0ea15456deb324d9670012604a67d1b329
 
- 	   	var infowindow = new google.maps.InfoWindow({
- 	   		content: contentstring
- 	   	});
- 	   	infowindow.open(map,marker);
-}
+
 
 //click on add event
 $('#add-event').click(function() {
