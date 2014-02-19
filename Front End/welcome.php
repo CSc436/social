@@ -59,35 +59,79 @@
 
   	//place a pin
 	function placeMarker(location) {
- 	  new google.maps.Marker({
-      	position: location,
-      	map: map,
-      	title: "mouseclick"
- 	   });
+ 		var marker = new google.maps.Marker({
+      		position: location,
+      		map: map,
+      		title: "mouseclick"
+ 	   	});
+		var input = create_input_control();
+		map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
+
 }
 
+	function create_input_control() {
+		var inputDiv = document.createElement('div');
+		inputDiv.style.padding = '5px';
+		var controlUI = document.createElement('div');
+		controlUI.style.backgroundColor = 'white';
+		controlUI.style.borderStyle = 'solid';
+		controlUI.style.borderWidth = '2px';
+		controlUI.style.cursor = 'pointer';
+		controlUI.style.textAlign = 'center';
+		controlUI.title = 'Cancel adding an Event';
+		inputDiv.appendChild(controlUI);
+		var controlForm = document.createElement('form');
+		controlForm.setAttribute('method',"post");
+		controlForm.setAttribute('action',"submit.php");
+		controlUI.appendChild(controlForm);
+
+		
+		var controlTitleText = document.createElement("textarea");
+		controlTitleText.setAttribute('innterHTML', "party name:");
+		controlTitleText.setAttribute('')
+	
+
+		var controlInput = document.createElement("input"); //input element, text
+		controlInput.setAttribute('type',"text");
+		controlInput.setAttribute('name',"username");
+		controlInput.style.fontFamily = 'Arial,sans-serif';
+		controlInput.style.fontSize = '15px';
+		controlInput.style.paddingLeft = '4px';
+		controlInput.style.paddingRight = '4px';
+
+		var controlSubmit = document.createElement("input"); //input element, Submit button
+		controlSubmit.setAttribute('type',"submit");
+		controlSubmit.setAttribute('value',"Submit");
+
+		controlForm.appendChild(controlTitleText);
+		controlForm.appendChild(controlInput);
+		controlForm.appendChild(controlSubmit);
+		
+		return inputDiv;
+	}
 
 
-//create the X control
-var controlDiv = document.createElement('div');
-controlDiv.style.padding = '5px';
-var controlUI = document.createElement('div');
-controlUI.style.backgroundColor = 'white';
-controlUI.style.borderStyle = 'solid';
-controlUI.style.borderWidth = '2px';
-controlUI.style.cursor = 'pointer';
-controlUI.style.textAlign = 'center';
-controlUI.title = 'Cancel adding an Event';
-controlDiv.appendChild(controlUI);
-var controlText = document.createElement('div');
-controlText.style.fontFamily = 'Arial,sans-serif';
-controlText.style.fontSize = '34px';
-controlText.style.paddingLeft = '4px';
-controlText.style.paddingRight = '4px';
-controlText.innerHTML = '<strong>X</strong>';
-controlUI.appendChild(controlText);
-map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
-controlDiv.style.display = "none"
+
+	//create the X control
+	var controlDiv = document.createElement('div');
+	controlDiv.style.padding = '5px';
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = 'white';
+	controlUI.style.borderStyle = 'solid';
+	controlUI.style.borderWidth = '2px';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Cancel adding an Event';
+	controlDiv.appendChild(controlUI);
+	var controlText = document.createElement('div');
+	controlText.style.fontFamily = 'Arial,sans-serif';
+	controlText.style.fontSize = '34px';
+	controlText.style.paddingLeft = '4px';
+	controlText.style.paddingRight = '4px';
+	controlText.innerHTML = '<strong>X</strong>';
+	controlUI.appendChild(controlText);
+	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
+	controlDiv.style.display = "none";
 
 
 //click on add event
