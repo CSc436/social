@@ -101,6 +101,10 @@
  	   	});
  	   	infowindow.open(map,marker);
 		
+		google.maps.event.addListener(infowindow,'closeclick',function(){
+   			marker.setMap(null); //removes the marker
+   			addEventOpen = false;
+			});
 	}
 
 
@@ -126,10 +130,10 @@
 	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
 	controlDiv.style.display = "none";
 
-
-
+var addEventOpen = false;
 //click on add event
 $('#add-event').click(function() {
+	if(addEventOpen == false){
 	$('#add-event').css("font-weight","bold");
 	map.setOptions({ draggableCursor: 'crosshair' });
 
@@ -143,11 +147,12 @@ $('#add-event').click(function() {
 
 	//placing the pin
 	google.maps.event.addListener(map, 'click', function(event) {
-  		placeMarker(event.latLng);
+  		currentMark = placeMarker(event.latLng);
   		normal_map();
 
 	});
-
+	addEventOpen = true;
+	}
 });
 
 //return map settings to normal
