@@ -36,10 +36,12 @@
 			navigator.geolocation.getCurrentPosition(function(position) {
 				initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
 				map.setCenter(initialLocation);
+				var image = 'img/user.png';
 				var marker = new google.maps.Marker({
 					position: initialLocation,
 					title: 'Your Location',
-					map: map
+					map: map,
+					icon: image
 				});
 				//getGeocode(initialLocation, marker);
 			}, function() {
@@ -75,10 +77,12 @@
 
   	//place a pin
 	function placeMarker(location) {
+		var image = 'img/newEvent.png';
  		var marker = new google.maps.Marker({
       		position: location,
       		map: map,
-      		title: "mouseclick"
+      		title: "mouseclick",
+      		icon: image
  	   	});
 
  		var contentstring = 	"<form action='submit.php' method='post'>"+
