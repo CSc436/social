@@ -32,12 +32,14 @@
 			browserSupportFlag = true;
 			navigator.geolocation.getCurrentPosition(function(position) {
 				initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+				getGeocode(initialLocation);
 				map.setCenter(initialLocation);
 				var marker = new google.maps.Marker({
 					position: initialLocation,
 					title: 'Your Location',
 					map: map
 				});
+				//getGeocode(initialLocation, marker);
 			}, function() {
 				handleNoGeolocation(browserSupportFlag);
 			});
@@ -57,6 +59,18 @@
     map.setCenter(initialLocation);
   }
 
+
+  	//gets geocode nfo and displays in an infowindow
+  	// function getGeocode(location, marker) {
+  		//geocoder = new google.maps.Geocoder();
+  		// var infowindow = new google.maps.InfoWindow();
+  		// geocoder.geocode({'latLng': location}, function(results, status) {
+    //     	infowindow.setContent(results[1].formatted_address);
+    //     	infowindow.open(map, marker);
+    //     });
+    // }
+
+
   	//place a pin
 	function placeMarker(location) {
  		var marker = new google.maps.Marker({
@@ -64,62 +78,23 @@
       		map: map,
       		title: "mouseclick"
  	   	});
-		var input = create_input_control();
-		map.controls[google.maps.ControlPosition.TOP_CENTER].push(input);
 
-}
-
-	function create_input_control() {
-		var inputDiv = document.createElement('div');
-		inputDiv.style.padding = '5px';
-		var controlUI = document.createElement('div');
-		controlUI.style.backgroundColor = 'white';
-		controlUI.style.borderStyle = 'solid';
-		controlUI.style.borderWidth = '2px';
-		controlUI.style.cursor = 'pointer';
-		controlUI.style.textAlign = 'center';
-		controlUI.title = 'Cancel adding an Event';
-		inputDiv.appendChild(controlUI);
-		var controlForm = document.createElement('form');
-		controlForm.setAttribute('method',"post");
-		controlForm.setAttribute('action',"submit.php");
-		controlUI.appendChild(controlForm);
-
-		
-		controlForm.innerHTML = "Event Title: <input type='text' name='title'><br>"+
+ 		var contentstring = 	"<form action='submit.php' method='post'>"+
+ 								"<input type ='hidden' name='user' value='me' >" +
+ 								"Event Title: <input type='text' name='title'><br>"+
 								"Description: <input type='textarea' name='description'><br>"+
 								"Category: <select>"+
 									"<option value='sports'>sports</option>"+
 									"<option value='music'>music</option>"+
 								"</select><br>"+
-								"<input type='submit'>";
+								"<input type='submit'>" +
+								"</form>";
 
-		return inputDiv;
-	}
-
-
-
-	//create the X control
-	var controlDiv = document.createElement('div');
-	controlDiv.style.padding = '5px';
-	var controlUI = document.createElement('div');
-	controlUI.style.backgroundColor = 'white';
-	controlUI.style.borderStyle = 'solid';
-	controlUI.style.borderWidth = '2px';
-	controlUI.style.cursor = 'pointer';
-	controlUI.style.textAlign = 'center';
-	controlUI.title = 'Cancel adding an Event';
-	controlDiv.appendChild(controlUI);
-	var controlText = document.createElement('div');
-	controlText.style.fontFamily = 'Arial,sans-serif';
-	controlText.style.fontSize = '34px';
-	controlText.style.paddingLeft = '4px';
-	controlText.style.paddingRight = '4px';
-	controlText.innerHTML = '<strong>X</strong>';
-	controlUI.appendChild(controlText);
-	map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
-	controlDiv.style.display = "none";
-
+ 	   	var infowindow = new google.maps.InfoWindow({
+ 	   		content: contentstring
+ 	   	});
+ 	   	infowindow.open(map,marker);
+}
 
 //click on add event
 $('#add-event').click(function() {
@@ -151,10 +126,8 @@ function normal_map() {
 	$('#add-event').css("font-weight","normal");
 }
 
-
 }
 google.maps.event.addDomListener(window, 'load', initialize);
-
 
 
 </script>
