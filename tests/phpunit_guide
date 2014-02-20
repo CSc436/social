@@ -1,0 +1,23 @@
+---PHPUnit Windows Guide---
+There are dependencies that require installing PEAR before PHPUnit
+Installing PEAR:
+1. Download the file located at: http://pear.php.net/go-pear.phar
+2. Open Command Prompt with admin privileges
+3. Navigate to <Zend Install Directory>\ZendServer\bin\
+4. From this directory run the command: 
+	#php <Directory of file from step 1>
+5. The installation prompt for system|local install , enter system.
+6. At the next prompt A list of 12 directories will appear for installation location
+Note: If 12th directory (Path to CLI php.exe) is set to "\." or any variation of the current directory it needs to be set.
+Enter 12 and set the path to the directory for php.exe (For Zend server this is "C:\Program Files\Zend\ZendServer\bin\.").
+7. hit enter to begin the installation.
+7.) Once the installation has completed run the following commands:
+	# pear channel-update pear.php.net
+	# pear upgrade pear 
+	# pear channel-discover pear.phpunit.de
+	# pear channel-discover pear.symfony-project.com
+	# pear config-set auto_discover 1
+	# pear update-channels
+	# pear install pear.phpunit.de/PHPUnit
+8.) Once the installation is complete verify phpunit is installed by running the command;
+	# phpunit --version
