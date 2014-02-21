@@ -158,7 +158,7 @@ $('#add-event').click(function() {
 	addEventOpen = true;
 	}
 });
-
+//slide for sidebar
 $('#showhide').click(function() {
 	$("#sidebar-main").animate({width: "toggle"}, "fast");
 });
@@ -168,6 +168,7 @@ function normal_map() {
 	controlDiv.style.display = "none";
 	map.setOptions({ draggableCursor: null, dragginCursor: null});
 	$('#add-event').css("font-weight","normal");
+	addEventOpen = false;
 }
 
 }
