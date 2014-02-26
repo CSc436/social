@@ -160,7 +160,16 @@ $('#add-event').click(function() {
 });
 
 $('#showhide').click(function() {
-	$("#sidebar-main").animate({width: "toggle"}, "fast");
+    var loc = $("#sidebar-main").css("left");
+    if (loc == "auto") {
+	    $("#sidebar-main").animate({left: "-20%"}, "fast");
+        window.setTimeout(1000);
+        $("#sidebar-main").css("left", "-20%");
+    }
+    else {
+        $("#sidebar-main").animate({left: "auto"}, "fast");
+        $("#sidebar-main").css("left", "auto");
+    }    
 });
 //return map settings to normal
 function normal_map() {
@@ -188,7 +197,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 				</ul>
 			</div>
 		</div>
-		<div id="showhide"></div>
+        <div id="showhide"></div>
 		<div id="map-canvas"/>
 	</div>
 </body>
