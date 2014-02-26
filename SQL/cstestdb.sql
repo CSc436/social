@@ -175,6 +175,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -187,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-18 20:34:35
+-- Dump completed on 2014-02-20 20:04:44

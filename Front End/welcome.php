@@ -158,7 +158,7 @@ $('#add-event').click(function() {
 	addEventOpen = true;
 	}
 });
-
+//slide for sidebar
 $('#showhide').click(function() {
     var loc = $("#sidebar-main").css("left");
     if (loc == "auto") {
@@ -177,6 +177,7 @@ function normal_map() {
 	controlDiv.style.display = "none";
 	map.setOptions({ draggableCursor: null, dragginCursor: null});
 	$('#add-event').css("font-weight","normal");
+	addEventOpen = false;
 }
 
 }
