@@ -138,6 +138,7 @@ $('#add-event').click(function() {
 	});
 	addEventOpen = true;
 	}
+<<<<<<< HEAD
 });
         
 //return map settings to normal
@@ -151,3 +152,6 @@ function normal_map() {
 
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+=======
+});
+>>>>>>> 5cdade6ad165d8863500a8c2510b54e133ebf78c
