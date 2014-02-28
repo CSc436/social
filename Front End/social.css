@@ -10,6 +10,7 @@
     top: 0px;
     height: 100%;
     width: 20%;
+    left: 0px;
     z-index: 99;
     padding: 5px;
 }
@@ -40,10 +41,10 @@
     background-color: #FF0000;
     top: 0px;
     left: 20%;
-    height: 5%;
+    height: 3%;
     width: 1%;
     z-index: 99;
-    /*padding: 5px;*/
+    padding: 5px;
 }
 
 a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
