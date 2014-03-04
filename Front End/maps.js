@@ -1,4 +1,5 @@
 var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var infowindow = null;
 	function initialize() {
 		var mapOptions = {
 			center: new google.maps.LatLng(-34.397, 150.644),
@@ -70,10 +71,10 @@ var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
       		icon: image
  	   	});
 
- 		var contentstring = 	"<form action='submit.php' method='post'>"+
+ 		var contentstring = 	"<form id='create_event' onsubmit='return submitForm();'>"+
  								"<input type ='hidden' name='user' value='me' >" +
- 								"Event Title: <input type='text' name='title'><br>"+
-								"Description: <input type='textarea' name='description'><br>"+
+ 								"Event Title: <input type='text' name='title' value=''><br>"+
+								"Description: <input type='textarea' name='description' value=''><br>"+
 								"Category: <select>"+
 									"<option value='sports'>sports</option>"+
 									"<option value='music'>music</option>"+
@@ -81,7 +82,7 @@ var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 								"<input type='submit'>" +
 								"</form>";
 
-		var infowindow = new google.maps.InfoWindow({
+		infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
  	   	});
  	   	infowindow.open(map,marker);
@@ -90,6 +91,12 @@ var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
    			marker.setMap(null); //removes the marker
    			addEventOpen = false;
 			});
+
+		// $("#create_event").submit(function() {
+		// 	console.log("correct");
+		// 	infowindow.close();
+		// });
+
 	}
 
 
@@ -138,9 +145,11 @@ $('#add-event').click(function() {
 	});
 	addEventOpen = true;
 	}
-<<<<<<< HEAD
 });
-        
+
+
+
+
 //return map settings to normal
 function normal_map() {
 	google.maps.event.clearListeners(map, 'click');
@@ -151,7 +160,28 @@ function normal_map() {
 }
 
 }
+
+function submitForm(){
+	var postData = $('#create_event').serialize();
+	$.ajax( {
+		url: "submit.php",
+		type: "POST",
+		data: postData,
+		success:function(message) {
+			//submitsuccess(data)
+			console.log(message);
+			addeventopen = false;
+			infowindow.close();
+		},
+		error:function(message) {
+			console.log("error");
+			console.log(message);
+		}
+	});
+	return false;
+}
+
+
+
+
 google.maps.event.addDomListener(window, 'load', initialize);
-=======
-});
->>>>>>> 5cdade6ad165d8863500a8c2510b54e133ebf78c
