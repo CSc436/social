@@ -91,15 +91,7 @@ var infowindow = null;
    			marker.setMap(null); //removes the marker
    			addEventOpen = false;
 			});
-
-		// $("#create_event").submit(function() {
-		// 	console.log("correct");
-		// 	infowindow.close();
-		// });
-
 	}
-
-
 
 	//create the X control
 	var controlDiv = document.createElement('div');
@@ -147,17 +139,14 @@ $('#add-event').click(function() {
 	}
 });
 
-
-
-
 //return map settings to normal
-function normal_map() {
-	google.maps.event.clearListeners(map, 'click');
-	controlDiv.style.display = "none";
-	map.setOptions({ draggableCursor: null, dragginCursor: null});
-	$('#add-event').css("font-weight","normal");
-	addEventOpen = false;
-}
+	function normal_map() {
+		google.maps.event.clearListeners(map, 'click');
+		controlDiv.style.display = "none";
+		map.setOptions({ draggableCursor: null, dragginCursor: null});
+		$('#add-event').css("font-weight","normal");
+		addEventOpen = false;
+	}
 
 }
 
@@ -180,8 +169,5 @@ function submitForm(){
 	});
 	return false;
 }
-
-
-
 
 google.maps.event.addDomListener(window, 'load', initialize);
