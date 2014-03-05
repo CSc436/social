@@ -10,5 +10,11 @@ $(document).ready(function () {
         //sidebarAnimate();
         //$("#sidebar-main").toggle("slow",sidebarAnimate());
         $("#sidebar-main").toggle("slide",{direction: "left"},500);
+        $(this).toggle("slide",{direction: "left"},500);
     });
+    
+    $("#showhide-hidden").click(function () {
+        $("#sidebar-main").toggle("slide",{direction: "left"},500);
+        $("#showhide").toggle("slide",{direction: "left"},500);
+    });    
 });

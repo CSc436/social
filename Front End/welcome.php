@@ -20,7 +20,9 @@
     
 <body>
 	<div id="wrapper">
+        <div id="showhide-hidden"><span>>></span></div>
 		<div id="sidebar-main">
+            <div id="showhide"><span><<</span></div>
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<li class="sidebar-link"><a class="sidebar-link-button" href="#">Events</a></li>
@@ -30,8 +32,7 @@
 				</ul>
 			</div>
 		</div>
-        <div id="showhide"></div>
-		<div id="map-canvas"/>
+        <div id="map-canvas"/>
 	</div>
 </body>
 </html>

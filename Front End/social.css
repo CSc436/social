@@ -10,9 +10,9 @@
     top: 0px;
     height: 100%;
     width: 20%;
-    left: 0px;
+    left: 0;
     z-index: 99;
-    padding: 5px;
+    padding: 20px 5px 5px 5px;
 }
 
 #sidebar-links {
@@ -38,13 +38,26 @@
 
 #showhide {
     position: absolute;
-    background-color: #FF0000;
+    background-color: #404040;
+    color: #F8F8F8;
     top: 0px;
-    left: 20%;
-    height: 3%;
-    width: 1%;
+    right: 0;
+    /*left: 0;*/
+    height: 30px;
+    width: 30px;
     z-index: 99;
-    padding: 5px;
+}
+
+#showhide-hidden {
+    position: absolute;
+    background-color: #404040;
+    color: #F8F8F8;
+    top: 0px;
+    left: 0;
+    /*left: 0;*/
+    height: 30px;
+    width: 30px;
+    z-index: 50;
 }
 
 a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
@@ -56,4 +69,5 @@ a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
 #map-canvas {
    /* left: 20%;
     width: 80%; */
+    position: fixed;
 }
