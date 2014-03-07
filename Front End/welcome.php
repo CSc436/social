@@ -30,9 +30,10 @@
 		<div id="sidebar-main" class="sliding-object">
             <div id="sidebar-header">LOGO HERE
             </div>
+			<!--  Under Construction
 			<div id="sidebar-login-indicator">
-				Welcome
-			</div>
+				Login Info
+			</div>-->
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>

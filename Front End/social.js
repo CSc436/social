@@ -43,6 +43,12 @@ $(window).resize(function(){
 	// Position and resize the hide button.
 	$("#showhide").css('left', $("#sidebar-main").width());
 	$("#showhide").css('height', $("#showhide").width());
+	
+	// If the sidebar is hidden, make sure it stays hidden.
+	if($("#sidebar-main").position()['left'] < 0){
+		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
+		$("#showhide").css('left', 0);
+	}
 });
 
 //slide for event list
