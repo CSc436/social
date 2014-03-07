@@ -15,23 +15,40 @@
 	</script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js" rel="script"></script>
     <script src="social.js"></script>
-    <script src="maps.js"></script>	
+    <script src="maps.js"></script>
 </head>
     
 <body>
 	<div id="wrapper">
+        <div id="showhide-hidden"><span>>></span></div>
 		<div id="sidebar-main">
+            <div id="sidebar-header">LOGO HERE
+                <div id="showhide"><span><<</span></div>
+            </div>
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
-					<li class="sidebar-link"><a class="sidebar-link-button" href="#">Events</a></li>
+					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>
 					<li class="sidebar-link" id="add-event"><a class="sidebar-link-button" href="#">Create</a></li>
 					<li class="sidebar-link" id="my-account"><a class="sidebar-link-button" href="#">My Account</a></li>
                     <li class="sidebar-link"><a class="sidebar-link-button" href="#">Settings</a></li>
 				</ul>
 			</div>
 		</div>
-        <div id="showhide"></div>
-		<div id="map-canvas"/>
+        <div id="event-list">
+            <div id="events-wrapper">
+                <div class="event">
+                    <span>Event Name</span></br>
+                    <span>12:00pm - 2:00pm</span></br>
+                    <span>This could be an event description.</span>
+                </div>
+                <div class="event">
+                    <span>Midnight Salsa Dancing</span></br>
+                    <span>12:00am - 2:00am</span></br>
+                    <span>Dancing in the ancient style of Salsa. At midnight.</span>
+                </div>
+            </div>
+        </div>
+        <div id="map-canvas"/>
 	</div>
 </body>
 </html>
