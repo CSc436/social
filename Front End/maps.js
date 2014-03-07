@@ -1,4 +1,4 @@
-var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 var infowindow = null;
 	function initialize() {
 		var mapOptions = {
@@ -45,7 +45,7 @@ var infowindow = null;
     } else {
       alert("Your browser doesn't support geolocation. We've placed you in NYC.");
     }
-    initialLocation = newyork;   
+    initialLocation = current;   
     map.setCenter(initialLocation);
   }
 
@@ -71,17 +71,18 @@ var infowindow = null;
       		icon: image
  	   	});
 
- 		var contentstring = 	"<form id='create_event' onsubmit='return submitForm();'>"+
- 								"<input type ='hidden' name='user' value='me' >" +
- 								"Event Title: <input type='text' name='title' value=''><br>"+
-								"Description: <input type='textarea' name='description' value=''><br>"+
-								"Category: <select>"+
+ 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm();'>"+
+ 								"<input id='user' type ='hidden' name='user' value='me' >" +
+ 								"Event Title: <input id='title' type='text' name='title' value=''><br>"+
+								"Description: <input id='desc' type='textarea' name='description' value=''><br>"+
+								"Category: <select id='category'>"+
 									"<option value='sports'>sports</option>"+
 									"<option value='music'>music</option>"+
 								"</select><br>"+
 								"<input type='submit'>" +
 								"</form>";
 
+		current = location;
 		infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
  	   	});
@@ -128,22 +129,21 @@ $('#add-event').click(function() {
 	
 	//clicking the x
 	google.maps.event.addDomListener(controlDiv, 'click', function() {
-    	normal_map();
+    	normalMap();
   	});
 
 	//placing the pin
 	google.maps.event.addListener(map, 'click', function(event) {
   		currentMark = placeMarker(event.latLng);
   		console.log(event.latLng);
-  		normal_map();
-
+  		normalMap();
 	});
 	addEventOpen = true;
 	}
 });
 	loadEventsFromDB();
 //return map settings to normal
-	function normal_map() {
+	function normalMap() {
 		google.maps.event.clearListeners(map, 'click');
 		controlDiv.style.display = "none";
 		map.setOptions({ draggableCursor: null, dragginCursor: null});
@@ -200,17 +200,39 @@ function loadEventsFromDB(){
 
 
 
+function checkNotEmpty(title, desc, cat) {
+	//TODO: Make pretty
+	if (title === "") {
+		alert("no title");
+		return false;
+	}
+	if (desc === "") {
+		alert("no description");
+		return false;
+	}
+	return true;
+}
+
 function submitForm(){
-	var postData = $('#create_event').serialize();
+	var user = $("#user").val();
+	var title = $("#title").val();
+	var desc = $("#desc").val();
+	var cat = $("#category").val();
+	var coord = current;
+	console.log(coord.d);
+	console.log(coord.e);
+	
+	var proceed = checkNotEmpty(title, desc);
+	if (!proceed){
+		return false;
+	}
+
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: postData,
+		data: {user: user, title: title, desc: desc, category:cat, x:coord.d, y:coord.e},
 		success:function(message) {
-			//submitsuccess(data)
-			console.log(message);
-			addeventopen = false;
-			infowindow.close();
+			submitSuccess(message);
 		},
 		error:function(message) {
 			console.log("error");
@@ -218,6 +240,14 @@ function submitForm(){
 		}
 	});
 	return false;
+}
+
+function submitSuccess(data) {
+	console.log(data);
+	var res = JSON.parse(data);
+	console.log(res);
+	addeventopen = false;
+	infowindow.close();
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
