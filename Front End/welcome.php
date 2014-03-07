@@ -20,11 +20,19 @@
     
 <body>
 	<div id="wrapper">
-        <div id="showhide-hidden"><span>>></span></div>
-		<div id="sidebar-main">
+		<a href="javascript:void(0);">
+			<div id="showhide">
+				<div class="colored-line"></div>
+				<div class="colored-line"></div>
+				<div class="colored-line"></div>
+			</div>
+		</a>
+		<div id="sidebar-main" class="sliding-object">
             <div id="sidebar-header">LOGO HERE
-                <div id="showhide"><span><<</span></div>
             </div>
+			<div id="sidebar-login-indicator">
+				Welcome
+			</div>
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>
@@ -34,6 +42,7 @@
 				</ul>
 			</div>
 		</div>
+		
         <div id="event-list">
             <div id="events-wrapper">
                 <div class="event">
