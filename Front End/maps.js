@@ -93,6 +93,8 @@ var infowindow = null;
 			});
 	}
 
+	
+
 	//create the X control
 	var controlDiv = document.createElement('div');
 	controlDiv.style.padding = '5px';
@@ -132,13 +134,14 @@ $('#add-event').click(function() {
 	//placing the pin
 	google.maps.event.addListener(map, 'click', function(event) {
   		currentMark = placeMarker(event.latLng);
+  		console.log(event.latLng);
   		normal_map();
 
 	});
 	addEventOpen = true;
 	}
 });
-
+	loadEventsFromDB();
 //return map settings to normal
 	function normal_map() {
 		google.maps.event.clearListeners(map, 'click');
@@ -148,7 +151,54 @@ $('#add-event').click(function() {
 		addEventOpen = false;
 	}
 
+function loadMarker(location, user, title, description, category) {
+		var image = 'img/newEvent.png';
+ 		var marker = new google.maps.Marker({
+      		position: location,
+      		map: map,
+      		title: "mouseclick",
+      		icon: image
+ 	   	});
+
+ 		var contentstring = 	"<form id='create_event' onsubmit='return submitForm();'>"+
+ 								"<input type ='hidden' name='user' value='"+user+"' >" +
+ 								"Event Title: <input type='text' name='title' value='"+title+"'><br>"+
+								"Description: <input type='textarea' name='description' value='"+description+"'><br>"+
+								"Category: <select>"+
+									"<option value='sports'>"+category+"</option>"+
+									"<option value='music'>music</option>"+
+								"</select><br>"+
+								"<input type='submit'>" +
+								"</form>";
+
+		infowindow = new google.maps.InfoWindow({
+ 	   		content: contentstring
+ 	   	});
+ 	   	infowindow.open(map,marker);
+		
+		google.maps.event.addListener(infowindow,'closeclick',function(){
+   			marker.setMap(null); //removes the marker
+   			addEventOpen = false;
+			});
+	}
+
+function loadEventsFromDB(){
+	$.getJSON(
+		'getEvents.php',
+		function(data) {
+			console.log(data[0]);
+			for(var message in data){
+				console.log(data[message]["Title"]);
+			loadMarker(event.latLng, data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
+			}
+		}
+	);
+	return false;
 }
+
+}
+
+
 
 function submitForm(){
 	var postData = $('#create_event').serialize();
