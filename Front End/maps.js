@@ -1,4 +1,4 @@
-var newyork = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 var infowindow = null;
 	function initialize() {
 		var mapOptions = {
@@ -45,7 +45,7 @@ var infowindow = null;
     } else {
       alert("Your browser doesn't support geolocation. We've placed you in NYC.");
     }
-    initialLocation = newyork;   
+    initialLocation = current;   
     map.setCenter(initialLocation);
   }
 
@@ -82,6 +82,7 @@ var infowindow = null;
 								"<input type='submit'>" +
 								"</form>";
 
+		current = location;
 		infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
  	   	});
@@ -152,6 +153,7 @@ $('#add-event').click(function() {
 
 
 function checkNotEmpty(title, desc, cat) {
+	//TODO: Make pretty
 	if (title === "") {
 		alert("no title");
 		return false;
@@ -168,6 +170,10 @@ function submitForm(){
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
+	var coord = current;
+	console.log(coord.d);
+	console.log(coord.e);
+	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
 		return false;
@@ -176,7 +182,7 @@ function submitForm(){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {user: user, title: title, desc: desc, cat:cat},
+		data: {user: user, title: title, desc: desc, category:cat, x:coord.d, y:coord.e},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -189,6 +195,7 @@ function submitForm(){
 }
 
 function submitSuccess(data) {
+	console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
 	addeventopen = false;
