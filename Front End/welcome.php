@@ -22,9 +22,13 @@
 	<div id="wrapper">
         <div id="showhide-hidden"><span>>></span></div>
 		<div id="sidebar-main">
+<<<<<<< HEAD
             <div id="sidebar-header">LOGO HERE
                 <div id="showhide"><span><<</span></div>
             </div>
+=======
+            <div id="showhide"><span><<</span></div>
+>>>>>>> 29296851537bb7a8d0438900b55a08086a50a01b
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>
@@ -34,6 +38,7 @@
 				</ul>
 			</div>
 		</div>
+<<<<<<< HEAD
         <div id="event-list">
             <div id="events-wrapper">
                 <div class="event">
@@ -48,6 +53,8 @@
                 </div>
             </div>
         </div>
+=======
+>>>>>>> 29296851537bb7a8d0438900b55a08086a50a01b
         <div id="map-canvas"/>
 	</div>
 </body>
