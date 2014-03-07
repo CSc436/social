@@ -1,8 +1,10 @@
--- MySQL dump 10.13  Distrib 5.5.23, for Win32 (x86)
+CREATE DATABASE  IF NOT EXISTS `cstestdb` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `cstestdb`;
+-- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
 -- Host: localhost    Database: cstestdb
 -- ------------------------------------------------------
--- Server version	5.5.23
+-- Server version	5.6.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,12 +25,12 @@ DROP TABLE IF EXISTS `attending`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `attending` (
-  `Email` varchar(50) NOT NULL DEFAULT '',
-  `EventID` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`Email`,`EventID`),
-  KEY `EventID` (`EventID`),
-  CONSTRAINT `attending_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
-  CONSTRAINT `attending_ibfk_2` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`)
+  `Email` varchar(50) NOT NULL,
+  `Event` int(11) NOT NULL,
+  PRIMARY KEY (`Email`,`Event`),
+  KEY `Event_idx` (`Event`),
+  CONSTRAINT `Event` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `Email` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,8 +52,10 @@ DROP TABLE IF EXISTS `category`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `category` (
   `CategoryID` int(11) NOT NULL AUTO_INCREMENT,
-  `CategoryName` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`CategoryID`)
+  `CategoryName` varchar(100) NOT NULL,
+  PRIMARY KEY (`CategoryID`),
+  UNIQUE KEY `CategoryID_UNIQUE` (`CategoryID`),
+  UNIQUE KEY `CategoryName_UNIQUE` (`CategoryName`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -72,20 +76,21 @@ DROP TABLE IF EXISTS `event`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event` (
-  `EventID` int(11) NOT NULL,
+  `EventID` int(11) NOT NULL AUTO_INCREMENT,
   `Title` varchar(140) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Timestamp` datetime NOT NULL,
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
-  `CategoryID` int(11) DEFAULT NULL,
+  `CategoryID` int(11) NOT NULL,
   PRIMARY KEY (`EventID`),
+  UNIQUE KEY `EventID_UNIQUE` (`EventID`),
   KEY `Email` (`Email`),
   KEY `LocationID` (`LocationID`),
   KEY `fk_CategoryID` (`CategoryID`),
-  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
+  CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `event_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
-  CONSTRAINT `event_ibfk_2` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`)
+  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -96,6 +101,32 @@ CREATE TABLE `event` (
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
 /*!40000 ALTER TABLE `event` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `eventkeyword`
+--
+
+DROP TABLE IF EXISTS `eventkeyword`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `eventkeyword` (
+  `EventID` int(11) NOT NULL,
+  `KeywordID` int(11) NOT NULL,
+  PRIMARY KEY (`EventID`),
+  KEY `KeywordID_idx` (`KeywordID`),
+  CONSTRAINT `EventID` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `KeywordID` FOREIGN KEY (`KeywordID`) REFERENCES `keyword` (`KeywordID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `eventkeyword`
+--
+
+LOCK TABLES `eventkeyword` WRITE;
+/*!40000 ALTER TABLE `eventkeyword` DISABLE KEYS */;
+/*!40000 ALTER TABLE `eventkeyword` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -125,6 +156,31 @@ LOCK TABLES `following` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `keyword`
+--
+
+DROP TABLE IF EXISTS `keyword`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `keyword` (
+  `KeywordID` int(11) NOT NULL AUTO_INCREMENT,
+  `Word` varchar(25) NOT NULL,
+  PRIMARY KEY (`KeywordID`),
+  UNIQUE KEY `KeywordID_UNIQUE` (`KeywordID`),
+  UNIQUE KEY `Word_UNIQUE` (`Word`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `keyword`
+--
+
+LOCK TABLES `keyword` WRITE;
+/*!40000 ALTER TABLE `keyword` DISABLE KEYS */;
+/*!40000 ALTER TABLE `keyword` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `locale`
 --
 
@@ -132,10 +188,11 @@ DROP TABLE IF EXISTS `locale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locale` (
-  `LocationID` int(11) NOT NULL,
+  `LocationID` int(11) NOT NULL AUTO_INCREMENT,
   `longitude` float NOT NULL,
   `latitude` float NOT NULL,
-  PRIMARY KEY (`LocationID`)
+  PRIMARY KEY (`LocationID`),
+  UNIQUE KEY `LocationID_UNIQUE` (`LocationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -165,7 +222,8 @@ CREATE TABLE `user` (
   `Phone` int(11) DEFAULT NULL,
   `Reputation` int(11) NOT NULL,
   PRIMARY KEY (`Email`),
-  UNIQUE KEY `Username` (`Username`)
+  UNIQUE KEY `Username` (`Username`),
+  UNIQUE KEY `Email_UNIQUE` (`Email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -188,4 +246,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-02-20 20:04:44
+-- Dump completed on 2014-03-06 21:06:17
