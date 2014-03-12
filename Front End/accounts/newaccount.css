@@ -1,7 +1,16 @@
+#new_account{
+	text-align: center;
+	/*opacity: 0;*/
+	-moz-transition: opacity .3s linear;
+	-webkit-transition: opacity .3s linear;
+	transition: opacity .3s linear;
+	visibility: hidden;
+}
+
 #new_account_form{
 	position: fixed;
-	left: 30%;
-	top: 30%;
+	top: 50%;
+	left: 50%;
 	display: inline-block;		/* Fits the width of the container according to its content. */
 	overflow: hidden;			/* Forces the container to recognize that it has children, for adjusting height */
 	z-index: 3;
@@ -10,6 +19,7 @@
 	background-color: #404040;
 	color: white;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
+	padding-bottom: 10px;
 }
 
 .new_account_form_block{
@@ -31,7 +41,9 @@
 	text-transform: uppercase;
 }
 
-.new_account_form_block input{
+.new_account_form_block input,
+.new_account_form_block button,
+.new_account_form_block button:link{
 	display: block;
 	border: 3px solid white;
 	line-height: 1.5;
@@ -65,7 +77,22 @@
 
 .new_account_submit input{
 	height: 50px;
+	border: 3px solid #33CC33;
 }
+
+.new_account_submit input:hover{ border: 3px solid #29A329; }
+.new_account_submit input:focus{ border: 3px solid #1F7A1F; }
+
+.new_account_submit button{
+	height: 50px;
+	margin-top: 10px;
+	border: 3px solid #FF3300;
+	background-color:transparent;
+}
+
+.new_account_submit button:hover { border: 3px solid #CC2900;}
+.new_account_submit button:active { border: 3px solid #991F00;}
+.new_account_submit button:visited { border: 3px solid #991F00;}
 
 .screen{
 	height: 100%;

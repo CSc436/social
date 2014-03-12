@@ -1,5 +1,17 @@
 $(document).ready(function () {
 
+	// Load the new account form into the page.
+	$.get(
+		"accounts/newaccount.php",
+		{},
+		function(data){
+			// Attach the returned content to the body.
+			$('body').append(data);
+			$("#new_account_form").css("margin-left", -($("#new_account_form").width() / 2));
+			$("#new_account_form").css("margin-top", -($("#new_account_form").width() / 2));
+		}
+	);
+
 	// Position the hide button.
 	$("#showhide").css('left', $("#sidebar-main").width());
 	$("#showhide").css('height', $("#showhide").width());
@@ -49,6 +61,15 @@ $(window).resize(function(){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 		$("#showhide").css('left', 0);
 	}
+});
+
+$(document).ready(function () {
+
+	$("#my-account").click(function () {
+		//load_page_into_body("accounts/newaccount.php");
+		$("#new_account").css("visibility", "visible");
+		//$("#new_account").css("opacity", "1");
+	});
 });
 
 //slide for event list
