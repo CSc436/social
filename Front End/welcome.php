@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+	// TODO: Actually set this variable.
+	$loggedin = false;
+?>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -20,20 +24,42 @@
     
 <body>
 	<div id="wrapper">
-        <div id="showhide-hidden"><span>>></span></div>
-		<div id="sidebar-main">
+		<a href="javascript:void(0);">
+			<div id="showhide">
+				<div class="colored-line"></div>
+				<div class="colored-line"></div>
+				<div class="colored-line"></div>
+			</div>
+		</a>
+		<div id="sidebar-main" class="sliding-object">
             <div id="sidebar-header">LOGO HERE
-                <div id="showhide"><span><<</span></div>
             </div>
+			<!--  Under Construction
+			<div id="sidebar-login-indicator">
+				Login Info
+			</div>-->
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
-					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>
-					<li class="sidebar-link" id="add-event"><a class="sidebar-link-button" href="#">Create</a></li>
-					<li class="sidebar-link" id="my-account"><a class="sidebar-link-button" href="#">My Account</a></li>
-                    <li class="sidebar-link"><a class="sidebar-link-button" href="#">Settings</a></li>
+					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
+					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
+					<a class="sidebar-link-button" href="#">
+						<li class="sidebar-link" id="my-account">
+							<?php
+								// This button will change if the user is logged in.
+								if($loggedin){
+									echo("My Account");
+								}
+								else{
+									echo("Log In");
+								}
+							?>
+						</li>
+					</a>
+                    <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
 				</ul>
 			</div>
 		</div>
+		
         <div id="event-list">
             <div id="events-wrapper">
                 <div class="event">
