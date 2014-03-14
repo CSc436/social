@@ -148,19 +148,11 @@ $('#add-event').click(function() {
 		controlDiv.style.display = "none";
 		map.setOptions({ draggableCursor: null, dragginCursor: null});
 		$('#add-event').css("font-weight","normal");
-		addEventOpen = false;
+		//addEventOpen = false;
 	}
-
-function loadMarker(location, user, title, description, category) {
-		var image = 'img/newEvent.png';
- 		var marker = new google.maps.Marker({
-      		position: location,
-      		map: map,
-      		title: "mouseclick",
-      		icon: image
- 	   	});
-
- 		var contentstring = 	"<form id='create_event' onsubmit='return submitForm();'>"+
+/*
+function loadMarker(marker, user, title, description, category) {
+ 		var contentstring = 	"<div class='event-content'>"+
  								"<input type ='hidden' name='user' value='"+user+"' >" +
  								"Event Title: <input type='text' name='title' value='"+title+"'><br>"+
 								"Description: <input type='textarea' name='description' value='"+description+"'><br>"+
@@ -168,33 +160,79 @@ function loadMarker(location, user, title, description, category) {
 									"<option value='sports'>"+category+"</option>"+
 									"<option value='music'>music</option>"+
 								"</select><br>"+
-								"<input type='submit'>" +
-								"</form>";
+								"</div>";
 
 		infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
  	   	});
- 	   	infowindow.open(map,marker);
 		
+		google.maps.event.addListener(marker, 'click', function() {
+    		infowindow.open(map,marker);
+  		});
 		google.maps.event.addListener(infowindow,'closeclick',function(){
-   			marker.setMap(null); //removes the marker
+   			//marker.setMap(null); //removes the marker
    			addEventOpen = false;
 			});
 	}
-
+var markers;*/
 function loadEventsFromDB(){
 	$.getJSON(
 		'getEvents.php',
 		function(data) {
-			console.log(data[0]);
 			for(var message in data){
-				console.log(data[message]["Title"]);
-			loadMarker(event.latLng, data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
+				var e = data[message]["Email"];
+				var t = data[message]["Title"];
+				var d = data[message]["5"];
+				var c = data[message]["CategoryID"];
+
+				console.log(data[message]);
+				var image = 'img/newEvent.png';
+ 				var marker = new google.maps.Marker({
+      				position: new google.maps.LatLng(data[message]["longitude"],data[message]["latitude"]),
+      				map: map,
+      				title: data[message]["Title"],
+      				icon: image
+ 	   			});
+ 				//autoCenter(markerr);
+				//loadMarker(marker,data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
+				var contentstring = 	"<div class='event-content'>"+
+ 								"<input type ='hidden' name='user' value='"+e+"' >" +
+ 								"Event Title: <input type='text' name='title' value='"+t+"'><br>"+
+								"Description: <input type='textarea' name='description' value='"+d+"'><br>"+
+								"Category: <select>"+
+									"<option value='sports'>"+c+"</option>"+
+									"<option value='music'>music</option>"+
+								"</select><br>"+
+								"</div>";
+
+				infowindow = new google.maps.InfoWindow({
+		 	   		content: contentstring
+		 	   	});
+				infowindow.open(map,marker);
+				(function(mark,info) {
+					google.maps.event.addListener(mark, 'click', function() {
+		    			info.open(map,mark);
+		  			});
+				})(marker,infowindow);
+				google.maps.event.addListener(infowindow,'closeclick',function(){
+		   			//marker.setMap(null); //removes the marker
+		   			addEventOpen = false;
+					});
+
 			}
 		}
 	);
 	return false;
 }
+
+function autoCenter(marker) {
+//  Create a new viewpoint bound
+var bounds = new google.maps.LatLngBounds();
+bounds.extend(marker.position);
+//  Fit these bounds to the map
+map.fitBounds(bounds);
+}
+
 
 }
 

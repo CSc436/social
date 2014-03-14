@@ -101,3 +101,8 @@ a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
     width: 80%; */
     position: fixed;
 }
+
+.event-content {
+    background-color: green;
+    min-height: 200px;
+}

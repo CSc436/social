@@ -2,7 +2,7 @@
  	include("connect.php");
 
 	$query = $db->prepare("
-		Select * From event
+		Select * From event, locale where event.locationid=locale.locationid;
 	");
 	
 	// Execute the query.
