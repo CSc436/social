@@ -219,8 +219,9 @@ function submitForm(){
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	console.log(coord.d);
-	console.log(coord.e);
+	console.log(current);
+	console.log(coord.lat());
+	console.log(coord.lng());
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
@@ -230,7 +231,7 @@ function submitForm(){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {user: user, title: title, desc: desc, category:cat, x:coord.d, y:coord.e},
+		data: {user: user, title: title, desc: desc, category:cat, x:coord.lat(), y:coord.lng()},
 		success:function(message) {
 			submitSuccess(message);
 		},
