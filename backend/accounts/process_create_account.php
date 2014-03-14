@@ -3,17 +3,21 @@
 	 *								Script Executed When Loaded								*
 	 ****************************************************************************************/
 
+	 $errmsg = null;
+	 
 	// Connect to the DB.
 	include("../connect.php");
 
 	// First, check if a user attached to the provided email already exists.
 	if(checkExistingUser($db, $_POST['email']) == true){
-		die("Sorry, there is already an account associated with that email.");
+		$errmsg = "Sorry, there is already an account associated with that email.";
+		die(json_encode($errmsg));
 	}
 	
 	// Check if the passwords match.
 	if($_POST['password1'] != $_POST['password2']){
-		die("Passwords do not match");
+		$errmsg = "Passwords do not match";
+		die(json_encode($errmsg));
 	}
 	
 	// Generate a salt.
@@ -25,6 +29,8 @@
 	// Create the user.
 	createUser($db, $_POST['email'], $_POST['username'], $_POST['firstname'], $_POST['lastname'],
 			   $salt, $hash, $_POST['phone'], 0);
+			   
+	echo json_encode($errmsg);
 	
 	/****************************************************************************************
 	 *										Functions										*
@@ -98,7 +104,8 @@
 		} catch (PDOException $e){
 			// Display an error.
 			// echo("There was an error creating the user:<br><br>" . $e->getMessage());
-			echo("There was an error creating the user:<br><br>" . $insert_user_query->errorInfo()[2]);
+			$errmsg = "There was an error creating the user:\n\n" . $insert_user_query->errorInfo()[2];
+			die(json_encode($errmsg));
 		}
 	}
 ?>

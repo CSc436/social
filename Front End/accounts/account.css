@@ -1,4 +1,4 @@
-#new_account{
+.account_page{
 	text-align: center;
 	/*opacity: 0;*/
 	-moz-transition: opacity .3s linear;
@@ -7,7 +7,11 @@
 	visibility: hidden;
 }
 
-#new_account_form{
+#account_error{
+	visibility: visible;
+}
+
+.account_form{
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -22,7 +26,7 @@
 	padding-bottom: 10px;
 }
 
-.new_account_form_block{
+.account_form_block{
 	display: block;
 	overflow: hidden;
 	margin-left: 4px;
@@ -35,15 +39,15 @@
 	margin: 15px 0px 4px 0px;
 }
 
-.new_account_form_block label{
+.account_form_block label{
 	display: block;
 	margin-top: 5px;
 	text-transform: uppercase;
 }
 
-.new_account_form_block input,
-.new_account_form_block button,
-.new_account_form_block button:link{
+.account_form_block input,
+.account_form_block button,
+.account_form_block button:link{
 	display: block;
 	border: 3px solid white;
 	line-height: 1.5;
@@ -53,16 +57,16 @@
 	color: white;
 }
 
-.new_account_form_block input:hover,
-.new_account_form_block label:hover + input{
+.account_form_block input:hover,
+.account_form_block label:hover + input{
 	border: 3px solid #5895B8;
 }
 
-.new_account_form_block input:focus{
+.account_form_block input:focus{
 	border: 3px solid #10689a;
 }
 
-.new_account_form_column{
+.account_form_column{
 	float: left;
 	padding: 4px 4px 4px 4px;
 	margin: 4px 4px 4px 4px;
@@ -93,6 +97,22 @@
 .new_account_submit button:hover { border: 3px solid #CC2900;}
 .new_account_submit button:active { border: 3px solid #991F00;}
 .new_account_submit button:visited { border: 3px solid #991F00;}
+
+.login_form_fields{
+	margin: 0px 80px 0px 80px
+}
+
+#login_form_createaccount{
+	border: 3px solid #33CC33;
+}
+
+#login_form_createaccount:hover{ border: 3px solid #29A329; }
+#login_form_createaccount:focus{ border: 3px solid #1F7A1F; }
+
+#account_error_msg{
+	margin: 0px 50px 0px 50px;
+	width: 300px;
+}
 
 .screen{
 	height: 100%;

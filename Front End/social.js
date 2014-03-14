@@ -1,5 +1,17 @@
 $(document).ready(function () {
 
+	// Load the login form into the page.
+	$.get(
+		"accounts/login.php",
+		{},
+		function(data){
+			// Attach the returned content to the body.
+			$('body').append(data);
+			$("#login_form").css("margin-left", -($("#login_form").width() / 2));
+			$("#login_form").css("margin-top", -($("#login_form").width() / 2));
+		}
+	);
+	
 	// Load the new account form into the page.
 	$.get(
 		"accounts/newaccount.php",
@@ -67,8 +79,8 @@ $(document).ready(function () {
 
 	$("#my-account").click(function () {
 		//load_page_into_body("accounts/newaccount.php");
-		$("#new_account").css("visibility", "visible");
-		//$("#new_account").css("opacity", "1");
+		$("#login").css("visibility", "visible");
+		//displayError("This is a test.");
 	});
 });
 
@@ -79,5 +91,26 @@ $(document).ready(function () {
     
     $("#events-button").click(function () {
         eventList.toggle("slide",{direction: "left"}, 500);
-    });    
+    });
 });
+
+// Displays a message to the user.
+function displayMsg(title, message){
+	
+	// Load the login form into the page.
+	$.post(
+		"accounts/accounterr.php",
+		{ title: title,
+		errmsg: message},
+		function(data){
+			$('body').append(data);
+			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
+			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
+		}
+	);
+}
+
+// Closes the message prompt.
+function closeMsg(){
+	$("#account_error").detach();
+}
