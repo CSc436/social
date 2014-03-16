@@ -220,10 +220,6 @@ function loadEventsFromDB(){
 		   			//marker.setMap(null); //removes the marker
 		   			addEventOpen = false;
 					});
-			// console.log(data[0]);
-			for(var message in data){
-				// console.log(data[message]["Title"]);
-			loadMarker(event.latLng, data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
 			}
 		}
 	);
