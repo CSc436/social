@@ -71,13 +71,15 @@ var infowindow = null;
       		icon: image
  	   	});
 
- 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm();'>"+
+ 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm(event);'>"+
  								"<input id='user' type ='hidden' name='user' value='me' >" +
  								"Event Title: <input id='title' type='text' name='title' value=''><br>"+
 								"Description: <input id='desc' type='textarea' name='description' value=''><br>"+
+								"Keywords: <input id='keywords' type='textarea' value=''><br>" +
+								"<small>enter to add a keyword</small><br>" +
 								"Category: <select id='category'>"+
 									"<option value='sports'>sports</option>"+
-									"<option value='music'>music</option>"+
+									"<option value='music'>music</option>" +
 								"</select><br>"+
 								"<input type='submit'>" +
 								"</form>";
@@ -135,7 +137,7 @@ $('#add-event').click(function() {
 	//placing the pin
 	google.maps.event.addListener(map, 'click', function(event) {
   		currentMark = placeMarker(event.latLng);
-  		console.log(event.latLng);
+  		// console.log(event.latLng);
   		normalMap();
 	});
 	addEventOpen = true;
@@ -218,7 +220,10 @@ function loadEventsFromDB(){
 		   			//marker.setMap(null); //removes the marker
 		   			addEventOpen = false;
 					});
-
+			// console.log(data[0]);
+			for(var message in data){
+				// console.log(data[message]["Title"]);
+			loadMarker(event.latLng, data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
 			}
 		}
 	);
@@ -251,15 +256,31 @@ function checkNotEmpty(title, desc, cat) {
 	return true;
 }
 
-function submitForm(){
+function submitForm(e){
+	var keywordsarray = new Array();
+	var kw;
+
+	//if enter is presse in the title or description field, do nothing
+	if ($(document.activeElement).attr("type") !=  "submit" && $(document.activeElement).attr("id") != "keywords") {
+		console.log("return my dilla")
+		return false;
+	}
+
+	if ($(document.activeElement).attr("id") == "keywords") {
+		kw = $(document.activeElement).val().toUpperCase();
+		keywordsarray.push(kw);
+		console.log(keywordsarray);
+		$(document.activeElement).val("");
+		return false;
+	}
+
 	var user = $("#user").val();
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	console.log(current);
-	console.log(coord.lat());
-	console.log(coord.lng());
+
+	console.log(keywordsarray);
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
@@ -282,7 +303,7 @@ function submitForm(){
 }
 
 function submitSuccess(data) {
-	console.log(data);
+	// console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
 	addeventopen = false;

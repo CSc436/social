@@ -2,7 +2,7 @@
 	include '..\backend\connect.php';
 
 	$add_category = $db->prepare("
-		REPLACE INTO `category` (`CategoryName`)
+		INSERT IGNORE INTO `category` (`CategoryName`)
 		VALUES 
 		(:category)
 		");
@@ -23,7 +23,7 @@
 	$catID = $get_catID_query->fetch();
 
 	$add_locale = $db->prepare("
-		REPLACE INTO `locale` (`longitude`, `latitude`)
+		INSERT IGNORE INTO `locale` (`longitude`, `latitude`)
 		VALUES 
 		(:xcoord, :ycoord)
 		");
