@@ -30,14 +30,11 @@ $(document).ready(function () {
             $("#event-list").hide();
         }
     });
-<<<<<<< HEAD
-=======
     
     /*$("#showhide-hidden").click(function () {
         $("#sidebar-main").toggle("slide",{direction: "left"},500);
         $("#showhide").toggle("slide",{direction: "left"},500);
     });*/    
->>>>>>> ryan
 });
 
 // On window resize, do...
@@ -52,41 +49,6 @@ $(window).resize(function(){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 		$("#showhide").css('left', 0);
 	}
-<<<<<<< HEAD
-});
-
-$(document).ready(function () {
-
-	// Load the login form into the page.
-	$.get(
-		"accounts/login.php",
-		{},
-		function(data){
-			// Attach the returned content to the body.
-			$('body').append(data);
-			$("#login_form").css("margin-left", -($("#login_form").width() / 2));
-			$("#login_form").css("margin-top", -($("#login_form").width() / 2));
-		}
-	);
-	
-	// Load the new account form into the page.
-	$.get(
-		"accounts/newaccount.php",
-		{},
-		function(data){
-			// Attach the returned content to the body.
-			$('body').append(data);
-			$("#new_account_form").css("margin-left", -($("#new_account_form").width() / 2));
-			$("#new_account_form").css("margin-top", -($("#new_account_form").width() / 2));
-		}
-	);
-
-	// Open the login form when the user clicks "log in".
-	$("#my-account").click(function () {
-		$("#login").css("visibility", "visible");
-	});
-=======
->>>>>>> ryan
 });
 
 //slide for event list
@@ -102,25 +64,18 @@ $(document).ready(function () {
         });
 	   return false;
     }*/
-<<<<<<< HEAD
-    function populateEventList(){
-        $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
-    }
-=======
     
     /*function populateEventList(){
         $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
     }*/
->>>>>>> ryan
     
     var eventList = $("#event-list");
     eventList.hide();
     
     $("#events-button").click(function () {
-<<<<<<< HEAD
-        if ($("#event-list").is(":hidden")) {
+        /*if ($("#event-list").is(":hidden")) {
             populateEventList();
-        } 
+        } */
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });
@@ -145,11 +100,3 @@ function displayMsg(title, message){
 function closeMsg(){
 	$("#account_error").detach();
 }
-=======
-        /*if ($("#event-list").is(":hidden")) {
-            populateEventList();
-        } */
-        eventList.toggle("slide",{direction: "left"}, 500);
-    });
-});
->>>>>>> ryan
