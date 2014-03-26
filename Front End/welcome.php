@@ -62,16 +62,14 @@
 		
         <div id="event-list">
             <div id="events-wrapper">
+<<<<<<< HEAD
                 <div class="event">
                     <span>Event Name</span></br>
                     <span>12:00pm - 2:00pm</span></br>
                     <span>This could be an event description.</span>
                 </div>
-                <div class="event">
-                    <span>Midnight Salsa Dancing</span></br>
-                    <span>12:00am - 2:00am</span></br>
-                    <span>Dancing in the ancient style of Salsa. At midnight.</span>
-                </div>
+=======
+>>>>>>> ryan
             </div>
         </div>
         <div id="map-canvas"/>

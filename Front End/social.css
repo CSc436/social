@@ -8,7 +8,10 @@
 	-moz-transition: all .3s ease;
 	-webkit-transition: all .3s ease;
 	transition: all .3s ease;
+<<<<<<< HEAD
 	
+=======
+>>>>>>> ryan
 }
 
 /* Sidebar Styles */
@@ -95,12 +98,16 @@
     height: 30px;
     width: 30px;
     z-index: 1;
+<<<<<<< HEAD
 }
 */
 
 #sidebar-links a{
 	text-decoration: none;
+=======
+>>>>>>> ryan
 }
+*/
 
 .sidebar-link:link {background-color:#F8F8F8; text-decoration: none;}      /* unvisited link */
 .sidebar-link:visited {background-color:#F8F8F8; text-decoration: none;}  /* visited link */
@@ -113,7 +120,7 @@
     background-color: #404040;
     position: absolute;
     top: 0px;
-    left: 20.6%;
+    left: 19%;
     height: 100%;
     z-index: 1;
     border-style: solid;
