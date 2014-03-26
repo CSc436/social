@@ -32,28 +32,13 @@
 			</div>
 		</a>
 		<div id="sidebar-main" class="sliding-object">
-            <div id="sidebar-header">LOGO HERE
-            </div>
-			<!--  Under Construction
-			<div id="sidebar-login-indicator">
-				Login Info
-			</div>-->
+            <div id="sidebar-header">LOGO HERE</div>
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
 					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
 					<a class="sidebar-link-button" href="#">
-						<li class="sidebar-link" id="my-account">
-							<?php
-								// This button will change if the user is logged in.
-								if($loggedin){
-									echo("My Account");
-								}
-								else{
-									echo("Log In");
-								}
-							?>
-						</li>
+					<li class="sidebar-link" id="my-account">Log In</li>
 					</a>
                     <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
 				</ul>

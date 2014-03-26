@@ -94,6 +94,8 @@ $(document).ready(function () {
     });
 });
 
+messageIsDisplayed = false;
+
 // Displays a message to the user.
 function displayMsg(title, message){
 	
@@ -103,14 +105,59 @@ function displayMsg(title, message){
 		{ title: title,
 		errmsg: message},
 		function(data){
+		
+			// Prevent two messages from appearing at the same time.
+			if(messageIsDisplayed){
+				closeMsg();
+			}
+		
 			$('body').append(data);
 			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
 			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
+			
+			messageIsDisplayed = true;
 		}
 	);
 }
 
 // Closes the message prompt.
 function closeMsg(){
+	$("#account_error").css("visibility", "hidden");
 	$("#account_error").detach();
+	messageIsDisplayed = false;
+}
+
+function toggleLogoutButton(state){
+
+	// Switch from login to logout.
+	if(state == 1){
+		$("#my-account").html("Log Out");
+		$("#my-account").attr('onclick','').unbind('click');
+		$("#my-account").click(function () {
+		
+			// Processing message.
+			displayMsg("Logging Out...", "");
+		
+			// Call the logout script.
+			$.get(
+				"../backend/accounts/process_logout.php",
+				{},
+				function(data){
+					// Display a success message and toggle the logout button.
+					closeMsg();
+					displayMsg("Logout Successful!", "");
+					toggleLogoutButton(0);
+				}
+			);
+		});
+	}
+	// Switch from logout to login.
+	else{
+		// Open the login form when the user clicks "log in".
+		$("#my-account").html("Log In");
+		$("#my-account").attr('onclick','').unbind('click');
+		$("#my-account").click(function () {
+			$("#login").css("visibility", "visible");
+		});
+	}
 }
