@@ -1,4 +1,5 @@
 var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var keywordsarray = new Array();
 var infowindow = null;
 	function initialize() {
 		var mapOptions = {
@@ -71,13 +72,15 @@ var infowindow = null;
       		icon: image
  	   	});
 
- 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm();'>"+
+ 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm(event);'>"+
  								"<input id='user' type ='hidden' name='user' value='me' >" +
  								"Event Title: <input id='title' type='text' name='title' value=''><br>"+
 								"Description: <input id='desc' type='textarea' name='description' value=''><br>"+
+								"Keywords: <input id='keywords' type='textarea' value=''><br>" +
+								"<small>enter to add a keyword</small><div id='kw'></div><br>" +
 								"Category: <select id='category'>"+
 									"<option value='sports'>sports</option>"+
-									"<option value='music'>music</option>"+
+									"<option value='music'>music</option>" +
 								"</select><br>"+
 								"<input type='submit'>" +
 								"</form>";
@@ -135,7 +138,7 @@ $('#add-event').click(function() {
 	//placing the pin
 	google.maps.event.addListener(map, 'click', function(event) {
   		currentMark = placeMarker(event.latLng);
-  		console.log(event.latLng);
+  		// console.log(event.latLng);
   		normalMap();
 	});
 	addEventOpen = true;
@@ -148,19 +151,11 @@ $('#add-event').click(function() {
 		controlDiv.style.display = "none";
 		map.setOptions({ draggableCursor: null, dragginCursor: null});
 		$('#add-event').css("font-weight","normal");
-		addEventOpen = false;
+		//addEventOpen = false;
 	}
-
-function loadMarker(location, user, title, description, category) {
-		var image = 'img/newEvent.png';
- 		var marker = new google.maps.Marker({
-      		position: location,
-      		map: map,
-      		title: "mouseclick",
-      		icon: image
- 	   	});
-
- 		var contentstring = 	"<form id='create_event' onsubmit='return submitForm();'>"+
+/*
+function loadMarker(marker, user, title, description, category) {
+ 		var contentstring = 	"<div class='event-content'>"+
  								"<input type ='hidden' name='user' value='"+user+"' >" +
  								"Event Title: <input type='text' name='title' value='"+title+"'><br>"+
 								"Description: <input type='textarea' name='description' value='"+description+"'><br>"+
@@ -168,33 +163,78 @@ function loadMarker(location, user, title, description, category) {
 									"<option value='sports'>"+category+"</option>"+
 									"<option value='music'>music</option>"+
 								"</select><br>"+
-								"<input type='submit'>" +
-								"</form>";
+								"</div>";
 
 		infowindow = new google.maps.InfoWindow({
  	   		content: contentstring
  	   	});
- 	   	infowindow.open(map,marker);
 		
+		google.maps.event.addListener(marker, 'click', function() {
+    		infowindow.open(map,marker);
+  		});
 		google.maps.event.addListener(infowindow,'closeclick',function(){
-   			marker.setMap(null); //removes the marker
+   			//marker.setMap(null); //removes the marker
    			addEventOpen = false;
 			});
 	}
-
+var markers;*/
 function loadEventsFromDB(){
 	$.getJSON(
 		'getEvents.php',
 		function(data) {
-			console.log(data[0]);
 			for(var message in data){
-				console.log(data[message]["Title"]);
-			loadMarker(event.latLng, data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
+				var e = data[message]["Email"];
+				var t = data[message]["Title"];
+				var d = data[message]["5"];
+				var c = data[message]["CategoryID"];
+
+				console.log(data[message]);
+				var image = 'img/newEvent.png';
+ 				var marker = new google.maps.Marker({
+      				position: new google.maps.LatLng(data[message]["longitude"],data[message]["latitude"]),
+      				map: map,
+      				title: data[message]["Title"],
+      				icon: image
+ 	   			});
+ 				//autoCenter(markerr);
+				//loadMarker(marker,data[message]["Email"],data[message]["Title"],data[message]["5"],data[message]["CategoryID"]);
+				var contentstring = 	"<div class='event-content'>"+
+ 								"<input type ='hidden' name='user' value='"+e+"' >" +
+ 								"Event Title: <input type='text' name='title' value='"+t+"'><br>"+
+								"Description: <input type='textarea' name='description' value='"+d+"'><br>"+
+								"Category: <select>"+
+									"<option value='sports'>"+c+"</option>"+
+									"<option value='music'>music</option>"+
+								"</select><br>"+
+								"</div>";
+
+				infowindow = new google.maps.InfoWindow({
+		 	   		content: contentstring
+		 	   	});
+				infowindow.open(map,marker);
+				(function(mark,info) {
+					google.maps.event.addListener(mark, 'click', function() {
+		    			info.open(map,mark);
+		  			});
+				})(marker,infowindow);
+				google.maps.event.addListener(infowindow,'closeclick',function(){
+		   			//marker.setMap(null); //removes the marker
+		   			addEventOpen = false;
+					});
 			}
 		}
 	);
 	return false;
 }
+
+function autoCenter(marker) {
+//  Create a new viewpoint bound
+var bounds = new google.maps.LatLngBounds();
+bounds.extend(marker.position);
+//  Fit these bounds to the map
+map.fitBounds(bounds);
+}
+
 
 }
 
@@ -213,14 +253,30 @@ function checkNotEmpty(title, desc, cat) {
 	return true;
 }
 
-function submitForm(){
+function submitForm(e){
+	var kw;
+
+	//if enter is presse in the title or description field, do nothing
+	if ($(document.activeElement).attr("type") !=  "submit" && $(document.activeElement).attr("id") != "keywords") {
+		console.log("return my dilla")
+		return false;
+	}
+
+	if ($(document.activeElement).attr("id") == "keywords") {
+		kw = $(document.activeElement).val();
+		keywordsarray.push(kw.toUpperCase());
+		// $("kw").innerHTML = keywordsarray[0];
+		$(document.activeElement).val("");
+		return false;
+	}
+
 	var user = $("#user").val();
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	console.log(coord.d);
-	console.log(coord.e);
+
+	console.log(keywordsarray);
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
@@ -230,7 +286,7 @@ function submitForm(){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {user: user, title: title, desc: desc, category:cat, x:coord.d, y:coord.e},
+		data: {user: user, title: title, desc: desc, category:cat, x:coord.lat(), y:coord.lng(), keywords:keywordsarray},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -239,11 +295,12 @@ function submitForm(){
 			console.log(message);
 		}
 	});
+	keywordsarray.length = 0;
 	return false;
 }
 
 function submitSuccess(data) {
-	console.log(data);
+	// console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
 	addeventopen = false;

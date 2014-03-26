@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<?php
+	// TODO: Actually set this variable.
+	$loggedin = false;
+?>
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -36,10 +40,22 @@
 			</div>-->
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
-					<li class="sidebar-link"><a class="sidebar-link-button" id="events-button" href="#">Events</a></li>
-					<li class="sidebar-link" id="add-event"><a class="sidebar-link-button" href="#">Create</a></li>
-					<li class="sidebar-link" id="my-account"><a class="sidebar-link-button" href="#">My Account</a></li>
-                    <li class="sidebar-link"><a class="sidebar-link-button" href="#">Settings</a></li>
+					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
+					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
+					<a class="sidebar-link-button" href="#">
+						<li class="sidebar-link" id="my-account">
+							<?php
+								// This button will change if the user is logged in.
+								if($loggedin){
+									echo("My Account");
+								}
+								else{
+									echo("Log In");
+								}
+							?>
+						</li>
+					</a>
+                    <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
 				</ul>
 			</div>
 		</div>
