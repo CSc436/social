@@ -113,7 +113,7 @@ DROP TABLE IF EXISTS `eventkeyword`;
 CREATE TABLE `eventkeyword` (
   `EventID` int(11) NOT NULL,
   `KeywordID` int(11) NOT NULL,
-  PRIMARY KEY (`EventID`),
+  PRIMARY KEY (`EventID`, `KeywordID`),
   KEY `KeywordID_idx` (`KeywordID`),
   CONSTRAINT `EventID` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `KeywordID` FOREIGN KEY (`KeywordID`) REFERENCES `keyword` (`KeywordID`) ON DELETE NO ACTION ON UPDATE NO ACTION
