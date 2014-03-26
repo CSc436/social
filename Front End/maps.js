@@ -1,4 +1,5 @@
 var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
+var keywordsarray = new Array();
 var infowindow = null;
 	function initialize() {
 		var mapOptions = {
@@ -76,7 +77,7 @@ var infowindow = null;
  								"Event Title: <input id='title' type='text' name='title' value=''><br>"+
 								"Description: <input id='desc' type='textarea' name='description' value=''><br>"+
 								"Keywords: <input id='keywords' type='textarea' value=''><br>" +
-								"<small>enter to add a keyword</small><br>" +
+								"<small>enter to add a keyword</small><div id='kw'></div><br>" +
 								"Category: <select id='category'>"+
 									"<option value='sports'>sports</option>"+
 									"<option value='music'>music</option>" +
@@ -253,7 +254,6 @@ function checkNotEmpty(title, desc, cat) {
 }
 
 function submitForm(e){
-	var keywordsarray = new Array();
 	var kw;
 
 	//if enter is presse in the title or description field, do nothing
@@ -263,9 +263,9 @@ function submitForm(e){
 	}
 
 	if ($(document.activeElement).attr("id") == "keywords") {
-		kw = $(document.activeElement).val().toUpperCase();
-		keywordsarray.push(kw);
-		console.log(keywordsarray);
+		kw = $(document.activeElement).val();
+		keywordsarray.push(kw.toUpperCase());
+		// $("kw").innerHTML = keywordsarray[0];
 		$(document.activeElement).val("");
 		return false;
 	}
@@ -286,7 +286,7 @@ function submitForm(e){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {user: user, title: title, desc: desc, category:cat, x:coord.lat(), y:coord.lng()},
+		data: {user: user, title: title, desc: desc, category:cat, x:coord.lat(), y:coord.lng(), keywords:keywordsarray},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -295,6 +295,7 @@ function submitForm(e){
 			console.log(message);
 		}
 	});
+	keywordsarray.length = 0;
 	return false;
 }
 
