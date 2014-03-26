@@ -236,11 +236,11 @@ function loadEventsFromDB(){
 function checkNotEmpty(title, desc, cat) {
 	//TODO: Make pretty
 	if (title === "") {
-		alert("no title");
+		displayMsg("No Title", "Please give your event a title.");
 		return false;
 	}
 	if (desc === "") {
-		alert("no description");
+		displayMsg("No Description", "Please name your event.");
 		return false;
 	}
 	return true;
@@ -293,7 +293,7 @@ function submitForm(e){
 }
 
 function submitSuccess(data) {
-	//console.log(data);
+	 console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
 	addeventopen = false;
