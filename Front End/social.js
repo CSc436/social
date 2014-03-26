@@ -30,15 +30,11 @@ $(document).ready(function () {
             $("#event-list").hide();
         }
     });
-<<<<<<< HEAD
-=======
     
     /*$("#showhide-hidden").click(function () {
         $("#sidebar-main").toggle("slide",{direction: "left"},500);
         $("#showhide").toggle("slide",{direction: "left"},500);
     });*/    
->>>>>>> ryan
-});
 
 // On window resize, do...
 $(window).resize(function(){
@@ -52,7 +48,6 @@ $(window).resize(function(){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 		$("#showhide").css('left', 0);
 	}
-<<<<<<< HEAD
 });
 
 $(document).ready(function () {
@@ -85,10 +80,8 @@ $(document).ready(function () {
 	$("#my-account").click(function () {
 		$("#login").css("visibility", "visible");
 	});
-=======
->>>>>>> ryan
 });
-
+    
 //slide for event list
 $(document).ready(function () {
     
@@ -102,25 +95,27 @@ $(document).ready(function () {
         });
 	   return false;
     }*/
-<<<<<<< HEAD
+
     function populateEventList(){
         $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
     }
-=======
     
     /*function populateEventList(){
         $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
     }*/
->>>>>>> ryan
+    
+    /*function populateEventList(){
+        $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
+    }*/
     
     var eventList = $("#event-list");
     eventList.hide();
     
     $("#events-button").click(function () {
-<<<<<<< HEAD
         if ($("#event-list").is(":hidden")) {
+        /*if ($("#event-list").is(":hidden")) {
             populateEventList();
-        } 
+        } */
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });
@@ -145,11 +140,10 @@ function displayMsg(title, message){
 function closeMsg(){
 	$("#account_error").detach();
 }
-=======
         /*if ($("#event-list").is(":hidden")) {
             populateEventList();
         } */
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });
->>>>>>> ryan
+});
