@@ -79,3 +79,24 @@ $(document).ready(function () {
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });
+
+// Displays a message to the user.
+function displayMsg(title, message){
+	
+	// Load the login form into the page.
+	$.post(
+		"accounts/accounterr.php",
+		{ title: title,
+		errmsg: message},
+		function(data){
+			$('body').append(data);
+			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
+			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
+		}
+	);
+}
+
+// Closes the message prompt.
+function closeMsg(){
+	$("#account_error").detach();
+}
