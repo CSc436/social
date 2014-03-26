@@ -1,29 +1,5 @@
 $(document).ready(function () {
 
-	// Load the login form into the page.
-	$.get(
-		"accounts/login.php",
-		{},
-		function(data){
-			// Attach the returned content to the body.
-			$('body').append(data);
-			$("#login_form").css("margin-left", -($("#login_form").width() / 2));
-			$("#login_form").css("margin-top", -($("#login_form").width() / 2));
-		}
-	);
-	
-	// Load the new account form into the page.
-	$.get(
-		"accounts/newaccount.php",
-		{},
-		function(data){
-			// Attach the returned content to the body.
-			$('body').append(data);
-			$("#new_account_form").css("margin-left", -($("#new_account_form").width() / 2));
-			$("#new_account_form").css("margin-top", -($("#new_account_form").width() / 2));
-		}
-	);
-
 	// Position the hide button.
 	$("#showhide").css('left', $("#sidebar-main").width());
 	$("#showhide").css('height', $("#showhide").width());
@@ -75,21 +51,31 @@ $(window).resize(function(){
 	}
 });
 
-$(document).ready(function () {
-
-	$("#my-account").click(function () {
-		//load_page_into_body("accounts/newaccount.php");
-		$("#login").css("visibility", "visible");
-		//displayError("This is a test.");
-	});
-});
-
 //slide for event list
 $(document).ready(function () {
+    
+    //get events and fill event list
+    /*function populateEventList(){
+	   $.getJSON('getEvents.php', function(data) {
+           console.log(data[0]);
+           for(var message in data){
+               console.log(data[message]["Title"]);
+           }
+        });
+	   return false;
+    }*/
+    
+    /*function populateEventList(){
+        $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
+    }*/
+    
     var eventList = $("#event-list");
     eventList.hide();
     
     $("#events-button").click(function () {
+        /*if ($("#event-list").is(":hidden")) {
+            populateEventList();
+        } */
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });

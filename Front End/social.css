@@ -8,7 +8,6 @@
 	-moz-transition: all .3s ease;
 	-webkit-transition: all .3s ease;
 	transition: all .3s ease;
-	
 }
 
 /* Sidebar Styles */
@@ -98,14 +97,22 @@
 }
 */
 
+<<<<<<< HEAD
 #sidebar-links a{
 	text-decoration: none;
 }
+*/
 
 .sidebar-link:link {background-color:#F8F8F8; text-decoration: none;}      /* unvisited link */
 .sidebar-link:visited {background-color:#F8F8F8; text-decoration: none;}  /* visited link */
 .sidebar-link:hover {background-color:#5895B8; text-decoration: none;}  /* mouse over link */
 .sidebar-link:active {background-color:#10689a; text-decoration: none;}  /* selected link */
+
+a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
+a:visited {color:#F8F8F8; text-decoration: none;}  /* visited link */
+a:hover {color:#F8F8F8; text-decoration: none;}  /* mouse over link */
+a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
+
 
 /* Event List Styles */
 #event-list {
@@ -113,9 +120,9 @@
     background-color: #404040;
     position: absolute;
     top: 0px;
-    left: 20.6%;
+    left: 19%;
     height: 100%;
-    z-index: 1;
+    z-index: 98;
     border-style: solid;
     border-width: 0px 0px 0px 3px;
     border-color: #F8F8F8;
