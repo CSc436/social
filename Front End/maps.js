@@ -25,6 +25,7 @@ var circle;
 		google.maps.event.addListener(map,'dragend',function(){
 			if(!addEventOpen)
    			{
+                $('.event').remove();
    				loadEventsFromDB();
    			}
 		});
@@ -184,6 +185,10 @@ function loadEventsFromDB(){
 				var c = data[message]["CategoryName"];
 
 				console.log(data[message]);
+                
+                // Add event to sidebar list
+                $("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+                
 				var image = 'img/newEvent.png';
  				var marker = new google.maps.Marker({
       				position: new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]),
