@@ -29,6 +29,9 @@ var circle;
    				loadEventsFromDB();
    			}
 		});
+		google.maps.event.addListener(map,'zoom_changed',function(){
+			loadEventsFromDB();
+		});
 		if(navigator.geolocation) {
 			browserSupportFlag = true;
 			navigator.geolocation.getCurrentPosition(function(position) {
@@ -176,7 +179,8 @@ function loadEventsFromDB(){
 	$.getJSON(
 		'getEvents.php',
 		{currentLat: map.getCenter().lat(),
-		 currentLong: map.getCenter().lng()},
+		 currentLong: map.getCenter().lng(),
+		 zoom: map.getZoom()},
 		function(data) {
 			for(var message in data){
 				var e = data[message]["Email"];
@@ -217,6 +221,12 @@ function loadEventsFromDB(){
 		    			}
 		  			});
 		  			google.maps.event.addListener(map, 'dragend', function() {
+		  				if(!addEventOpen)
+		  				{
+		  					mark.setMap(null);
+		  				}
+		  			});
+		  			google.maps.event.addListener(map, 'zoom_changed', function() {
 		  				if(!addEventOpen)
 		  				{
 		  					mark.setMap(null);

@@ -45,11 +45,12 @@
 					// Prevent the form from changing the page.
 					e.preventDefault();
 					
-					// Display an error if necessary.
 					$("#new_account").css("visibility", "hidden");
+					
+					// Display a "processing" message.
 					displayMsg("Creating Account", "Processing...");
 					
-					// 
+					// Send the form data to be processed.
 					$.post(
 						"../backend/accounts/process_create_account.php",
 						{email: $("#new_account_form_email").val(),
@@ -60,10 +61,15 @@
 							password1: $("#new_account_form_password1").val(),
 							password2: $("#new_account_form_password2").val()},
 						function(data){
+						
+							// Close the "processing" message.
 							closeMsg();
+							
+							// Display error message if the process returns an error.
 							if(data){
 								displayMsg("Uh Oh, Error!", data);
 							}
+							// Display success message.
 							else{
 								displayMsg("Success!", "Your account has been created.");
 							}
