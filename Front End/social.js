@@ -1,5 +1,29 @@
 $(document).ready(function () {
 
+	// Load the login form into the page.
+	$.get(
+		"accounts/login.php",
+		{},
+		function(data){
+			// Attach the returned content to the body.
+			$('body').append(data);
+			$("#login_form").css("margin-left", -($("#login_form").width() / 2));
+			$("#login_form").css("margin-top", -($("#login_form").width() / 2));
+		}
+	);
+	
+	// Load the new account form into the page.
+	$.get(
+		"accounts/newaccount.php",
+		{},
+		function(data){
+			// Attach the returned content to the body.
+			$('body').append(data);
+			$("#new_account_form").css("margin-left", -($("#new_account_form").width() / 2));
+			$("#new_account_form").css("margin-top", -($("#new_account_form").width() / 2));
+		}
+	);
+
 	// Position the hide button.
 	$("#showhide").css('left', $("#sidebar-main").width());
 	$("#showhide").css('height', $("#showhide").width());
@@ -51,9 +75,18 @@ $(window).resize(function(){
 	}
 });
 
+/*$(document).ready(function () {
+
+	$("#my-account").click(function () {
+		//load_page_into_body("accounts/newaccount.php");
+		$("#login").css("visibility", "visible");
+		//displayError("This is a test.");
+	});
+});*/
+
 //slide for event list
 $(document).ready(function () {
-    
+
     //get events and fill event list
     /*function populateEventList(){
 	   $.getJSON('getEvents.php', function(data) {
@@ -68,18 +101,24 @@ $(document).ready(function () {
     /*function populateEventList(){
         $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
     }*/
-    
+
     var eventList = $("#event-list");
     eventList.hide();
     
     $("#events-button").click(function () {
-        /*if ($("#event-list").is(":hidden")) {
+	    /*if ($("#event-list").is(":hidden")) {
             populateEventList();
         } */
+
         eventList.toggle("slide",{direction: "left"}, 500);
     });
 });
 
+<<<<<<< HEAD
+=======
+messageIsDisplayed = false;
+
+>>>>>>> master
 // Displays a message to the user.
 function displayMsg(title, message){
 	
@@ -89,14 +128,69 @@ function displayMsg(title, message){
 		{ title: title,
 		errmsg: message},
 		function(data){
+<<<<<<< HEAD
 			$('body').append(data);
 			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
 			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
+=======
+		
+			// Prevent two messages from appearing at the same time.
+			if(messageIsDisplayed){
+				closeMsg();
+			}
+		
+			$('body').append(data);
+			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
+			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
+			
+			messageIsDisplayed = true;
+>>>>>>> master
 		}
 	);
 }
 
 // Closes the message prompt.
 function closeMsg(){
+<<<<<<< HEAD
 	$("#account_error").detach();
+=======
+	$("#account_error").css("visibility", "hidden");
+	$("#account_error").detach();
+	messageIsDisplayed = false;
+}
+
+function toggleLogoutButton(state){
+
+	// Switch from login to logout.
+	if(state == 1){
+		$("#my-account").html("Log Out");
+		$("#my-account").attr('onclick','').unbind('click');
+		$("#my-account").click(function () {
+		
+			// Processing message.
+			displayMsg("Logging Out...", "");
+		
+			// Call the logout script.
+			$.get(
+				"../backend/accounts/process_logout.php",
+				{},
+				function(data){
+					// Display a success message and toggle the logout button.
+					closeMsg();
+					displayMsg("Logout Successful!", "");
+					toggleLogoutButton(0);
+				}
+			);
+		});
+	}
+	// Switch from logout to login.
+	else{
+		// Open the login form when the user clicks "log in".
+		$("#my-account").html("Log In");
+		$("#my-account").attr('onclick','').unbind('click');
+		$("#my-account").click(function () {
+			$("#login").css("visibility", "visible");
+		});
+	}
+>>>>>>> master
 }

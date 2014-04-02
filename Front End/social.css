@@ -97,10 +97,22 @@
 }
 */
 
+<<<<<<< HEAD
+#sidebar-links a{
+	text-decoration: none;
+}
+*/
+
+.sidebar-link:link {background-color:#F8F8F8; text-decoration: none;}      /* unvisited link */
+.sidebar-link:visited {background-color:#F8F8F8; text-decoration: none;}  /* visited link */
+.sidebar-link:hover {background-color:#5895B8; text-decoration: none;}  /* mouse over link */
+.sidebar-link:active {background-color:#10689a; text-decoration: none;}  /* selected link */
+
 a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
 a:visited {color:#F8F8F8; text-decoration: none;}  /* visited link */
 a:hover {color:#F8F8F8; text-decoration: none;}  /* mouse over link */
 a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
+
 
 /* Event List Styles */
 #event-list {

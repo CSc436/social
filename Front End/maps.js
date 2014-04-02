@@ -29,6 +29,9 @@ var circle;
    				loadEventsFromDB();
    			}
 		});
+		google.maps.event.addListener(map,'zoom_changed',function(){
+			loadEventsFromDB();
+		});
 		if(navigator.geolocation) {
 			browserSupportFlag = true;
 			navigator.geolocation.getCurrentPosition(function(position) {
@@ -176,7 +179,8 @@ function loadEventsFromDB(){
 	$.getJSON(
 		'getEvents.php',
 		{currentLat: map.getCenter().lat(),
-		 currentLong: map.getCenter().lng()},
+		 currentLong: map.getCenter().lng(),
+		 zoom: map.getZoom()},
 		function(data) {
 			for(var message in data){
 				var e = data[message]["Email"];
@@ -188,7 +192,7 @@ function loadEventsFromDB(){
                 
                 // Add event to sidebar list
                 $("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
-                
+
 				var image = 'img/newEvent.png';
  				var marker = new google.maps.Marker({
       				position: new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]),
@@ -222,6 +226,12 @@ function loadEventsFromDB(){
 		  					mark.setMap(null);
 		  				}
 		  			});
+		  			google.maps.event.addListener(map, 'zoom_changed', function() {
+		  				if(!addEventOpen)
+		  				{
+		  					mark.setMap(null);
+		  				}
+		  			});
 				})(marker,infowindow);
 				google.maps.event.addListener(infowindow,'closeclick',function(){
 		   			//marker.setMap(null); //removes the marker
@@ -241,11 +251,11 @@ function loadEventsFromDB(){
 function checkNotEmpty(title, desc, cat) {
 	//TODO: Make pretty
 	if (title === "") {
-		alert("no title");
+		displayMsg("No Title", "Please give your event a title.");
 		return false;
 	}
 	if (desc === "") {
-		alert("no description");
+		displayMsg("No Description", "Please name your event.");
 		return false;
 	}
 	return true;
@@ -298,7 +308,7 @@ function submitForm(e){
 }
 
 function submitSuccess(data) {
-	//console.log(data);
+	 console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
 	addeventopen = false;
