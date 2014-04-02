@@ -75,14 +75,14 @@ $(window).resize(function(){
 	}
 });
 
-$(document).ready(function () {
+/*$(document).ready(function () {
 
 	$("#my-account").click(function () {
 		//load_page_into_body("accounts/newaccount.php");
 		$("#login").css("visibility", "visible");
 		//displayError("This is a test.");
 	});
-});
+});*/
 
 //slide for event list
 $(document).ready(function () {

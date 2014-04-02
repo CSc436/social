@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <?php
-	// TODO: Actually set this variable.
-	$loggedin = false;
+	session_name("loggedin");
+	session_set_cookie_params(0);
+	session_start();
 ?>
 <html>
 <head>
@@ -38,7 +39,23 @@
 					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
 					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
 					<a class="sidebar-link-button" href="#">
-					<li class="sidebar-link" id="my-account">Log In</li>
+					<li class="sidebar-link" id="my-account">
+						<?php
+							// Check if a user is already logged in.
+							if(isset($_SESSION['loggedin'])){
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(1);
+									</script>";
+							}
+							else{
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(0);
+									</script>";
+							}
+						?>
+					</li>
 					</a>
                     <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
 				</ul>
