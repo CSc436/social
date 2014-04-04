@@ -1,5 +1,7 @@
 $(document).ready(function () {
 
+    $("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
+    
 	// Load the login form into the page.
 	$.get(
 		"accounts/login.php",
@@ -24,26 +26,20 @@ $(document).ready(function () {
 		}
 	);
 
-	// Position the hide button.
-	$("#showhide").css('left', $("#sidebar-main").width());
-	$("#showhide").css('height', $("#showhide").width());
-
-    $("#showhide").click(function () {
+    $("#list-toggle").click(function () {
 	
 		// Allow the show/hide button to slide upon it first being clicked.
-		if(!$("#showhide").hasClass("sliding-object")){
-			$("#showhide").addClass("sliding-object");
+		if(!$("#list-toggle").hasClass("sliding-object")){
+			$("#list-toggle").addClass("sliding-object");
 		}
 	
 		// Restore the sidebar.
 		if($("#sidebar-main").position()['left'] < 0){
 			$("#sidebar-main").css('left', 0);
-			$("#showhide").css('left', $("#sidebar-main").width());
 		}
 		// Hide the sidebar.
 		else{
 			$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
-			$("#showhide").css('left', 0);
 		}
 		
         /*$("#sidebar-main").toggle("slide",{direction: "left"},500);
@@ -55,23 +51,17 @@ $(document).ready(function () {
         }
     });
     
-    /*$("#showhide-hidden").click(function () {
+    /*$("#list-toggle-hidden").click(function () {
         $("#sidebar-main").toggle("slide",{direction: "left"},500);
-        $("#showhide").toggle("slide",{direction: "left"},500);
+        $("#list-toggle").toggle("slide",{direction: "left"},500);
     });*/    
 });
 
 // On window resize, do...
-$(window).resize(function(){
-	
-	// Position and resize the hide button.
-	$("#showhide").css('left', $("#sidebar-main").width());
-	$("#showhide").css('height', $("#showhide").width());
-	
+$(window).resize(function(){	
 	// If the sidebar is hidden, make sure it stays hidden.
 	if($("#sidebar-main").position()['left'] < 0){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
-		$("#showhide").css('left', 0);
 	}
 });
 
@@ -114,11 +104,8 @@ $(document).ready(function () {
     });
 });
 
-<<<<<<< HEAD
-=======
 messageIsDisplayed = false;
 
->>>>>>> master
 // Displays a message to the user.
 function displayMsg(title, message){
 	
@@ -128,11 +115,6 @@ function displayMsg(title, message){
 		{ title: title,
 		errmsg: message},
 		function(data){
-<<<<<<< HEAD
-			$('body').append(data);
-			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
-			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
-=======
 		
 			// Prevent two messages from appearing at the same time.
 			if(messageIsDisplayed){
@@ -144,16 +126,12 @@ function displayMsg(title, message){
 			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
 			
 			messageIsDisplayed = true;
->>>>>>> master
 		}
 	);
 }
 
 // Closes the message prompt.
 function closeMsg(){
-<<<<<<< HEAD
-	$("#account_error").detach();
-=======
 	$("#account_error").css("visibility", "hidden");
 	$("#account_error").detach();
 	messageIsDisplayed = false;
@@ -192,5 +170,4 @@ function toggleLogoutButton(state){
 			$("#login").css("visibility", "visible");
 		});
 	}
->>>>>>> master
 }

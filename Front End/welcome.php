@@ -25,13 +25,29 @@
     
 <body>
 	<div id="wrapper">
-		<a href="javascript:void(0);">
-			<div id="showhide">
-				<div class="colored-line"></div>
-				<div class="colored-line"></div>
-				<div class="colored-line"></div>
-			</div>
-		</a>
+
+        <div id="top-menu">
+            <div id="my-account" class="menu-item">
+                <?php
+							// Check if a user is already logged in.
+							if(isset($_SESSION['loggedin'])){
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(1);
+									</script>";
+							}
+							else{
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(0);
+									</script>";
+							}
+				?>
+            </div>
+            <div id="notification-icon" class="menu-item">Notifications</div>
+            <div id="logo" class="menu-item"></div>
+            <div id="list-toggle" class="menu-item">List</div>
+        </div>
 		<div id="sidebar-main" class="sliding-object">
             <div id="sidebar-header">LOGO HERE</div>
 			<div id="sidebar-links-wrapper">
@@ -62,10 +78,6 @@
 			</div>
 		</div>
 		
-        <div id="event-list">
-            <div id="events-wrapper">
-            </div>
-        </div>
         <div id="map-canvas"/>
 	</div>
 </body>
