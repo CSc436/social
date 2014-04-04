@@ -27,26 +27,26 @@
 	<div id="wrapper">
 
         <div id="top-menu">
-            <div id="my-account" class="menu-item">
+            <a href="#" class="menu-link"><div id="my-account" class="menu-item">
                 <?php
-							// Check if a user is already logged in.
-							if(isset($_SESSION['loggedin'])){
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(1);
-									</script>";
-							}
-							else{
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(0);
-									</script>";
-							}
+					// Check if a user is already logged in.
+					if(isset($_SESSION['loggedin'])){
+					echo "
+						<script type='text/javascript'>
+							toggleLogoutButton(1);
+						</script>";
+					}
+					else{
+						echo "
+							<script type='text/javascript'>
+								toggleLogoutButton(0);
+							</script>";
+					}
 				?>
-            </div>
-            <div id="notification-icon" class="menu-item">Notifications</div>
+            </div></a>
+            <a href="#" class="menu-link"><div id="notification-icon" class="menu-item">Notifications</div></a>
             <div id="logo" class="menu-item"></div>
-            <div id="list-toggle" class="menu-item">List</div>
+            <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">List</div></a>
         </div>
 		<div id="sidebar-main" class="sliding-object">
             <div id="sidebar-header">LOGO HERE</div>
