@@ -49,33 +49,7 @@
             <div id="list-toggle" class="menu-item">List</div>
         </div>
 		<div id="sidebar-main" class="sliding-object">
-            <div id="sidebar-header">LOGO HERE</div>
-			<div id="sidebar-links-wrapper">
-				<ul id="sidebar-links">
-					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
-					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
-					<a class="sidebar-link-button" href="#">
-					<li class="sidebar-link" id="my-account">
-						<?php
-							// Check if a user is already logged in.
-							if(isset($_SESSION['loggedin'])){
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(1);
-									</script>";
-							}
-							else{
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(0);
-									</script>";
-							}
-						?>
-					</li>
-					</a>
-                    <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
-				</ul>
-			</div>
+            <div id="events-wrapper"></div>
 		</div>
 		
         <div id="map-canvas"/>
