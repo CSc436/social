@@ -72,11 +72,53 @@
 
     $result = $get_event->fetch();
 
+
+
+    $event_id = $result["EventID"];
+    // echo json_encode($event_id);
+    $kwID_array = array();
+
+	if (isset($_POST['keywords'])) {
+		$arr = $_POST['keywords'];
+		foreach ($arr as $value) {
+			$add_keyword = $db->prepare("
+				INSERT IGNORE INTO `keyword`
+					(`Word`)
+				VALUES
+					(:keyword)
+				");
+			$add_keyword->execute(array(
+				':keyword' => $value
+				));
+			
+			$get_kwID_query = $db->prepare("
+				SELECT `keywordID` from `keyword`
+				WHERE
+				`Word` = :keyword
+				");
+			$get_kwID_query->execute(array(
+				':keyword' => $value
+				));
+			$kwID = $get_kwID_query->fetch();
+			array_push($kwID_array, $kwID['keywordID']);
+		}
+	}
+
+	foreach($kwID_array as $val) {
+		$add_kw_event_assoc = $db->prepare("
+				INSERT INTO `eventkeyword`
+					(`EventID`, `KeywordID`)
+				VALUES
+					(:eventid, :kw)
+			");
+		$add_kw_event_assoc->execute(array(
+			':eventid' => $event_id,
+			':kw' => $val
+			));
+	}
+
+	// echo json_encode($db->lastInsertId());
     echo json_encode($result);
-	// echo json_encode($_POST);
-
-
-	// replace into `category` values ('derp');
-	// select categoryID from category where categoryname = 'derp';
+	
 
 ?>

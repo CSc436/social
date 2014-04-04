@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <?php
-	// TODO: Actually set this variable.
-	$loggedin = false;
+	session_name("loggedin");
+	session_set_cookie_params(0);
+	session_start();
 ?>
 <html>
 <head>
@@ -32,28 +33,29 @@
 			</div>
 		</a>
 		<div id="sidebar-main" class="sliding-object">
-            <div id="sidebar-header">LOGO HERE
-            </div>
-			<!--  Under Construction
-			<div id="sidebar-login-indicator">
-				Login Info
-			</div>-->
+            <div id="sidebar-header">LOGO HERE</div>
 			<div id="sidebar-links-wrapper">
 				<ul id="sidebar-links">
 					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
 					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
 					<a class="sidebar-link-button" href="#">
-						<li class="sidebar-link" id="my-account">
-							<?php
-								// This button will change if the user is logged in.
-								if($loggedin){
-									echo("My Account");
-								}
-								else{
-									echo("Log In");
-								}
-							?>
-						</li>
+					<li class="sidebar-link" id="my-account">
+						<?php
+							// Check if a user is already logged in.
+							if(isset($_SESSION['loggedin'])){
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(1);
+									</script>";
+							}
+							else{
+								echo "
+									<script type='text/javascript'>
+										toggleLogoutButton(0);
+									</script>";
+							}
+						?>
+					</li>
 					</a>
                     <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
 				</ul>
@@ -62,16 +64,6 @@
 		
         <div id="event-list">
             <div id="events-wrapper">
-                <div class="event">
-                    <span>Event Name</span></br>
-                    <span>12:00pm - 2:00pm</span></br>
-                    <span>This could be an event description.</span>
-                </div>
-                <div class="event">
-                    <span>Midnight Salsa Dancing</span></br>
-                    <span>12:00am - 2:00am</span></br>
-                    <span>Dancing in the ancient style of Salsa. At midnight.</span>
-                </div>
             </div>
         </div>
         <div id="map-canvas"/>
