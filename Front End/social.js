@@ -77,6 +77,25 @@ $(window).resize(function(){
 //slide for event list
 $(document).ready(function () {
 
+    $("logout-button").click(function () {
+		
+			// Processing message.
+			displayMsg("Logging Out...", "");
+		
+			// Call the logout script.
+			$.get(
+				"../backend/accounts/process_logout.php",
+				{},
+				function(data){
+					// Display a success message and toggle the logout button.
+					closeMsg();
+					displayMsg("Logout Successful!", "");
+					toggleLoginButton(0);
+				}
+			);
+		});
+    
+    
     //get events and fill event list
     /*function populateEventList(){
 	   $.getJSON('getEvents.php', function(data) {
@@ -137,29 +156,13 @@ function closeMsg(){
 	messageIsDisplayed = false;
 }
 
-function toggleLogoutButton(state){
+function toggleLoginButton(state){
 
 	// Switch from login to logout.
 	if(state == 1){
-		$("#my-account").html("Log Out");
+		$("#my-account").html("My Account");
 		$("#my-account").attr('onclick','').unbind('click');
-		$("#my-account").click(function () {
 		
-			// Processing message.
-			displayMsg("Logging Out...", "");
-		
-			// Call the logout script.
-			$.get(
-				"../backend/accounts/process_logout.php",
-				{},
-				function(data){
-					// Display a success message and toggle the logout button.
-					closeMsg();
-					displayMsg("Logout Successful!", "");
-					toggleLogoutButton(0);
-				}
-			);
-		});
 	}
 	// Switch from logout to login.
 	else{

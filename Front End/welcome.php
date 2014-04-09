@@ -33,13 +33,13 @@
 					if(isset($_SESSION['loggedin'])){
 					echo "
 						<script type='text/javascript'>
-							toggleLogoutButton(1);
+							toggleLoginButton(1);
 						</script>";
 					}
 					else{
 						echo "
 							<script type='text/javascript'>
-								toggleLogoutButton(0);
+								toggleLoginButton(0);
 							</script>";
 					}
 				?>
@@ -51,6 +51,9 @@
 		<div id="sidebar-main" class="sliding-object">
             <div id="events-wrapper"></div>
 		</div>
+        <div id="my-account-menu">
+            <a href="#"></a>    
+        </div>
 		
         <div id="map-canvas"/>
 	</div>
