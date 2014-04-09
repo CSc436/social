@@ -51,8 +51,8 @@
 		<div id="sidebar-main" class="sliding-object">
             <div id="events-wrapper"></div>
 		</div>
-        <div id="my-account-menu">
-            <a href="#"></a>    
+        <div id="my-account-menu" class="sliding-object">
+            <a href="#" id="logout-button">Logout</a>
         </div>
 		
         <div id="map-canvas"/>

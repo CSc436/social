@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
     $("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
+	$("#sidebar-main").css('top', $("#top-menu").height());
+	$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
     
 	// Load the login form into the page.
 	$.get(
@@ -77,7 +79,7 @@ $(window).resize(function(){
 //slide for event list
 $(document).ready(function () {
 
-    $("logout-button").click(function () {
+    $("#logout-button").click(function () {
 		
 			// Processing message.
 			displayMsg("Logging Out...", "");
@@ -156,16 +158,32 @@ function closeMsg(){
 	messageIsDisplayed = false;
 }
 
+function toggleMyAccountMenu(state){
+
+	// Restore the menu.
+	if($("#my-account-menu").position()['top'] < 0){
+		$("#my-account-menu").css('top', $("#top-menu").height());
+	}
+	// Hide the menu.
+	else{
+		$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
+	}
+}
+
 function toggleLoginButton(state){
 
-	// Switch from login to logout.
+	// Switch from login to my account.
 	if(state == 1){
 		$("#my-account").html("My Account");
 		$("#my-account").attr('onclick','').unbind('click');
-		
+		$("#my-account").click(function (){
+			toggleMyAccountMenu();
+		});
 	}
-	// Switch from logout to login.
+	// Switch from my account to login.
 	else{
+		$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
+	
 		// Open the login form when the user clicks "log in".
 		$("#my-account").html("Log In");
 		$("#my-account").attr('onclick','').unbind('click');
