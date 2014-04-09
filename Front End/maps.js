@@ -174,6 +174,26 @@ function handleNotLoggedIn() {
 	displayMsg("NOT LOGGED IN", "Please log in before creating an event");
 }
 
+function processAttend(eventId, msg) {
+	// console.log("attend");
+	email = msg['message'];
+
+	$.ajax( {
+		url: "submitAttend.php",
+		type: "POST",
+		data: {email: email, eventID: eventId},
+		success:function(message) {
+			console.log(message);
+		},
+		error:function(message) {
+			console.log("error");
+			console.log(message);
+		}
+	});
+
+
+}
+
 function processClick() {
 	if(addEventOpen == false){
 		$('#add-event').css("font-weight","bold");
@@ -212,8 +232,9 @@ function processLoadEvent(curUser, data) {
 				var t = data[message]["Title"];
 				var d = data[message]["Description"];
 				var c = data[message]["CategoryName"];
-
+				var id = data[message]["EventID"];
 				// console.log(data[message]);
+
                 
                 // Add event to sidebar list
                 $("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
@@ -244,19 +265,25 @@ function processLoadEvent(curUser, data) {
  	   			}
  	   			else {
  	   				contentstring = contentstring + 
-						"<button type='button' style='float: right' class='btn btn-primary btn-sm'>Attend</button>"+
+						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
 						"</div>";
 
 				}
 
+
 				infowindow = new google.maps.InfoWindow({
 		 	   		content: contentstring
 		 	   	});
+
+
 				(function(mark,info) {
 					google.maps.event.addListener(mark, 'click', function() {
 		    			if(!addEventOpen){
 		    				info.open(map,mark);
 		    				addEventOpen = true;
+		    				// console.log($("#attendbtn"));
+		    				$("#attendbtn").click(function() {console.log("test");});
+		    				
 		    			}
 		  			});
 		  			google.maps.event.addListener(map, 'dragend', function() {
@@ -280,7 +307,28 @@ function processLoadEvent(curUser, data) {
 				// console.log(infowindow["closeclick"]);
 
 			}
-		}	
+		}
+
+
+function btnclick(e) {
+	// console.log("click");
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(message) {
+			// console.log("success");
+			// console.log(message);
+			// console.log(message["message"]);
+			processAttend(e, message);
+		},
+		error:function(message) {
+			console.log("fail");
+			console.log(message);
+			handleNotLoggedIn();
+		}, dataType: "json"
+	});
+}
+
 
 
 function loadEventsFromDB(){
