@@ -1,5 +1,7 @@
 <?php
 	include '..\backend\connect.php';
+	session_name("loggedin");
+	session_start();
 
 	$add_category = $db->prepare("
 		INSERT IGNORE INTO `category` (`CategoryName`)
@@ -53,10 +55,10 @@
             (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID)
     ");
 
-
+    // echo json_encode($_SESSION['loggedin']);
     $add_event->execute(array(
         ':title' => $_POST['title'],
-        ':email' => "bar@bar.com",
+        ':email' => $_SESSION['loggedin'],
         ':locid' => $locID[0],
         ':desc' => $_POST['desc'],
         ':catID' => $catID[0]

@@ -154,6 +154,7 @@ function toggleLogoutButton(state){
 		$("#my-account").html("Log Out");
 		$("#my-account").attr('onclick','').unbind('click');
 		$("#my-account").click(function () {
+			loadEventsFromDB();
 		
 			// Processing message.
 			displayMsg("Logging Out...", "");

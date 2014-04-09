@@ -54,6 +54,7 @@
 								
 								// Change the "login" button to "logout".
 								toggleLogoutButton(1);
+								loadEventsFromDB();
 							}
 							// Display success message.
 							else{
