@@ -20,7 +20,11 @@
 				?>
 			</div>
 			<div class="account_form_block new_account_submit">
-				<button type="button" id="account_error_cancel">Back</button>
+				<button type="button" id="account_error_cancel">
+					<?php
+						echo (htmlspecialchars($_POST['buttonText']));
+					?>
+				</button>
 			</div>
 			<script>
 				// Cancel Button

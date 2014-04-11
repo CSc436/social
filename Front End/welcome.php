@@ -27,47 +27,37 @@
     
 <body>
 	<div id="wrapper">
-		<a href="javascript:void(0);">
-			<div id="showhide">
-				<div class="colored-line"></div>
-				<div class="colored-line"></div>
-				<div class="colored-line"></div>
-			</div>
-		</a>
-		<div id="sidebar-main" class="sliding-object">
-            <div id="sidebar-header">LOGO HERE</div>
-			<div id="sidebar-links-wrapper">
-				<ul id="sidebar-links">
-					<a class="sidebar-link-button" id="events-button" href="#"><li class="sidebar-link">Events</li></a>
-					<a class="sidebar-link-button" href="#"><li class="sidebar-link" id="add-event">Create</li></a>
-					<a class="sidebar-link-button" href="#">
-					<li class="sidebar-link" id="my-account">
-						<?php
-							// Check if a user is already logged in.
-							if(isset($_SESSION['loggedin'])){
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(1);
-									</script>";
-							}
-							else{
-								echo "
-									<script type='text/javascript'>
-										toggleLogoutButton(0);
-									</script>";
-							}
-						?>
-					</li>
-					</a>
-                    <a class="sidebar-link-button" href="#"><li class="sidebar-link">Settings</li></a>
-				</ul>
-			</div>
-		</div>
-		
-        <div id="event-list">
-            <div id="events-wrapper">
-            </div>
+
+        <div id="top-menu">
+            <a href="#" class="menu-link"><div id="my-account" class="menu-item">
+                <?php
+					// Check if a user is already logged in.
+					if(isset($_SESSION['loggedin'])){
+					echo "
+						<script type='text/javascript'>
+							toggleLoginButton(1);
+						</script>";
+					}
+					else{
+						echo "
+							<script type='text/javascript'>
+								toggleLoginButton(0);
+							</script>";
+					}
+				?>
+            </div></a>
+            <a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
+            <a href="#" class="menu-link"><div id="notification-icon" class="menu-item">Notifications</div></a>
+            <div id="logo" class="menu-item"></div>
+            <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">List</div></a>
         </div>
+		<div id="sidebar-main" class="sliding-object">
+            <div id="events-wrapper"></div>
+		</div>
+        <div id="my-account-menu" class="sliding-object">
+            <a href="#" class="my-account-menu-item" id="logout-button">Logout</a>
+        </div>
+		
         <div id="map-canvas"/>
 	</div>
 </body>
