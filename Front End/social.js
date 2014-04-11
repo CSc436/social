@@ -114,6 +114,8 @@ $(document).ready(function () {
     });
 });
 
+messageIsDisplayed = false;
+
 // Displays a message to the user.
 function displayMsg(title, message){
 	
