@@ -2,7 +2,7 @@
  	include("connect.php");
 
 	$query = $db->prepare("
-		Select * From event, locale,category 
+		Select * From event, locale,category
 		where event.locationid=locale.locationid 
 		AND event.categoryID=category.categoryID
 		AND ABS(".$_GET['currentLat']."-latitude) < 0.1167

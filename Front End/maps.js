@@ -183,7 +183,11 @@ function processAttend(eventId, msg) {
 		type: "POST",
 		data: {email: email, eventID: eventId},
 		success:function(message) {
-			console.log(message);
+			// console.log(message);
+			// console.log(infowindow.content);
+			contentstring = infowindow.content.replace("class='btn btn-primary btn-sm'", "class='btn btn-primary btn-sm' disabled");
+			infowindow.setContent(contentstring);
+			$("attendbtn").attr("disabled", "disabled");
 		},
 		error:function(message) {
 			console.log("error");
@@ -226,7 +230,11 @@ function processClick() {
 		addEventOpen = false;
 	}
 
-function processLoadEvent(curUser, data) {
+
+
+function processLoadEvent(curUser, data, userEvents) {
+			// var attendingEvents = getEventsAttending(curUser);
+			console.log(userEvents);
 			for(var message in data){
 				var e = data[message]["Email"];
 				var t = data[message]["Title"];
@@ -264,9 +272,18 @@ function processLoadEvent(curUser, data) {
 
  	   			}
  	   			else {
- 	   				contentstring = contentstring + 
+ 	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
+ 	   				console.log(result);
+ 	   				if (result.length > 0) {
+	 	   				contentstring = contentstring + 
+							"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm' disabled>Attend</button>"+
+							"</div>";
+					}
+					else {
+						contentstring = contentstring + 
 						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
-						"</div>";
+							"</div>";	
+					}
 
 				}
 
@@ -345,12 +362,27 @@ function loadEventsFromDB(){
 					success:function(message) {
 						// console.log(message['message']);
 						curUser = message["message"];
-						processLoadEvent(curUser, data);
+						$.ajax( {
+							url: "getUserEvents.php",
+							type: "POST",
+							data: {user: curUser},
+							success:function(message) {
+								console.log("getuservents");
+								var userEvents = JSON.parse(message)
+								processLoadEvent(curUser, data, userEvents);
+							},
+							error:function(message) {
+								console.log("error");
+								console.log(message);
+								userEvents = null;
+								processLoadEvent(curUser, data, new Array());
+							}
+						});
 					},
 					error:function(message) {
 						// console.log(message);
 						curUser = null;
-						processLoadEvent(curUser, data);
+						processLoadEvent(curUser, data, new Array());
 					}, dataType: "json"
 				});
 			// console.log(curUser);
