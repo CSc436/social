@@ -114,11 +114,6 @@ $(document).ready(function () {
     });
 });
 
-<<<<<<< HEAD
-=======
-messageIsDisplayed = false;
-
->>>>>>> master
 // Displays a message to the user.
 function displayMsg(title, message){
 	
@@ -128,12 +123,6 @@ function displayMsg(title, message){
 		{ title: title,
 		errmsg: message},
 		function(data){
-<<<<<<< HEAD
-			$('body').append(data);
-			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
-			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
-=======
-		
 			// Prevent two messages from appearing at the same time.
 			if(messageIsDisplayed){
 				closeMsg();
@@ -144,16 +133,12 @@ function displayMsg(title, message){
 			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
 			
 			messageIsDisplayed = true;
->>>>>>> master
 		}
 	);
 }
 
 // Closes the message prompt.
 function closeMsg(){
-<<<<<<< HEAD
-	$("#account_error").detach();
-=======
 	$("#account_error").css("visibility", "hidden");
 	$("#account_error").detach();
 	messageIsDisplayed = false;
@@ -193,5 +178,4 @@ function toggleLogoutButton(state){
 			$("#login").css("visibility", "visible");
 		});
 	}
->>>>>>> master
 }

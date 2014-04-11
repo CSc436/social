@@ -146,7 +146,7 @@ function placeMarker(location) {
 								"<input id='user' type ='hidden' name='user' value='me' >" +
 								"Event Title: <input id='title' type='text' name='title' value=''><br>" +
 							"Description: <input id='desc' type='textarea' name='description' value=''><br>" +
-							"Keywords: <input id='keywords' type='textarea' value=''><br>" +
+							"Keywords: <input id='keywords' type='textarea' name='keywords' value=''><br>" +
 	 						"<small>enter to add a keyword</small><div id='kw'></div><br>" +
 							"Category: <select id='category'>" +
 								"<option value='sports'>sports</option>" +
