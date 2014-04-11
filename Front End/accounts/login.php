@@ -50,7 +50,9 @@
 							
 							// Display error message if the process returns an error.
 							if(data[":code"] == 0){
-								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".");
+								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".", null, function(){
+									console.log("IT WORKS");
+								});
 								
 								// Change the "login" button to "logout".
 								toggleLogoutButton(1);
