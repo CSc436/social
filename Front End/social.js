@@ -128,13 +128,16 @@ $(document).ready(function () {
 messageIsDisplayed = false;
 
 // Displays a message to the user.
-function displayMsg(title, message){
+function displayMsg(title, message, buttonText, onCancelFunction){
+	
+	buttonText = (typeof buttonText !== 'undefined' && buttonText != null) ? buttonText : "Cancel";
 	
 	// Load the login form into the page.
 	$.post(
 		"accounts/accounterr.php",
 		{ title: title,
-		errmsg: message},
+		errmsg: message,
+		buttonText: buttonText},
 		function(data){
 		
 			// Prevent two messages from appearing at the same time.
@@ -143,6 +146,11 @@ function displayMsg(title, message){
 			}
 		
 			$('body').append(data);
+			
+			// Bind a function to the cancel button if one is supplied.
+			if(typeof onCancelFunction !== 'undefined' && onCancelFunction != null && typeof onCancelFunction === 'function')
+				$("#account_error_cancel").click(onCancelFunction);
+			
 			$("#account_error_msg_window").css("margin-left", -($("#account_error_msg_window").width() / 2));
 			$("#account_error_msg_window").css("margin-top", -($("#account_error_msg_window").width() / 2));
 			

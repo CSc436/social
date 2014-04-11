@@ -8,6 +8,8 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 	<link rel="stylesheet" type="text/css" href="social.css">
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
 	<style type="text/css">
 	html { height: 100% }
 	body { height: 100%; margin: 0; padding: 0 }
