@@ -16,27 +16,30 @@
     width: 100%;
     height: 35px;
 	z-index: 2;
-	background-color: white;
+	background-color: #4398DE;
 }
 
 #my-account,
-#notification-icon {
+#notification-icon,
+#add-event {
     float: right;
     list-style: none;
 }
 
 #list-toggle {
-    float: left;   
+    list-style: none;
+    width: 5%;
 }
 
 .menu-item {
-    margin: 5px;
+    margin: 10px;
 	text-decoration: none;
+    color: #EBF5ED;
 }
 
 /* Sidebar Styles */
 #sidebar-main {
-    background-color: #404040;
+    background-color: #EBF5ED;
     position: absolute;
 	left: 0;
     height: 100%;
@@ -61,9 +64,9 @@
 }
 
 .event {
-    color: #F8F8F8;
+    color: black;
     border-bottom: solid;
-    border-color: #F0F0F0;
+    border-color: #4398DE;
     border-width: 1px;
     padding: 3%;
 }
@@ -72,9 +75,18 @@
 	width: 200px;
 	height: 300px;
 	position: absolute;
-	background-color: pink;
+	background-color: #EBF5ED;
 	right: 0px;
 	z-index: 1;
+}
+
+.my-account-menu-item {
+    color: black;
+    width: 100%;
+    border-bottom: solid;
+    border-color: #4398DE;
+    border-width: 1px;
+    text-decoration: none;
 }
 
 /* Map Styles */

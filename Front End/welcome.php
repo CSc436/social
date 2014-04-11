@@ -44,6 +44,7 @@
 					}
 				?>
             </div></a>
+            <a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
             <a href="#" class="menu-link"><div id="notification-icon" class="menu-item">Notifications</div></a>
             <div id="logo" class="menu-item"></div>
             <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">List</div></a>
@@ -52,7 +53,7 @@
             <div id="events-wrapper"></div>
 		</div>
         <div id="my-account-menu" class="sliding-object">
-            <a href="#" id="logout-button">Logout</a>
+            <a href="#" class="my-account-menu-item" id="logout-button">Logout</a>
         </div>
 		
         <div id="map-canvas"/>
