@@ -27,7 +27,27 @@ $(document).ready(function () {
 			$("#new_account_form").css("margin-top", -($("#new_account_form").width() / 2));
 		}
 	);
+	
+	// Bind some functionality to the logout button.
+	$("#logout-button").click(function () {
+		
+		// Processing message.
+		displayMsg("Logging Out...", "");
+	
+		// Call the logout script.
+		$.get(
+			"../backend/accounts/process_logout.php",
+			{},
+			function(data){
+				// Display a success message and toggle the logout button.
+				closeMsg();
+				displayMsg("Logout Successful!", "");
+				toggleLoginButton(0);
+			}
+		);
+	});
 
+	// Toggle the sidebar
     $("#list-toggle").click(function () {
 	
 		// Allow the show/hide button to slide upon it first being clicked.
@@ -43,20 +63,11 @@ $(document).ready(function () {
 		else{
 			$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 		}
-		
-        /*$("#sidebar-main").toggle("slide",{direction: "left"},500);
-		$(this).toggle("slide",{direction: "left"},500);
-		$(this).css('left', 0);*/
-		
-        if ($("#event-list").is(":visible")) {
-            $("#event-list").hide();
-        }
     });
-    
-    /*$("#list-toggle-hidden").click(function () {
-        $("#sidebar-main").toggle("slide",{direction: "left"},500);
-        $("#list-toggle").toggle("slide",{direction: "left"},500);
-    });*/    
+	
+	// all-events tab clicked.
+	$("#all-events-tab").click(function(){ switchTabs("#all-events-tab"); });
+	$("#my-events-tab").click(function(){ switchTabs("#my-events-tab"); });
 });
 
 // On window resize, do...
@@ -65,64 +76,6 @@ $(window).resize(function(){
 	if($("#sidebar-main").position()['left'] < 0){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 	}
-});
-
-/*$(document).ready(function () {
-
-	$("#my-account").click(function () {
-		//load_page_into_body("accounts/newaccount.php");
-		$("#login").css("visibility", "visible");
-		//displayError("This is a test.");
-	});
-});*/
-
-//slide for event list
-$(document).ready(function () {
-
-    $("#logout-button").click(function () {
-		
-			// Processing message.
-			displayMsg("Logging Out...", "");
-		
-			// Call the logout script.
-			$.get(
-				"../backend/accounts/process_logout.php",
-				{},
-				function(data){
-					// Display a success message and toggle the logout button.
-					closeMsg();
-					displayMsg("Logout Successful!", "");
-					toggleLoginButton(0);
-				}
-			);
-		});
-    
-    
-    //get events and fill event list
-    /*function populateEventList(){
-	   $.getJSON('getEvents.php', function(data) {
-           console.log(data[0]);
-           for(var message in data){
-               console.log(data[message]["Title"]);
-           }
-        });
-	   return false;
-    }*/
-    
-    /*function populateEventList(){
-        $("#events-wrapper").append('<div class="event"><span>Midnight Salsa Dancing</span></br><span>12:00am - 2:00am</span></br><span>Dancing in the ancient style of Salsa. At midnight.</span></div>');
-    }*/
-
-    var eventList = $("#event-list");
-    eventList.hide();
-    
-    $("#events-button").click(function () {
-	    /*if ($("#event-list").is(":hidden")) {
-            populateEventList();
-        } */
-
-        eventList.toggle("slide",{direction: "left"}, 500);
-    });
 });
 
 messageIsDisplayed = false;
@@ -199,4 +152,16 @@ function toggleLoginButton(state){
 			$("#login").css("visibility", "visible");
 		});
 	}
+}
+
+currentActiveTab = "#all-events-tab";
+function switchTabs(tab){
+
+	// Switch the currently active tab.
+	$(currentActiveTab).removeClass("event-tab-active");
+	currentActiveTab = tab;
+	$(currentActiveTab).addClass("event-tab-active");
+
+	$("#events-wrapper").html("");
+	loadEventsFromDB();
 }

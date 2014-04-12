@@ -46,7 +46,36 @@
     width: 40%;
     z-index: 1;
 	text-align: center;
-    
+}
+
+#events-tabs{
+	display: block;
+	padding: 10px 0px 10px 0px;
+	background-color: #EBF5ED;
+}
+
+#events-tabs a:link{ color:#316EA0; }
+#events-tabs a:visited{ color:#316EA0; }
+#events-tabs a:hover{ color:#316EA0; }
+#events-tabs a:active{ color:#316EA0; }
+
+.event-tab{
+	display: inline-block;
+	width: 32%;
+	height: 40px;
+	font: 15px helvetica;
+	font-weight: bold;
+	line-height: 40px;
+	border-top: 2px solid #316EA0;
+	border-left: 2px solid #316EA0;
+	border-right: 2px solid #316EA0;
+	background-color: #F5FAF6;
+}
+
+.event-tab:hover{ background-color: #EBF5ED; }
+
+.event-tab-active{
+	background-color: #EBF5ED;
 }
 
 /* Event List Styles */

@@ -46,12 +46,17 @@
 					}
 				?>
             </div></a>
-            <a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
             <a href="#" class="menu-link"><div id="notification-icon" class="menu-item">Notifications</div></a>
+			<a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
             <div id="logo" class="menu-item"></div>
-            <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">List</div></a>
+            <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">Event List</div></a>
         </div>
 		<div id="sidebar-main" class="sliding-object">
+			<div id="events-tabs">
+				<a href="javascript:void(0)"><div id="all-events-tab" class="event-tab event-tab-active">All Events</div></a>
+				<a href="javascript:void(0)"><div id="my-events-tab" class="event-tab">My Events</div></a>
+				<a href="javascript:void(0)"><div class="event-tab">My Attending</div></a>
+			</div>
             <div id="events-wrapper"></div>
 		</div>
         <div id="my-account-menu" class="sliding-object">
