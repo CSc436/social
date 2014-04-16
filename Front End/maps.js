@@ -172,8 +172,36 @@ function placeMarker(location) {
 }
 
 function handleNotLoggedIn() {
-	displayMsg("NOT LOGGED IN", "Please log in before creating an event");
+	displayMsg("NOT LOGGED IN", "Please log in before doing that");
 }
+
+function processUnAttend(eventID, msg) {
+	email = msg['message'];
+
+	$.ajax( {
+		url: "submitUnAttend.php",
+		type: "POST",
+		data: {email: email, eventID: eventID},
+		success:function(message) {
+			// console.log(message);
+			// console.log(infowindow.content);
+			// console.log("success unclick");
+			contentstring = infowindow.content.replace("return btnunattend(", "return btnclick(");
+			contentstring = contentstring.replace("btn-danger", "btn-primary");
+			contentstring = contentstring.replace(">Cancel<", ">Attend<");
+			// console.log(contentstring);
+			infowindow.setContent(contentstring);
+			// loadEventsFromDB();
+			// $("attendbtn").attr("disabled", "disabled");
+		},
+		error:function(message) {
+			console.log("error");
+			console.log(message);
+		}
+	});
+
+}
+
 
 function processAttend(eventId, msg) {
 	// console.log("attend");
@@ -184,7 +212,14 @@ function processAttend(eventId, msg) {
 		type: "POST",
 		data: {email: email, eventID: eventId},
 		success:function(message) {
-			console.log(message);
+			// console.log(message);
+			// console.log(infowindow.content);
+			// console.log("click success")
+			contentstring = infowindow.content.replace("return btnclick(", "return btnunattend(");
+			contentstring = contentstring.replace("btn-primary", "btn-danger");
+			contentstring = contentstring.replace(">Attend<", ">Cancel<");
+			infowindow.setContent(contentstring);
+			// $("attendbtn").attr("disabled", "disabled");
 		},
 		error:function(message) {
 			console.log("error");
@@ -232,7 +267,11 @@ function processClick() {
 		//addEventOpen = false;
 	}
 
-function processLoadEvent(curUser, data) {
+
+
+function processLoadEvent(curUser, data, userEvents) {
+			// var attendingEvents = getEventsAttending(curUser);
+			// console.log(userEvents);
 			for(var message in data){
 				var e = data[message]["Email"];
 				var t = data[message]["Title"];
@@ -277,9 +316,18 @@ function processLoadEvent(curUser, data) {
 
  	   			}
  	   			else {
- 	   				contentstring = contentstring + 
+ 	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
+ 	   				console.log(result);
+ 	   				if (result.length > 0) {
+	 	   				contentstring = contentstring + 
+							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
+							"</div>";
+					}
+					else {
+						contentstring = contentstring + 
 						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
-						"</div>";
+							"</div>";	
+					}
 
 				}
 
@@ -311,9 +359,29 @@ function processLoadEvent(curUser, data) {
 			}
 		}
 
+function btnunattend(e) {
+	console.log("unclick");
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(message) {
+			// console.log("success");
+			// console.log(message);
+			// console.log(message["message"]);
+			processUnAttend(e, message);
+		},
+		error:function(message) {
+			// console.log("fail");
+			// console.log(message);
+			handleNotLoggedIn();
+		}, dataType: "json"
+	});
+
+}
+
 
 function btnclick(e) {
-	// console.log("click");
+	console.log("click");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
@@ -324,8 +392,8 @@ function btnclick(e) {
 			processAttend(e, message);
 		},
 		error:function(message) {
-			console.log("fail");
-			console.log(message);
+			// console.log("fail");
+			// console.log(message);
 			handleNotLoggedIn();
 		}, dataType: "json"
 	});
@@ -364,13 +432,28 @@ function loadEventsFromDB(){
 						// console.log(message['message']);
 						curUser = message["message"];
                         $('.event').remove();
-						processLoadEvent(curUser, data);
+						$.ajax( {
+							url: "getUserEvents.php",
+							type: "POST",
+							data: {user: curUser},
+							success:function(message) {
+								console.log("getuservents");
+								var userEvents = JSON.parse(message)
+								processLoadEvent(curUser, data, userEvents);
+							},
+							error:function(message) {
+								console.log("error");
+								console.log(message);
+								userEvents = null;
+								f(curUser, data, new Array());
+							}
+						});
 					},
 					error:function(message) {
 						// console.log(message);
 						curUser = null;
                         $('.event').remove();
-						processLoadEvent(curUser, data);
+						processLoadEvent(curUser, data, new Array());
 					}, dataType: "json"
 				});
 			// console.log(curUser);
@@ -439,7 +522,7 @@ function submitForm(e){
 		}
 	});
 	keywordsarray.length=0;
-	// loadEventsFromDB();
+	loadEventsFromDB();
 	return false;
 }
 
