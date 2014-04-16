@@ -32,7 +32,6 @@ var currentMark;
 		google.maps.event.addListener(map,'dragend',function(){
 			if(!addEventOpen)
    			{
-                $('.event').remove();
    				loadEventsFromDB();
    			}
 		});
@@ -345,11 +344,13 @@ function loadEventsFromDB(){
 					success:function(message) {
 						// console.log(message['message']);
 						curUser = message["message"];
+                        $('.event').remove();
 						processLoadEvent(curUser, data);
 					},
 					error:function(message) {
 						// console.log(message);
 						curUser = null;
+                        $('.event').remove();
 						processLoadEvent(curUser, data);
 					}, dataType: "json"
 				});
