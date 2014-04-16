@@ -462,6 +462,66 @@ function loadEventsFromDB(){
 	return false;
 }
 
+function loadMyEventsFromDB(){
+
+	var marker;
+
+	// Clear all markers off the map.
+	while(marker = markers.shift()){
+	
+		if(currentMarker != marker){
+			marker.setMap(null);
+		}
+	}
+	
+	// Reinsert the currently selected marker into the markers array.
+	if(currentMarker != null){
+		markers.push(currentMarker);
+	}
+
+	$.getJSON(
+		'getMyEvents.php',
+		{currentLat: map.getCenter().lat(),
+		 currentLong: map.getCenter().lng(),
+		 zoom: map.getZoom()},
+		function(data) {
+			var curUser;
+			$.ajax({
+					url: "checkloggedin.php",
+					type: "POST",
+					success:function(message) {
+						// console.log(message['message']);
+						curUser = message["message"];
+                        $('.event').remove();
+						$.ajax( {
+							url: "getUserEvents.php",
+							type: "POST",
+							data: {user: curUser},
+							success:function(message) {
+								console.log("getuservents");
+								var userEvents = JSON.parse(message)
+								processLoadEvent(curUser, data, userEvents);
+							},
+							error:function(message) {
+								console.log("error");
+								console.log(message);
+								userEvents = null;
+								f(curUser, data, new Array());
+							}
+						});
+					},
+					error:function(message) {
+						// console.log(message);
+						curUser = null;
+                        $('.event').remove();
+						processLoadEvent(curUser, data, new Array());
+					}, dataType: "json"
+				});
+			// console.log(curUser);
+		});
+	return false;
+}
+
 
 function checkNotEmpty(title, desc, cat) {
 	//TODO: Make pretty
@@ -538,5 +598,15 @@ function submitSuccess(data) {
 	currentMarker.setMap(null);
 	loadEventsFromDB();
 }
+
+$(document).ready( function() {
+    $("#all-events-tab").click( function() {
+        loadEventsFromDB();
+    });
+
+    $("#my-events-tab").click (function() {
+        loadMyEventsFromDB();
+    });
+});
 
 google.maps.event.addDomListener(window, 'load', initialize);
