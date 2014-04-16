@@ -53,7 +53,7 @@
 								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".");
 								
 								// Change the "login" button to "logout".
-								toggleLogoutButton(1);
+								toggleLoginButton(1);
 								loadEventsFromDB();
 							}
 							// Display success message.

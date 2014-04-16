@@ -10,108 +10,73 @@
 	transition: all .3s ease;
 }
 
+/* Main menu styles */
+#top-menu {
+	position: absolute;
+    width: 100%;
+    height: 35px;
+	z-index: 2;
+	background-color: #4398DE;
+}
+
+#my-account,
+#notification-icon,
+#add-event {
+    float: right;
+    list-style: none;
+}
+
+#list-toggle {
+    list-style: none;
+    width: 5%;
+}
+
+.menu-item {
+    margin: 10px;
+	text-decoration: none;
+    color: #EBF5ED;
+}
+
 /* Sidebar Styles */
 #sidebar-main {
-    background-color: #404040;
-	border-right: 3px solid black;
+    background-color: #EBF5ED;
     position: absolute;
 	left: 0;
-    top: 0px;
     height: 100%;
-    width: 20%;
+    width: 40%;
     z-index: 1;
 	text-align: center;
 }
 
-#sidebar-header {
+#events-tabs{
 	display: block;
-    text-align: center; 
-    border-bottom: solid;
-    border-color: #F0F0F0;
-    border-width: 1px;
-    margin: 0px 4px 10px 4px;
-	padding: 10% 0px 10% 0px;
+	padding: 10px 0px 10px 0px;
+	background-color: #EBF5ED;
 }
 
-#sidebar-login-indicator{
-	display: block;
-	margin: 10px 10px 5px 10px;
-	border: 3px solid white;
+#events-tabs a:link{ color:#316EA0; }
+#events-tabs a:visited{ color:#316EA0; }
+#events-tabs a:hover{ color:#316EA0; }
+#events-tabs a:active{ color:#316EA0; }
+
+.event-tab{
+	display: inline-block;
+	width: 32%;
+	height: 40px;
+	font: 15px helvetica;
+	font-weight: bold;
+	line-height: 40px;
+	border-top: 2px solid #316EA0;
+	border-left: 2px solid #316EA0;
+	border-right: 2px solid #316EA0;
+	background-color: #F5FAF6;
 }
 
-#sidebar-links-wrapper{
-	display: block;
+.event-tab:hover{ background-color: #EBF5ED; }
+
+.event-tab-active{
+	background-color: #EBF5ED;
 }
-
-#sidebar-links {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0% 4% 4% 4%;
-}
-
-.sidebar-link {
-    color: #F8F8F8;
-    text-align: center;
-    border-bottom: solid;
-    border-color: #F0F0F0;
-    border-width: 1px;
-    padding: 3%;
-    margin: 0 auto;
-}
-
-.sidebar-link-button {
-    width: 100%;   
-}
-
-#showhide {
-	position: absolute;
-	top: 3%;
-	width: 3%;		/* JS will set the height equal to whatever this is. */
-	z-index: 1;
-    background-color: #404040;
-	border: 3px solid black;
-    color: #F8F8F;
-	text-decoration:line-through;
-}
-
-#showhide:hover{
-	border: 3px solid #5895B8;
-}
-
-.colored-line{
-	display: block;
-	margin: 22% 15% 0% 15%;
-	border-bottom: 1px solid white;
-}
-
-/*
-#showhide-hidden {
-    position: absolute;
-    background-color: #404040;
-    color: #F8F8F8;
-    top: 0px;
-    left: 0px;
-    height: 30px;
-    width: 30px;
-    z-index: 1;
-}
-*/
-
-#sidebar-links a{
-	text-decoration: none;
-}
-*/
-
-.sidebar-link:link {background-color:#F8F8F8; text-decoration: none;}      /* unvisited link */
-.sidebar-link:visited {background-color:#F8F8F8; text-decoration: none;}  /* visited link */
-.sidebar-link:hover {background-color:#5895B8; text-decoration: none;}  /* mouse over link */
-.sidebar-link:active {background-color:#10689a; text-decoration: none;}  /* selected link */
-
-a:link {color:#F8F8F8; text-decoration: none;}      /* unvisited link */
-a:visited {color:#F8F8F8; text-decoration: none;}  /* visited link */
-a:hover {color:#F8F8F8; text-decoration: none;}  /* mouse over link */
-a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
-
 
 /* Event List Styles */
 #event-list {
@@ -128,11 +93,29 @@ a:active {color:#F8F8F8; text-decoration: none;}  /* selected link */
 }
 
 .event {
-    color: #F8F8F8;
+    color: black;
     border-bottom: solid;
-    border-color: #F0F0F0;
+    border-color: #4398DE;
     border-width: 1px;
     padding: 3%;
+}
+
+#my-account-menu{
+	width: 200px;
+	height: 300px;
+	position: absolute;
+	background-color: #EBF5ED;
+	right: 0px;
+	z-index: 1;
+}
+
+.my-account-menu-item {
+    color: black;
+    width: 100%;
+    border-bottom: solid;
+    border-color: #4398DE;
+    border-width: 1px;
+    text-decoration: none;
 }
 
 /* Map Styles */
