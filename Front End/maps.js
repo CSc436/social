@@ -282,6 +282,7 @@ function processLoadEvent(curUser, data, userEvents) {
 				// console.log(data[message]);
 
 				if(currentMarker != null && currentMarker.eventID == id){
+					$("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
 					continue;
 				}
                 
