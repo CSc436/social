@@ -1,6 +1,7 @@
 var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 var addEventOpen = false;
 var keywordsarray = new Array();
+var markers = new Array();
 var infowindow = null;
 var bounds;
 var circle;
@@ -8,7 +9,7 @@ var map;
 var controlDiv;
 var controlUI;
 var controlText;
-var currentMark;
+var currentMarker = null;
 
 	function initialize() {
 		var mapOptions = {
@@ -30,13 +31,14 @@ var currentMark;
 		bounds = new google.maps.LatLngBounds();
 		//add listener for dragging the map to reload events
 		google.maps.event.addListener(map,'dragend',function(){
-			if(!addEventOpen)
-   			{
-   				loadEventsFromDB();
-   			}
+			if(!addEventOpen){
+				loadEventsFromDB();
+			}
 		});
 		google.maps.event.addListener(map,'zoom_changed',function(){
-			loadEventsFromDB();
+			if(!addEventOpen){
+				loadEventsFromDB();
+			}
 		});
 		if(navigator.geolocation) {
 			browserSupportFlag = true;
@@ -138,8 +140,7 @@ function placeMarker(location) {
   		title: "mouseclick",
   		icon: image
 	   	});
-	   	currentMark = marker;
-	   	console.log(currentMark);
+	   	currentMarker = marker;
 
 		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm(event);'>" +
 								"<input id='user' type ='hidden' name='user' value='me' >" +
@@ -161,6 +162,7 @@ function placeMarker(location) {
 	   	infowindow.open(map,marker);
 	
 	google.maps.event.addListener(infowindow,'closeclick',function(){
+			currentMarker = null;
 			console.log("close");
 			marker.setMap(null); //removes the marker
 			addEventOpen = false;
@@ -195,6 +197,11 @@ function processAttend(eventId, msg) {
 
 function processClick() {
 	if(addEventOpen == false){
+	
+		if(infowindow != null){
+			infowindow.close();
+		}
+	
 		$('#add-event').css("font-weight","bold");
 		map.setOptions({ draggableCursor: 'crosshair' });
 
@@ -212,17 +219,17 @@ function processClick() {
 	  		//console.log(event.latLng);
 	  		normalMap();
 		});
-		//addEventOpen = true;
+		addEventOpen = true;
 	}
 }
-	//loadEventsFromDB();
+
 //return map settings to normal
 	function normalMap() {
 		google.maps.event.clearListeners(map, 'click');
 		controlDiv.style.display = "none";
 		map.setOptions({ draggableCursor: null, dragginCursor: null});
 		$('#add-event').css("font-weight","normal");
-		addEventOpen = false;
+		//addEventOpen = false;
 	}
 
 function processLoadEvent(curUser, data) {
@@ -232,19 +239,26 @@ function processLoadEvent(curUser, data) {
 				var d = data[message]["Description"];
 				var c = data[message]["CategoryName"];
 				var id = data[message]["EventID"];
+				var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
 				// console.log(data[message]);
 
+				if(currentMarker != null && currentMarker.eventID == id){
+					continue;
+				}
                 
                 // Add event to sidebar list
                 $("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
 
 				var image = 'img/newEvent.png';
  				var marker = new google.maps.Marker({
-      				position: new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]),
+      				position: pos,
       				map: map,
       				title: data[message]["Title"],
-      				icon: image
+      				icon: image,
+					eventID: id
  	   			});
+				
+				markers.push(marker);
 
    				var contentstring = 	"<div class='event-content'>"+
 							"<input type ='hidden' name='user' value='"+e+"' >" +
@@ -269,42 +283,31 @@ function processLoadEvent(curUser, data) {
 
 				}
 
-
-				infowindow = new google.maps.InfoWindow({
+				var iWindow;
+				iWindow = new google.maps.InfoWindow({
 		 	   		content: contentstring
 		 	   	});
 
 
 				(function(mark,info) {
 					google.maps.event.addListener(mark, 'click', function() {
-		    			if(!addEventOpen){
-		    				info.open(map,mark);
-		    				addEventOpen = true;
-		    				// console.log($("#attendbtn"));
-		    				$("#attendbtn").click(function() {console.log("test");});
-		    				
-		    			}
+						if(addEventOpen)
+							return;
+					
+						if(infowindow != null){
+							infowindow.close();
+						}
+						infowindow = info;
+						currentMarker = mark;
+						info.open(map,mark);
+						$("#attendbtn").click(function() {console.log("test");});
 		  			});
-		  			google.maps.event.addListener(map, 'dragend', function() {
-		  				if(!addEventOpen)
-		  				{
-		  					mark.setMap(null);
-		  				}
-		  			});
-		  			google.maps.event.addListener(map, 'zoom_changed', function() {
-		  				if(!addEventOpen)
-		  				{
-		  					mark.setMap(null);
-		  				}
-		  			});
-				})(marker,infowindow);
+				})(marker,iWindow);
 
-				google.maps.event.addListener(infowindow,'closeclick',function(){
-		   			//marker.setMap(null); //removes the marker
-		   			addEventOpen = false;
-					});
-				// console.log(infowindow["closeclick"]);
-
+				google.maps.event.addListener(iWindow,'closeclick',function(){
+		   			currentMarker = null;
+					infowindow = null;
+				});
 			}
 		}
 
@@ -331,6 +334,22 @@ function btnclick(e) {
 
 
 function loadEventsFromDB(){
+
+	var marker;
+
+	// Clear all markers off the map.
+	while(marker = markers.shift()){
+	
+		if(currentMarker != marker){
+			marker.setMap(null);
+		}
+	}
+	
+	// Reinsert the currently selected marker into the markers array.
+	if(currentMarker != null){
+		markers.push(currentMarker);
+	}
+
 	$.getJSON(
 		'getEvents.php',
 		{currentLat: map.getCenter().lat(),
@@ -428,11 +447,11 @@ function submitSuccess(data) {
 	 console.log(data);
 	var res = JSON.parse(data);
 	console.log(res);
-	addeventopen = false;
+	addEventOpen = false;
 	// infowindow."onclick".call()
 	// console.log(infowindow);
 	infowindow.close();
-	currentMark.setMap(null);
+	currentMarker.setMap(null);
 	loadEventsFromDB();
 }
 
