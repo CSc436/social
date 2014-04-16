@@ -271,7 +271,7 @@ function processClick() {
 
 function processLoadEvent(curUser, data, userEvents) {
 			// var attendingEvents = getEventsAttending(curUser);
-			// console.log(userEvents);
+			console.log(userEvents);
 			for(var message in data){
 				var e = data[message]["Email"];
 				var t = data[message]["Title"];
@@ -302,23 +302,22 @@ function processLoadEvent(curUser, data, userEvents) {
 
    				var contentstring = 	"<div class='event-content'>"+
 							"<input type ='hidden' name='user' value='"+e+"' >" +
-							"Event Title: <input type='text' name='title' value='"+t+"'><br>"+
-						"Description: <input type='textarea' name='description' value='"+d+"'><br>"+
-						"Category: <select>"+
+							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled='disabled' ><br>"+
+						"Description: <input type='textarea' name='description' value='"+d+"' disabled='disabled' ><br>"+
+						"Category: <select disabled>"+
 							"<option value='sports'>"+c+"</option>"+
 							"<option value='music'>music</option>"+
 						"</select>";
 
 
-
  	   			if ( e === curUser) {
- 	   				contentstring = contentstring +"</div>";
-
-
+ 	   				contentstring = contentstring + 
+							"<button type='button' id='attendcountbtn' style='float: right' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
+							"</div>";
  	   			}
  	   			else {
  	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				console.log(result);
+ 	   				// console.log(result);
  	   				if (result.length > 0) {
 	 	   				contentstring = contentstring + 
 							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
@@ -380,6 +379,37 @@ function btnunattend(e) {
 
 }
 
+
+function btnattendcount(e) {
+	// console.log("attendeelist");
+	$.ajax({
+		url: "getAttendeeList.php",
+		type: "GET",
+		data: {eventID: e},
+		success:function(message) {
+			// console.log("success");
+			// console.log(message);
+			// console.log(message["message"]);
+			processAttendeeList(message);
+		},
+		error:function(message) {
+			console.log(message);
+			// console.log("fail");
+			// console.log(message);
+			// handleNotLoggedIn();
+		}, dataType: "json"
+	});
+}
+
+function processAttendeeList(message) {
+	// console.log("process");
+	var array = [];
+	message.forEach(function(element) {
+		array.push(element[0]);
+	});
+	// console.log(array);
+	displayMsg("Attendees", array.toString(), "Done");
+}
 
 function btnclick(e) {
 	console.log("click");
