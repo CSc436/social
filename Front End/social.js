@@ -93,6 +93,8 @@ $(document).ready(function () {
 					closeMsg();
 					displayMsg("Logout Successful!", "");
 					toggleLoginButton(0);
+					loadEventsFromDB();
+					console.log("logged out");
 				}
 			);
 		});
