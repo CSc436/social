@@ -32,12 +32,12 @@ var currentMarker = null;
 		//add listener for dragging the map to reload events
 		google.maps.event.addListener(map,'dragend',function(){
 			if(!addEventOpen){
-				loadEventsFromDB();
+				loadEventsFromDB(true);
 			}
 		});
 		google.maps.event.addListener(map,'zoom_changed',function(){
 			if(!addEventOpen){
-				loadEventsFromDB();
+				loadEventsFromDB(true);
 			}
 		});
 		if(navigator.geolocation) {
@@ -52,7 +52,7 @@ var currentMarker = null;
 					map: map,
 					icon: image
 				});
-				loadEventsFromDB();
+				loadEventsFromDB(true);
 				circle = new google.maps.Circle({radius: 4828, center: initialLocation});
     			map.fitBounds(circle.getBounds());/*sets a radius around current location that will fit in viewport*/
 				//getGeocode(initialLocation, marker);
@@ -62,7 +62,7 @@ var currentMarker = null;
 		}
   // Browser doesn't support Geolocation
   else {
-  	loadEventsFromDB();
+  	loadEventsFromDB(true);
   	browserSupportFlag = false;
   	handleNoGeolocation(browserSupportFlag);
   }
@@ -270,8 +270,7 @@ function processClick() {
 
 
 function processLoadEvent(curUser, data, userEvents) {
-			// var attendingEvents = getEventsAttending(curUser);
-			// console.log(userEvents);
+
 			for(var message in data){
 				var e = data[message]["Email"];
 				var t = data[message]["Title"];
@@ -282,12 +281,12 @@ function processLoadEvent(curUser, data, userEvents) {
 				// console.log(data[message]);
 
 				if(currentMarker != null && currentMarker.eventID == id){
-					$("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+					$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
 					continue;
 				}
                 
                 // Add event to sidebar list
-                $("#events-wrapper").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+                $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
 
 				var image = 'img/newEvent.png';
  				var marker = new google.maps.Marker({
@@ -309,16 +308,12 @@ function processLoadEvent(curUser, data, userEvents) {
 							"<option value='music'>music</option>"+
 						"</select>";
 
-
-
  	   			if ( e === curUser) {
  	   				contentstring = contentstring +"</div>";
-
-
  	   			}
  	   			else {
  	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				console.log(result);
+ 	   				//console.log(result);
  	   				if (result.length > 0) {
 	 	   				contentstring = contentstring + 
 							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
@@ -329,7 +324,6 @@ function processLoadEvent(curUser, data, userEvents) {
 						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
 							"</div>";	
 					}
-
 				}
 
 				var iWindow;
@@ -400,9 +394,32 @@ function btnclick(e) {
 	});
 }
 
+// Previous filter settings for loading events.
+var previousEventFilterSettings = {
+	ownerFilter: null,
+	categoryFilter: null,
+	titleFilter: null,
+	startDateFilter: null
+}
 
+function loadEventsFromDB(usePreviousSettings, ownerFilter, titleFilter, categoryFilter, startDateFilter){
 
-function loadEventsFromDB(){
+	// Use previous filter settings.
+	if(typeof usePreviousSettings !== 'undefined' && usePreviousSettings != null && usePreviousSettings == true){
+		ownerFilter = previousEventFilterSettings["ownerFilter"];
+		categoryFilter = previousEventFilterSettings["categoryFilter"];
+		titleFilter = previousEventFilterSettings["titleFilter"];
+		startDateFilter = previousEventFilterSettings["startDateFilter"];
+	}
+	// Keep track of these new filter settings.
+	else{
+		previousEventFilterSettings = {
+			ownerFilter: ownerFilter,
+			categoryFilter: categoryFilter,
+			titleFilter: titleFilter,
+			startDateFilter: startDateFilter
+		}
+	}
 
 	var marker;
 
@@ -418,110 +435,82 @@ function loadEventsFromDB(){
 	if(currentMarker != null){
 		markers.push(currentMarker);
 	}
+	
+	// Parameters for even retrieval.
+	var eventParams = {
+		currentLat: map.getCenter().lat(),
+		currentLong: map.getCenter().lng(),
+		zoom: map.getZoom()
+	};
+	
+	// Pass filter parameters if some are available.
+	if(typeof ownerFilter !== 'undefined' && ownerFilter != null)
+		eventParams["owner"] = ownerFilter;
+	if(typeof categoryFilter !== 'undefined' && categoryFilter != null)
+		eventParams["category"] = categoryFilter;
+	if(typeof titleFilter !== 'undefined' && titleFilter != null)
+		eventParams["title"] = titleFilter;
+	if(typeof startDateFilter !== 'undefined' && startDateFilter != null)
+		eventParams["startdate"] = startDateFilter;
 
-	$.getJSON(
-		'getEvents.php',
-		{currentLat: map.getCenter().lat(),
-		 currentLong: map.getCenter().lng(),
-		 zoom: map.getZoom()},
-		function(data) {
-			var curUser;
-			$.ajax({
-					url: "checkloggedin.php",
-					type: "POST",
-					success:function(message) {
-						// console.log(message['message']);
-						curUser = message["message"];
-                        $('.event').remove();
-						$.ajax( {
-							url: "getUserEvents.php",
-							type: "POST",
-							data: {user: curUser},
-							success:function(message) {
-								console.log("getuservents");
-								var userEvents = JSON.parse(message)
-								processLoadEvent(curUser, data, userEvents);
-							},
-							error:function(message) {
-								console.log("error");
-								console.log(message);
-								userEvents = null;
-								f(curUser, data, new Array());
-							}
-						});
-					},
-					error:function(message) {
-						// console.log(message);
-						curUser = null;
-                        $('.event').remove();
-						processLoadEvent(curUser, data, new Array());
-					}, dataType: "json"
-				});
-			// console.log(curUser);
-		});
+	// First check if a user is logged in.
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(message) {
+			curUser = message["message"];
+			$('.event').remove();
+			
+			// Pass filter parameters if some are available.
+			if(typeof ownerFilter !== 'undefined' && ownerFilter != null){
+			
+				// If :self was passed in for the owner filter, use the login information to retrieve events.
+				eventParams["owner"] = (ownerFilter == ":self")? curUser : ownerFilter;
+			}
+			
+			// Retrieve all events, applying filters.
+			$.get(
+				'getEvents.php',
+				eventParams,
+				function(events) {
+					
+					// Retrieve all events that the current logged-in user is attending.
+					$.ajax( {
+						url: "getUserEvents.php",
+						type: "POST",
+						data: {user: curUser},
+						// Found some events that the user is attending.
+						success:function(message) {
+							var eventsCurrentlyAttending = JSON.parse(message)
+							processLoadEvent(curUser, events, eventsCurrentlyAttending);
+						},
+						// User isn't attending any events.
+						error:function(message) {
+							console.log(message);
+							processLoadEvent(curUser, events, null);
+						}
+					});
+				},
+				"json"
+			);
+		},
+		error:function(message) {
+			$('.event').remove();
+			
+			// Retrieve all events, applying filters.
+			$.getJSON(
+				'getEvents.php',
+				eventParams,
+				function(events) {
+					processLoadEvent(null, events, new Array());
+				},
+				"json"
+			);
+		}, dataType: "json"
+	});
+	
 	return false;
 }
-
-function loadMyEventsFromDB(){
-
-	var marker;
-
-	// Clear all markers off the map.
-	while(marker = markers.shift()){
-	
-		if(currentMarker != marker){
-			marker.setMap(null);
-		}
-	}
-	
-	// Reinsert the currently selected marker into the markers array.
-	if(currentMarker != null){
-		markers.push(currentMarker);
-	}
-
-	$.getJSON(
-		'getMyEvents.php',
-		{currentLat: map.getCenter().lat(),
-		 currentLong: map.getCenter().lng(),
-		 zoom: map.getZoom()},
-		function(data) {
-			var curUser;
-			$.ajax({
-					url: "checkloggedin.php",
-					type: "POST",
-					success:function(message) {
-						// console.log(message['message']);
-						curUser = message["message"];
-                        $('.event').remove();
-						$.ajax( {
-							url: "getUserEvents.php",
-							type: "POST",
-							data: {user: curUser},
-							success:function(message) {
-								console.log("getuservents");
-								var userEvents = JSON.parse(message)
-								processLoadEvent(curUser, data, userEvents);
-							},
-							error:function(message) {
-								console.log("error");
-								console.log(message);
-								userEvents = null;
-								f(curUser, data, new Array());
-							}
-						});
-					},
-					error:function(message) {
-						// console.log(message);
-						curUser = null;
-                        $('.event').remove();
-						processLoadEvent(curUser, data, new Array());
-					}, dataType: "json"
-				});
-			// console.log(curUser);
-		});
-	return false;
-}
-
 
 function checkNotEmpty(title, desc, cat) {
 	//TODO: Make pretty
@@ -598,15 +587,5 @@ function submitSuccess(data) {
 	currentMarker.setMap(null);
 	loadEventsFromDB();
 }
-
-$(document).ready( function() {
-    $("#all-events-tab").click( function() {
-        loadEventsFromDB();
-    });
-
-    $("#my-events-tab").click (function() {
-        loadMyEventsFromDB();
-    });
-});
 
 google.maps.event.addDomListener(window, 'load', initialize);

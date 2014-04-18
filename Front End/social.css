@@ -48,6 +48,10 @@
 	text-align: center;
 }
 
+#events-searchbar{
+	margin-top: 10px;
+}
+
 #events-tabs{
 	display: block;
 	padding: 10px 0px 10px 0px;
@@ -76,6 +80,10 @@
 
 .event-tab-active{
 	background-color: #EBF5ED;
+}
+
+#events-wrapper{
+	overflow-y: scroll;
 }
 
 /* Event List Styles */

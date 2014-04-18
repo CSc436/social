@@ -52,12 +52,23 @@
             <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">Event List</div></a>
         </div>
 		<div id="sidebar-main" class="sliding-object">
+			<div id="events-searchbar">
+				<form id="events-searchbar-form" method="POST">
+					<label for="filter-title">Search</label>
+					<input type="text" name="filter-title" id="filter-title" placeholder="Event Title" tabindex=1 />
+					<label for="filter-category">Category</label>
+					<input type="text" name="filter-category" id="filter-category" placeholder="e.g. Sports" tabindex=2 />
+					<input type="submit" value="Search" tabindex=3 />
+				</form>
+			</div>
 			<div id="events-tabs">
 				<a href="javascript:void(0)"><div id="all-events-tab" class="event-tab event-tab-active">All Events</div></a>
 				<a href="javascript:void(0)"><div id="my-events-tab" class="event-tab">My Events</div></a>
 				<a href="javascript:void(0)"><div class="event-tab">My Attending</div></a>
 			</div>
-            <div id="events-wrapper"></div>
+            <div id="events-wrapper">
+				<div id="events-list"></div>
+			</div>
 		</div>
         <div id="my-account-menu" class="sliding-object">
             <a href="#" class="my-account-menu-item" id="logout-button">Logout</a>

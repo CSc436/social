@@ -11,23 +11,24 @@
 	$params = array(
 		":currentLat" => htmlspecialchars($_GET['currentLat']),
 		":currentLong" => htmlspecialchars($_GET['currentLong']),
-		":zoom" => htmlspecialchars($_GET['zoom']),
+		":zoom" => htmlspecialchars($_GET['zoom'])
 	);
 
+	
 	// ***** APPLY FILTERS *****
-	if(isset($_GET['Category'])){
-		$params[":category"] = htmlspecialchars($_GET['Category']);
-		$queryString.=" AND category.CategoryName=':category'";
+	if(isset($_GET['category'])){
+		$params[":category"] = htmlspecialchars($_GET['category']);
+		$queryString .=" AND category.CategoryName=:category";
 	}
-	if(isset($_GET['Title'])){
-		$params[":title"] = htmlspecialchars($_GET['Title']);
-		$queryString.=" AND event.Title LIKE '%:title%'";
+	if(isset($_GET['title'])){
+		$params[":title"] = htmlspecialchars($_GET['title']);
+		$queryString .=" AND event.Title LIKE '%".htmlspecialchars($_GET['title'])."%'";
 	}
-	if(isset($_GET['Owner'])){
-		$params[":owner"] = htmlspecialchars($_GET['Owner']);
-		$queryString.=" AND event.Email=':owner'";
+	if(isset($_GET['owner'])){
+		$params[":owner"] = htmlspecialchars($_GET['owner']);
+		$queryString .=" AND event.Email=:owner";
 	}
-	if(isset($_GET['StartDate'])){
+	if(isset($_GET['startdate'])){
 		//$params[":startdate"] = htmlspecialchars($_GET['StartDate']);
 		//$queryString.=" AND event.StartDate=':startdate'";
 	}
