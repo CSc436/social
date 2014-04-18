@@ -227,6 +227,17 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(now(), event.Timestamp()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(now(), event.Timestamp()) > 5;
+DELETE from event WHERE datediff(now(), event.Timestamp()) > 5;
+END$$
+DELIMITER ;
 --
 -- Dumping data for table `user`
 --
