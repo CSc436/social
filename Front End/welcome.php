@@ -55,7 +55,7 @@
 			<div id="events-tabs">
 				<a href="javascript:void(0)"><div id="all-events-tab" class="event-tab event-tab-active">All Events</div></a>
 				<a href="javascript:void(0)"><div id="my-events-tab" class="event-tab">My Events</div></a>
-				<a href="javascript:void(0)"><div class="event-tab">My Attending</div></a>
+				<a href="javascript:void(0)"><div id="my-attending-tab" class="event-tab">My Attending</div></a>
 			</div>
             <div id="events-wrapper"></div>
 		</div>

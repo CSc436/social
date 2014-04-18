@@ -66,6 +66,7 @@ $(document).ready(function () {
     });
 	
 	// all-events tab clicked.
+	$("#my-attending-tab").click(function(){ switchTabs("#my-attending-tab"); });
 	$("#all-events-tab").click(function(){ switchTabs("#all-events-tab"); });
 	$("#my-events-tab").click(function(){ switchTabs("#my-events-tab"); });
 });
