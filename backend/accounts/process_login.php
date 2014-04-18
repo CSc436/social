@@ -23,7 +23,7 @@
 	$returnInfo[":data"] = checkLogin($db, $_POST['email'], $_POST['password']);
 	
 	// Start the loggedin PHP session.
-	$_SESSION['loggedin'] = $returnInfo[":data"]["Username"];
+	$_SESSION['loggedin'] = $_POST['email'];
 			   
 	echo json_encode($returnInfo);
 	
