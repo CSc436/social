@@ -43,8 +43,9 @@ $(document).ready(function () {
 			function(data){
 				// Display a success message and toggle the logout button.
 				closeMsg();
-				displayMsg("Logout Successful!", "");
+				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
+				loadEventsFromDB();
 			}
 		);
 	});

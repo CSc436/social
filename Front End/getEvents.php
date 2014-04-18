@@ -16,17 +16,17 @@
 
 	
 	// ***** APPLY FILTERS *****
+	if(isset($_GET['owner'])){
+		$params[":owner"] = htmlspecialchars($_GET['owner']);
+		$queryString .=" AND event.Email=:owner";
+	}
 	if(isset($_GET['category'])){
 		$params[":category"] = htmlspecialchars($_GET['category']);
 		$queryString .=" AND category.CategoryName=:category";
 	}
-	if(isset($_GET['title'])){
-		$params[":title"] = "%" . htmlspecialchars($_GET['title']) . "%";
-		$queryString .=" AND event.Title LIKE :title";
-	}
-	if(isset($_GET['owner'])){
-		$params[":owner"] = htmlspecialchars($_GET['owner']);
-		$queryString .=" AND event.Email=:owner";
+	if(isset($_GET['description'])){
+		$params[":description"] = "%" . htmlspecialchars($_GET['description']) . "%";
+		$queryString .=" AND (event.Title LIKE :description OR event.Description LIKE :description)";
 	}
 	if(isset($_GET['startdate'])){
 		//$params[":startdate"] = htmlspecialchars($_GET['StartDate']);

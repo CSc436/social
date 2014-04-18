@@ -430,17 +430,17 @@ function btnclick(e) {
 var previousEventFilterSettings = {
 	ownerFilter: null,
 	categoryFilter: null,
-	titleFilter: null,
+	descriptionFilter: null,
 	startDateFilter: null
 }
 
-function loadEventsFromDB(usePreviousSettings, ownerFilter, titleFilter, categoryFilter, startDateFilter){
+function loadEventsFromDB(usePreviousSettings, ownerFilter, descriptionFilter, categoryFilter, startDateFilter){
 
 	// Use previous filter settings.
 	if(typeof usePreviousSettings !== 'undefined' && usePreviousSettings != null && usePreviousSettings == true){
 		ownerFilter = previousEventFilterSettings["ownerFilter"];
 		categoryFilter = previousEventFilterSettings["categoryFilter"];
-		titleFilter = previousEventFilterSettings["titleFilter"];
+		descriptionFilter = previousEventFilterSettings["descriptionFilter"];
 		startDateFilter = previousEventFilterSettings["startDateFilter"];
 	}
 	// Keep track of these new filter settings.
@@ -448,7 +448,7 @@ function loadEventsFromDB(usePreviousSettings, ownerFilter, titleFilter, categor
 		previousEventFilterSettings = {
 			ownerFilter: ownerFilter,
 			categoryFilter: categoryFilter,
-			titleFilter: titleFilter,
+			descriptionFilter: descriptionFilter,
 			startDateFilter: startDateFilter
 		}
 	}
@@ -480,8 +480,8 @@ function loadEventsFromDB(usePreviousSettings, ownerFilter, titleFilter, categor
 		eventParams["owner"] = ownerFilter;
 	if(typeof categoryFilter !== 'undefined' && categoryFilter != null)
 		eventParams["category"] = categoryFilter;
-	if(typeof titleFilter !== 'undefined' && titleFilter != null)
-		eventParams["title"] = titleFilter;
+	if(typeof descriptionFilter !== 'undefined' && descriptionFilter != null)
+		eventParams["description"] = descriptionFilter;
 	if(typeof startDateFilter !== 'undefined' && startDateFilter != null)
 		eventParams["startdate"] = startDateFilter;
 
