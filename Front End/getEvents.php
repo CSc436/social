@@ -21,8 +21,8 @@
 		$queryString .=" AND category.CategoryName=:category";
 	}
 	if(isset($_GET['title'])){
-		$params[":title"] = htmlspecialchars($_GET['title']);
-		$queryString .=" AND event.Title LIKE '%".htmlspecialchars($_GET['title'])."%'";
+		$params[":title"] = "%" . htmlspecialchars($_GET['title']) . "%";
+		$queryString .=" AND event.Title LIKE :title";
 	}
 	if(isset($_GET['owner'])){
 		$params[":owner"] = htmlspecialchars($_GET['owner']);
