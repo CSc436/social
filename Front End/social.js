@@ -3,6 +3,8 @@ $(document).ready(function () {
     $("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 	$("#sidebar-main").css('top', $("#top-menu").height());
 	$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
+	
+	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
     
 	// Load the login form into the page.
 	$.get(
@@ -41,8 +43,9 @@ $(document).ready(function () {
 			function(data){
 				// Display a success message and toggle the logout button.
 				closeMsg();
-				displayMsg("Logout Successful!", "");
+				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
+				loadEventsFromDB();
 			}
 		);
 	});
@@ -66,9 +69,30 @@ $(document).ready(function () {
     });
 	
 	// all-events tab clicked.
-	$("#my-attending-tab").click(function(){ switchTabs("#my-attending-tab"); });
-	$("#all-events-tab").click(function(){ switchTabs("#all-events-tab"); });
-	$("#my-events-tab").click(function(){ switchTabs("#my-events-tab"); });
+	$("#all-events-tab").click(function(){
+		switchTabs("#all-events-tab");
+		loadEventsFromDB();
+	});
+	$("#my-events-tab").click(function(){
+		switchTabs("#my-events-tab");
+		loadEventsFromDB(false, ":self");
+	});
+	
+	// Intercept the form submit and use AJAX instead.
+	$("#events-searchbar-form").submit(function(e){
+	
+		// Prevent the form from changing the page.
+		e.preventDefault();
+		
+		// Display a "processing" message.
+		//displayMsg("Filter Events", "Searching...");
+		
+		// Apply filters and reload events.
+		var owner = (currentActiveTab == "#my-events-tab")? ":self" : null;
+		var title = ($("#filter-title").val() != "")? $("#filter-title").val() : null;
+		var category = ($("#filter-category").val() != "")? $("#filter-category").val() : null;
+		loadEventsFromDB(false, owner, title, category, null);
+	});
 });
 
 // On window resize, do...
@@ -77,6 +101,8 @@ $(window).resize(function(){
 	if($("#sidebar-main").position()['left'] < 0){
 		$("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 	}
+	
+	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
 });
 
 messageIsDisplayed = false;
@@ -162,7 +188,4 @@ function switchTabs(tab){
 	$(currentActiveTab).removeClass("event-tab-active");
 	currentActiveTab = tab;
 	$(currentActiveTab).addClass("event-tab-active");
-
-	$("#events-wrapper").html("");
-	loadEventsFromDB();
 }
