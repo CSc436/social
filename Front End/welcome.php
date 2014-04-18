@@ -54,11 +54,14 @@
 		<div id="sidebar-main" class="sliding-object">
 			<div id="events-searchbar">
 				<form id="events-searchbar-form" method="POST">
-					<label for="filter-title">Search</label>
-					<input type="text" name="filter-title" id="filter-title" placeholder="Event Title" tabindex=1 />
-					<label for="filter-category">Category</label>
-					<input type="text" name="filter-category" id="filter-category" placeholder="e.g. Sports" tabindex=2 />
-					<input type="submit" value="Search" tabindex=3 />
+					<input type="text" name="filter-title" id="filter-title" placeholder="Search" tabindex=1 />
+					<select id="filter-category" tabindex=2>
+						<option value="">Select Category...</option>
+						<?php
+							include("getCategories.php");
+						?>
+					</select>
+					<input type="submit" id="filter-submit" value="Search">
 				</form>
 			</div>
 			<div id="events-tabs">
