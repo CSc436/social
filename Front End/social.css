@@ -65,6 +65,12 @@
 	height: 25px;
 }
 
+#filter-radius{
+	margin: 5px 0px 0px 0px;
+	width: 15%;
+	height: 25px;
+}
+
 #filter-submit{
 	
 }

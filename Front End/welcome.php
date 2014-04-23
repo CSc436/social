@@ -55,13 +55,23 @@
 			<div id="events-searchbar">
 				<form id="events-searchbar-form" method="POST">
 					<input type="text" name="filter-title" id="filter-title" placeholder="Search" tabindex=1 />
+					<label for="filter-category">Category: </label>
 					<select id="filter-category" tabindex=2>
-						<option value="">Select Category...</option>
+						<option value="">All Categories</option>
 						<?php
 							include("getCategories.php");
 						?>
 					</select>
-					<input type="submit" id="filter-submit" value="Search">
+					<label for="filter-radius">Within:</label>
+					<select id="filter-radius" tabindex=3>
+						<option value=5>5 Miles</option>
+						<option value=10>10 Miles</option>
+						<option value=25>25 Miles</option>
+						<option value=50>50 Miles</option>
+					</select>
+					<label for="filter-address">Of</label>
+					<input type="text" id="filter-address" placeholder="Current Location" tabindex=4/>
+					<input type="submit" id="filter-submit" value="Search" tabindex=5>
 				</form>
 			</div>
 			<div id="events-tabs">
