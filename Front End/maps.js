@@ -279,13 +279,12 @@ function processLoadEvent(curUser, data, userEvents) {
 				var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
 				// console.log(data[message]);
 
-				if(currentMarker != null && currentMarker.eventID == id){
-					$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+                // Add event to sidebar list
+                $("#events-list").append('<div class="event" id="event-'+id+'"><span><b>'+t+'</b></span></br><span>'+d+'</span></div>');
+                
+				if(currentMarker != null && currentMarker.eventID == id) {
 					continue;
 				}
-                
-                // Add event to sidebar list
-                $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
 
 				var image = 'img/newEvent.png';
  				var marker = new google.maps.Marker({
@@ -619,5 +618,23 @@ function submitSuccess(data) {
 	currentMarker.setMap(null);
 	loadEventsFromDB();
 }
+
+$(document).ready(function () {
+    // Center on event on map when clicked in the sidebar.
+    $("#events-wrapper").on('click', '.event', function() {
+        var num = (this.id).match(/\d+$/); // Get event id from end of html id.
+        if (num) {
+            var eventId = parseInt(num);
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i]['eventID'] == eventId) {
+                    map.setCenter(markers[i]['position']);
+                    currentMarker = markers[i];
+                    // OPEN INFO WINDOW
+                }
+                //console.log(markers[i]['eventID']);
+            }
+        }
+    });
+});
 
 google.maps.event.addDomListener(window, 'load', initialize);
