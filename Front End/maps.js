@@ -28,6 +28,7 @@ var currentMarker = null;
 		};
 		map = new google.maps.Map(document.getElementById("map-canvas"),
 			mapOptions);
+		// map.getUiSettings().setMyLocationButtonEnabled(true);
 		bounds = new google.maps.LatLngBounds();
 		//add listener for dragging the map to reload events
 		google.maps.event.addListener(map,'dragend',function(){
@@ -148,6 +149,7 @@ function placeMarker(location) {
 							"Description: <input id='desc' type='textarea' name='description' value=''><br>" +
 							"Keywords: <input id='keywords' type='textarea' name='keywords' value=''><br>" +
 	 						"<small>enter to add a keyword</small><div id='kw'></div><br>" +
+	 						"<div id='kw'></div>" + 
 							"Category: <select id='category'>" +
 								"<option value='sports'>sports</option>" +
 								"<option value='music'>music</option>" +
@@ -300,32 +302,33 @@ function processLoadEvent(curUser, data, userEvents) {
 
    				var contentstring = 	"<div class='event-content'>"+
 							"<input type ='hidden' name='user' value='"+e+"' >" +
-							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled='disabled' ><br>"+
-						"Description: <input type='textarea' name='description' value='"+d+"' disabled='disabled' ><br>"+
+							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled ><br>"+
+						"Description: <input type='textarea' name='description' value='"+d+"' disabled ><br>"+
 						"Category: <select disabled>"+
-							"<option value='sports'>"+c+"</option>"+
-							"<option value='music'>music</option>"+
+							"<option value='sports'>"+c+"</option>" + 
 						"</select>";
 
+				// contentstring = contentstring + "<br><kbd>" + "abcd"+ "</kbd> <br><br>"
  	   			if ( e === curUser) {
  	   				contentstring = contentstring + 
-							"<button type='button' id='attendcountbtn' style='float: right' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
+							"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
 							"</div>";
  	   			}
  	   			else {
  	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				
  	   				if (result.length > 0) {
 	 	   				contentstring = contentstring + 
-							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
+							"<button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
 							"</div>";
 					}
 					else {
 						contentstring = contentstring + 
-						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
+						"<button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
 							"</div>";	
 					}
 				}
+
+
 
 				var iWindow;
 				iWindow = new google.maps.InfoWindow({
@@ -344,7 +347,7 @@ function processLoadEvent(curUser, data, userEvents) {
 						infowindow = info;
 						currentMarker = mark;
 						info.open(map,mark);
-						$("#attendbtn").click(function() {console.log("test");});
+						// $("#attendbtn").click(function() {console.log("test");});
 		  			});
 				})(marker,iWindow);
 
@@ -356,7 +359,6 @@ function processLoadEvent(curUser, data, userEvents) {
 		}
 
 function btnunattend(e) {
-	console.log("unclick");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
@@ -408,7 +410,6 @@ function processAttendeeList(message) {
 }
 
 function btnclick(e) {
-	console.log("click");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
@@ -567,34 +568,45 @@ function submitForm(e){
  	}
  
  	if ($(document.activeElement).attr("id") == "keywords") {
- 		kw = $(document.activeElement).val();
- 		keywordsarray.push(kw.toUpperCase());
- 		// $("kw").innerHTML = keywordsarray[0];
- 		$(document.activeElement).val("");
+ 		//adding keywords
+ 		kw = $(document.activeElement).val().trim().toUpperCase();
+ 		console.log(kw);
+ 		if (keywordsarray.indexOf(kw) < 0 && kw != "") {
+ 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <kbd onclick=\"return kwclick(this)\">" + kw+ "</kbd> ");
+ 			keywordsarray.push(kw.toUpperCase());
+ 			var title = $("#title").val();
+ 			var desc = $("#desc").val();
+ 			infowindow.setContent(contentstring);
+ 			//setContent() takes `1` unit of time, so this must wait 1 time unit
+ 			setTimeout('$("#keywords").focus()',1);
+ 			$("#title").val(title);
+ 			$("#desc").val(desc);
+ 				
+ 		}
+ 		else{
+ 			$(document.activeElement).val("");	
+ 		}
  		return false;
  	}
-	// var user = $_SESSION['loggedin'];
-	// console.log(user);
-	// console.log("user");
-	// marker.setMap(null);
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	// console.log(keywordsarray);
-	// console.log(current);
-	// console.log(coord.lat());
-	// console.log(coord.lng());
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
 		return false;
 	}
 
+		
+	if ($("#keywords").val() != "") {
+		keywordsarray.push($("#keywords").val().trim().toUpperCase());
+	}
+	console.log(keywordsarray);
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), kewords:keywordsarray},
+		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -606,6 +618,21 @@ function submitForm(e){
 	keywordsarray.length=0;
 	loadEventsFromDB();
 	return false;
+}
+
+function kwclick(e) {
+	var text = $(e)[0].innerHTML;
+	var outer = $(e)[0].outerHTML;
+	// console.log($(e)[0].outerHTML);
+	var i = keywordsarray.indexOf(text);
+	keywordsarray.splice(i, 1);
+	console.log(keywordsarray);
+	// e.remove();
+	// console.log(outer);
+	var contentstring = infowindow.content.replace(outer, " ");
+	// console.log(contentstring);
+	infowindow.setContent(contentstring);
+
 }
 
 function submitSuccess(data) {
