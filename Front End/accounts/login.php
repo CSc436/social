@@ -50,7 +50,7 @@
 							
 							// Display error message if the process returns an error.
 							if(data[":code"] == 0){
-								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".");
+								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".", "OK");
 								
 								// Change the "login" button to "logout".
 								toggleLoginButton(1);
@@ -58,7 +58,7 @@
 							}
 							// Display success message.
 							else{
-								displayMsg("I Can't Do That Dave....", data[":data"]);
+								displayMsg("I Can't Do That Dave....", data[":data"], "Close");
 							}
 						},
 						"json"
