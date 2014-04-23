@@ -2,6 +2,8 @@ var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 var addEventOpen = false;
 var keywordsarray = new Array();
 var markers = new Array();
+var searchMarkers = new Array();
+
 var infowindow = null;
 var bounds;
 var circle;
@@ -14,6 +16,7 @@ var currentMarker = null;
 	function initialize() {
 		var mapOptions = {
 			center: new google.maps.LatLng(-34.397, 150.644),
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			zoom: 15,
 			disableDefaultUI: true,
 			panControl: true,
@@ -27,7 +30,7 @@ var currentMarker = null;
 			}
 		};
 		map = new google.maps.Map(document.getElementById("map-canvas"),
-			mapOptions);
+			mapOptions);	
 		bounds = new google.maps.LatLngBounds();
 		//add listener for dragging the map to reload events
 		google.maps.event.addListener(map,'dragend',function(){
@@ -128,6 +131,65 @@ var currentMarker = null;
 		});
 	});
 
+	/*SearchBox stuff*/ 
+  // Create the search box and link it to the UI element.
+  var input = /** @type {HTMLInputElement} */(
+      document.getElementById('filter-address'));
+  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  var searchBox = new google.maps.places.SearchBox(
+    /** @type {HTMLInputElement} */(input));
+
+  // Listen for the event fired when the user selects an item from the
+  // pick list. Retrieve the matching places for that item.
+  google.maps.event.addListener(searchBox, 'places_changed', function() {
+    var places = searchBox.getPlaces();
+    console.log("places have been changed!");
+
+    for (var i = 0, searchMarker; searchMarker = searchMarkers[i]; i++) {
+      searchMarker.setMap(null);
+    }
+
+    // For each place, get the icon, place name, and location.
+    searchMarkers = [];
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0, place; place = places[i]; i++) {
+      var image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a searchMarker for each place.
+      var searchMarker = new google.maps.Marker({
+        map: map,
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+      });
+
+      searchMarkers.push(searchMarker);
+
+      bounds.extend(place.geometry.location);
+    }
+    if(places.length == 1){
+    	circle = new google.maps.Circle({radius: 1000, center: places[0].geometry.location});
+    			map.fitBounds(circle.getBounds());
+    }
+    else{
+    	console.log(places);
+    	map.fitBounds(bounds);
+	}
+  });
+
+  // Bias the SearchBox results towards places that are within the bounds of the
+  // current map's viewport.
+  google.maps.event.addListener(map, 'bounds_changed', function() {
+    var bounds = map.getBounds();
+    searchBox.setBounds(bounds);
+  });
 
 }
 
@@ -427,25 +489,34 @@ function btnclick(e) {
 }
 
 // Previous filter settings for loading events.
-var previousEventFilterSettings = {
+var eventFilterSettings = {
 	ownerFilter: null,
 	categoryFilter: null,
 	descriptionFilter: null,
 	startDateFilter: null
 }
 
+function setFilterSettings(ownerFilter, descriptionFilter, categoryFilter, startDateFilter){
+	eventFilterSettings = {
+			ownerFilter: ownerFilter,
+			categoryFilter: categoryFilter,
+			descriptionFilter: descriptionFilter,
+			startDateFilter: startDateFilter
+		}
+}
+
 function loadEventsFromDB(usePreviousSettings, ownerFilter, descriptionFilter, categoryFilter, startDateFilter){
 
 	// Use previous filter settings.
 	if(typeof usePreviousSettings !== 'undefined' && usePreviousSettings != null && usePreviousSettings == true){
-		ownerFilter = previousEventFilterSettings["ownerFilter"];
-		categoryFilter = previousEventFilterSettings["categoryFilter"];
-		descriptionFilter = previousEventFilterSettings["descriptionFilter"];
-		startDateFilter = previousEventFilterSettings["startDateFilter"];
+		ownerFilter = eventFilterSettings["ownerFilter"];
+		categoryFilter = eventFilterSettings["categoryFilter"];
+		descriptionFilter = eventFilterSettings["descriptionFilter"];
+		startDateFilter = eventFilterSettings["startDateFilter"];
 	}
 	// Keep track of these new filter settings.
 	else{
-		previousEventFilterSettings = {
+		eventFilterSettings = {
 			ownerFilter: ownerFilter,
 			categoryFilter: categoryFilter,
 			descriptionFilter: descriptionFilter,

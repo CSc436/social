@@ -18,7 +18,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 	<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&sensor=true">
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&sensor=true&libraries=places">
 	</script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js" rel="script"></script>
     <script src="social.js"></script>
@@ -48,7 +48,10 @@
             </div></a>
             <a href="#" class="menu-link"><div id="notification-icon" class="menu-item">Notifications</div></a>
 			<a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
-            <div id="logo" class="menu-item"></div>
+            <!--<div id="logo" class="menu-item"></div>-->
+            <div id="search-box">
+            	<input type="text" id="filter-address" placeholder="Current Location" tabindex=4/>
+            </div>
             <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">Event List</div></a>
         </div>
 		<div id="sidebar-main" class="sliding-object">
@@ -69,8 +72,6 @@
 						<option value=25>25 Miles</option>
 						<option value=50>50 Miles</option>
 					</select>
-					<label for="filter-address">Of</label>
-					<input type="text" id="filter-address" placeholder="Current Location" tabindex=4/>
 					<input type="submit" id="filter-submit" value="Search" tabindex=5>
 				</form>
 			</div>
