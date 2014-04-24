@@ -31,6 +31,13 @@
     width: 5%;
 }
 
+#search-box {
+    float: right;
+    list-style: none;
+    width: 20%;
+    margin-top: 5px;
+}
+
 .menu-item {
     margin: 10px;
 	text-decoration: none;
@@ -49,7 +56,34 @@
 }
 
 #events-searchbar{
-	margin-top: 10px;
+	width: 100%;
+	display: block;
+	padding: 10px 40px 0px 40px;
+	text-align: left;
+}
+
+#filter-title{
+	width: 100%;
+}
+
+#filter-category{
+	margin: 5px 0px 0px 0px;
+	width: 30%;
+	height: 25px;
+}
+
+#filter-radius{
+	margin: 5px 0px 0px 0px;
+	width: 15%;
+	height: 25px;
+}
+
+#filter-address{
+    width:100%;
+}
+
+#filter-submit{
+	
 }
 
 #events-tabs{

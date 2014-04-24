@@ -91,7 +91,10 @@ $(document).ready(function () {
 		var owner = (currentActiveTab == "#my-events-tab")? ":self" : null;
 		var title = ($("#filter-title").val() != "")? $("#filter-title").val() : null;
 		var category = ($("#filter-category").val() != "")? $("#filter-category").val() : null;
-		loadEventsFromDB(false, owner, title, category, null);
+		//var radius = $("#filter-radius").val();
+		setFilterSettings(owner, title, category, null);
+		circle = new google.maps.Circle({radius: (1609*($("#filter-radius").val())), center: map.getCenter()});
+    			map.fitBounds(circle.getBounds());
 	});
 });
 
