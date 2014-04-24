@@ -261,102 +261,125 @@ function processClick() {
 }
 
 //return map settings to normal
-	function normalMap() {
-		google.maps.event.clearListeners(map, 'click');
-		controlDiv.style.display = "none";
-		map.setOptions({ draggableCursor: null, dragginCursor: null});
-		$('#add-event').css("font-weight","normal");
-		//addEventOpen = false;
+function normalMap() {
+	google.maps.event.clearListeners(map, 'click');
+	controlDiv.style.display = "none";
+	map.setOptions({ draggableCursor: null, dragginCursor: null});
+	$('#add-event').css("font-weight","normal");
+	//addEventOpen = false;
+}
+
+
+
+function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
+	var e = data[message]["Email"];
+	var t = data[message]["Title"];
+	var d = data[message]["Description"];
+	var c = data[message]["CategoryName"];
+	var id = data[message]["EventID"];
+	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
+	
+	if(currentMarker != null && currentMarker.eventID == id){
+		$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+		return;
+	}
+	    
+    // Add event to sidebar list
+    $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+
+	var image = 'img/newEvent.png';
+	var marker = new google.maps.Marker({
+		position: pos,
+		map: map,
+		title: data[message]["Title"],
+		icon: image,
+		eventID: id
+	});
+		
+	markers.push(marker);
+
+	var contentstring = 	"<div class='event-content'>"+
+					"<input type ='hidden' name='user' value='"+e+"' >" +
+					"Event Title: <input type='textarea' name='title' value='"+t+"' disabled ><br>"+
+					"Description: <input type='textarea' name='description' value='"+d+"' disabled ><br>"+
+					"Category: <select disabled>"+
+					"<option value='sports'>"+c+"</option>" + 
+					"</select><br>";
+
+	for(var key in keywords) {
+		// console.log(keywords[key]["word"]);
+		contentstring = contentstring + "<kbd>" + keywords[key]["word"] + "</kbd> "
 	}
 
+	// contentstring = contentstring + "<br><kbd>" + "abcd"+ "</kbd> <br><br>"
+	if ( e === curUser) {
+		contentstring = contentstring + 
+		"<br><button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
+		"</div>";
+	}
+	else {
+		var result = $.grep(userEvents, function(e) {return e[0] == id; });
+		if (result.length > 0) {
+			contentstring = contentstring + 
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
+			"</div>";
+		}
+		else {
+			contentstring = contentstring + 
+			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
+			"</div>";	
+		}
+	}
+
+	var iWindow;
+	iWindow = new google.maps.InfoWindow({
+   		content: contentstring
+   	});
+
+	(function(mark,info) {
+		google.maps.event.addListener(mark, 'click', function() {
+			if(addEventOpen)
+				return;
+			
+			if(infowindow != null){
+				infowindow.close();
+			}
+			infowindow = info;
+			currentMarker = mark;
+			info.open(map,mark);
+		// $("#attendbtn").click(function() {console.log("test");});
+		});
+	})(marker,iWindow);
+
+	google.maps.event.addListener(iWindow,'closeclick',function(){
+		currentMarker = null;
+		infowindow = null;
+	});
+}
 
 
 function processLoadEvent(curUser, data, userEvents) {
-			for(var message in data){
-				var e = data[message]["Email"];
-				var t = data[message]["Title"];
-				var d = data[message]["Description"];
-				var c = data[message]["CategoryName"];
-				var id = data[message]["EventID"];
-				var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
-				// console.log(data[message]);
+	for(var message in data){
+		// console.log(data[message]);
 
-				if(currentMarker != null && currentMarker.eventID == id){
-					$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
-					continue;
-				}
-                
-                // Add event to sidebar list
-                $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
-
-				var image = 'img/newEvent.png';
- 				var marker = new google.maps.Marker({
-      				position: pos,
-      				map: map,
-      				title: data[message]["Title"],
-      				icon: image,
-					eventID: id
- 	   			});
-				
-				markers.push(marker);
-
-   				var contentstring = 	"<div class='event-content'>"+
-							"<input type ='hidden' name='user' value='"+e+"' >" +
-							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled ><br>"+
-						"Description: <input type='textarea' name='description' value='"+d+"' disabled ><br>"+
-						"Category: <select disabled>"+
-							"<option value='sports'>"+c+"</option>" + 
-						"</select>";
-
-				// contentstring = contentstring + "<br><kbd>" + "abcd"+ "</kbd> <br><br>"
- 	   			if ( e === curUser) {
- 	   				contentstring = contentstring + 
-							"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
-							"</div>";
- 	   			}
- 	   			else {
- 	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				if (result.length > 0) {
-	 	   				contentstring = contentstring + 
-							"<button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
-							"</div>";
-					}
-					else {
-						contentstring = contentstring + 
-						"<button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
-							"</div>";	
-					}
-				}
-
-
-
-				var iWindow;
-				iWindow = new google.maps.InfoWindow({
-		 	   		content: contentstring
-		 	   	});
-
-
-				(function(mark,info) {
-					google.maps.event.addListener(mark, 'click', function() {
-						if(addEventOpen)
-							return;
-					
-						if(infowindow != null){
-							infowindow.close();
-						}
-						infowindow = info;
-						currentMarker = mark;
-						info.open(map,mark);
-						// $("#attendbtn").click(function() {console.log("test");});
-		  			});
-				})(marker,iWindow);
-
-				google.maps.event.addListener(iWindow,'closeclick',function(){
-		   			currentMarker = null;
-					infowindow = null;
-				});
-			}
-		}
+		(function(msg){
+			var id = data[msg]["EventID"];
+			// console.log("loading");
+			$.ajax( {
+				url:"getEventKeywords.php",
+				type: "POST",
+				data: {eventID: id},
+				success: function(keywords) {
+					// console.log(keywords);
+					LoadSingleEvent(curUser, data, userEvents, msg, keywords);
+				}, 
+				error: function(keywords) {
+					console.log("FAILED to find keywords");
+				}, dataType: "json"
+			});
+		})(message);	
+	}
+}
 
 function btnunattend(e) {
 	$.ajax({
