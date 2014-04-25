@@ -29,8 +29,8 @@ CREATE TABLE `attending` (
   `Event` int(11) NOT NULL,
   PRIMARY KEY (`Email`,`Event`),
   KEY `Event_idx` (`Event`),
-  CONSTRAINT `Event` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Email` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `Email` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `Event` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,6 +65,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (1,'music');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,23 +84,37 @@ CREATE TABLE `event` (
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `CategoryID` int(11) NOT NULL,
+  `FlagCount` int(2) NOT NULL,
   PRIMARY KEY (`EventID`),
   UNIQUE KEY `EventID_UNIQUE` (`EventID`),
   KEY `Email` (`Email`),
   KEY `LocationID` (`LocationID`),
   KEY `fk_CategoryID` (`CategoryID`),
-  CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `event_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
-  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`)
+  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
+  CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `event`
 --
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 2 MINUTE
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(now(), event.Timestamp()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(now(), event.Timestamp()) > 5;
+DELETE from event WHERE datediff(now(), event.Timestamp()) > 5;
+END$$
+DELIMITER ;
+
 
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
+INSERT INTO `event` VALUES (1,'Git Sum','d@d.com','2014-04-22 19:05:27',1,'Sucka',1);
 /*!40000 ALTER TABLE `event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -113,7 +128,7 @@ DROP TABLE IF EXISTS `eventkeyword`;
 CREATE TABLE `eventkeyword` (
   `EventID` int(11) NOT NULL,
   `KeywordID` int(11) NOT NULL,
-  PRIMARY KEY (`EventID`, `KeywordID`),
+  PRIMARY KEY (`EventID`,`KeywordID`),
   KEY `KeywordID_idx` (`KeywordID`),
   CONSTRAINT `EventID` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `KeywordID` FOREIGN KEY (`KeywordID`) REFERENCES `keyword` (`KeywordID`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -152,6 +167,7 @@ CREATE TABLE `following` (
 
 LOCK TABLES `following` WRITE;
 /*!40000 ALTER TABLE `following` DISABLE KEYS */;
+INSERT INTO `following` VALUES ('bar@bar.com','foo@foo.com');
 /*!40000 ALTER TABLE `following` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -202,6 +218,7 @@ CREATE TABLE `locale` (
 
 LOCK TABLES `locale` WRITE;
 /*!40000 ALTER TABLE `locale` DISABLE KEYS */;
+INSERT INTO `locale` VALUES (1,-110.944,32.2361);
 /*!40000 ALTER TABLE `locale` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,10 +247,25 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
+DROP TABLE IF EXISTS `notifications`;
+CREATE TABLE `notifications` (
+  `NotificationID` INT(2) NOT NULL AUTO_INCREMENT, 
+ `User` VARCHAR(50) NOT NULL,
+  `Event` INT NOT NULL,
+  `Seen` BIT NOT NULL,
+  `Descrption` VARCHAR(140) NOT NULL,
+  PRIMARY KEY (`NotificationID`),
+  CONSTRAINT `User`
+  FOREIGN KEY (`User`)  REFERENCES `cstestdb`.`user` (`Email`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+  CONSTRAINT `Event`
+  FOREIGN KEY (`Event`) REFERENCES `cstestdb`.`event` (`EventID`));
 
+	
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
+INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('d@d.com','d','Dee','Dee','mrusicgntomu1ospc111hiwowzifympp','f93ed7f76e036405095830c7b6a787c2c1323007531acc73ed783b3b524f09c8',11111,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -246,4 +278,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-06 21:06:17
+-- Dump completed on 2014-04-22 19:13:10
