@@ -160,6 +160,11 @@
     text-decoration: none;
 }
 
+
+#createEvent {
+    overflow: hidden;
+}
+
 /* Map Styles */
 #map-canvas {
    /* left: 20%;

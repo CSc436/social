@@ -204,23 +204,43 @@ function placeMarker(location) {
 	   	});
 	   	currentMarker = marker;
 
-		var contentstring = 	"<form id='createEvent' onsubmit='return submitForm(event);'>" +
+		var contentstring = 	"<form id='createEvent' class='form-horizontal' role='form' onsubmit='return submitForm(event);'>" +
 								"<input id='user' type ='hidden' name='user' value='me' >" +
-								"Event Title: <input id='title' type='text' name='title' value=''><br>" +
-							"Description: <input id='desc' type='textarea' name='description' value=''><br>" +
-							"Keywords: <input id='keywords' type='textarea' name='keywords' value=''><br>" +
-	 						"<small>enter to add a keyword</small><div id='kw'></div><br>" +
-	 						"<div id='kw'></div>" + 
-							"Category: <select id='category'>" +
-								"<option value='sports'>sports</option>" +
-								"<option value='music'>music</option>" +
-							"</select><br>" +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Title:</label>" + 
+										"<input id='title' class='form-control' type='text' name='title' value=''>" +
+									'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' +
+										"<label class='control-label'>Description:</label>" +
+										"<input id='desc' class='form-control' type='text' name='description' value=''>" +
+									'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'> Category:</label>"+ 
+										"<select class='form-control' id='category'>" +
+											"<option value='sports'>sports</option>" +
+											"<option value='music'>music</option>" +
+										"</select>" +
+									"</div>" +
+								"</div>" +
+							'<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Keywords:</label>" +
+										"<input id='keywords' type='text' class='form-control' name='keywords' value=''>" +
+										"<small>enter to add a keyword</small><div id='kw'></div><br>" +
+									"</div>" +
+							"</div>" +
 							"<input type='submit'>" +
 							"</form>";
 
 	current = location;
 	infowindow = new google.maps.InfoWindow({
-	   		content: contentstring
+	   		content: contentstring,
+	   		maxWidth: 500
 	   	});
 	   	infowindow.open(map,marker);
 	
@@ -372,7 +392,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		contentstring = contentstring + "<kbd>" + keywords[key]["word"] + "</kbd> "
 	}
 
-	// contentstring = contentstring + "<br><kbd>" + "abcd"+ "</kbd> <br><br>"
+
+
 	if ( e === curUser) {
 		contentstring = contentstring + 
 		"<br><button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
