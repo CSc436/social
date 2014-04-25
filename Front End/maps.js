@@ -342,6 +342,11 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	
 	// Add event to sidebar list
                 $("#events-list").append('<div class="event" id="event-'+id+'"><span><b>'+t+'</b></span></br><span>'+d+'</span></div>');
+    
+    if (currentMarker != null && id == currentMarker['eventID']) {
+        $("#event-"+currentMarker['eventID']).css('background-color', "#FFFFFF");  
+        return;
+    }
 
 	var image = 'img/newEvent.png';
 	var marker = new google.maps.Marker({
@@ -394,6 +399,10 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 
 	(function(mark,info) {
 		google.maps.event.addListener(mark, 'click', function() {
+            if (currentMarker != null) {
+                $("#event-"+currentMarker['eventID']).css('background-color', "#EBF5ED");
+            }
+            $("#event-"+mark['eventID']).css('background-color', "#FFFFFF");
 			if(addEventOpen)
 				return;
 			
