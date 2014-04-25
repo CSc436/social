@@ -629,11 +629,16 @@ $(document).ready(function () {
                 if (markers[i]['eventID'] == eventId) {
                     map.setCenter(markers[i]['position']);
                     currentMarker = markers[i];
-                    // OPEN INFO WINDOW
+                    // Open info window.
+                    
                 }
                 //console.log(markers[i]['eventID']);
             }
         }
+    });
+    
+    $("#re-center-img").click(function() {
+        map.setCenter(initialLocation); 
     });
 });
 
