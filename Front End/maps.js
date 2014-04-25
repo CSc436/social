@@ -366,14 +366,11 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	var c = data[message]["CategoryName"];
 	var id = data[message]["EventID"];
 	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
-	
-	if(currentMarker != null && currentMarker.eventID == id){
-		$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
-		return;
-	}
-	    
-    // Add event to sidebar list
-    $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+    
+    if (currentMarker != null && id == currentMarker['eventID']) {
+        focusEvent(currentMarker);
+        return;
+    }
 
 	var image = 'img/newEvent.png';
 	var marker = new google.maps.Marker({
@@ -436,31 +433,27 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 			"</div>";	
 		}
 	}
-
+    
 	var iWindow;
 	iWindow = new google.maps.InfoWindow({
    		content: contentstring,
    		maxWidth: 500
    	});
+	
+	marker['infoWindow'] = iWindow;
 
 	(function(mark,info) {
 		google.maps.event.addListener(mark, 'click', function() {
+		
 			if(addEventOpen)
 				return;
 			
-			if(infowindow != null){
-				infowindow.close();
-			}
-			infowindow = info;
-			currentMarker = mark;
-			info.open(map,mark);
-		// $("#attendbtn").click(function() {console.log("test");});
+			focusEvent(mark);
 		});
 	})(marker,iWindow);
 
 	google.maps.event.addListener(iWindow,'closeclick',function(){
-		currentMarker = null;
-		infowindow = null;
+		unfocusEvent(marker);
 	});
 }
 
@@ -468,6 +461,9 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 function processLoadEvent(curUser, data, userEvents) {
 	for(var message in data){
 		// console.log(data[message]);
+		
+		// Add event to sidebar list
+		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["Description"]+'</span></div>');
 
 		(function(msg){
 			var id = data[msg]["EventID"];
@@ -759,6 +755,38 @@ function submitForm(e){
 	return false;
 }
 
+function focusEvent(marker){
+
+	var id = "#event-" + marker['eventID'];
+	
+	unfocusEvent(marker);
+	
+	// Mark the current event in the list.
+	if(!$(id).hasClass("event-focused")){
+		$(id).addClass("event-focused");
+	}
+	
+	currentMarker = marker;
+	infowindow = marker['infoWindow'];
+	infowindow.open(map, marker);
+}
+
+function unfocusEvent(marker){
+
+	// Update the marker in the list view.
+	if (currentMarker != null) {
+		$("#event-" + currentMarker['eventID']).removeClass("event-focused");
+	}
+	
+	// Close the current info window.
+	if(infowindow != null){
+		infowindow.close();
+	}
+	
+	infowindow = null;
+	currentMarker = null;
+}
+
 function kwclick(e) {
 	var text = $(e)[0].innerHTML;
 	var outer = $(e)[0].outerHTML;
@@ -785,5 +813,25 @@ function submitSuccess(data) {
 	currentMarker.setMap(null);
 	loadEventsFromDB();
 }
+
+$(document).ready(function () {
+    // Center on event on map when clicked in the sidebar.
+    $("#events-wrapper").on('click', '.event', function() {
+        var num = (this.id).match(/\d+$/); // Get event id from end of html id.
+        if (num) {
+            var eventId = parseInt(num);
+            for (var i=0; i<markers.length; i++) {
+                if (markers[i]['eventID'] == eventId) {
+                    map.setCenter(markers[i]['position']);
+					focusEvent(markers[i]);
+                }
+            }
+        }
+    });
+    
+    $("#re-center-img").click(function() {
+        map.setCenter(initialLocation); 
+    });
+});
 
 google.maps.event.addDomListener(window, 'load', initialize);

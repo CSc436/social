@@ -66,7 +66,6 @@ body {
     height: 100%;
     width: 40%;
     z-index: 1;
-	text-align: center;
 }
 
 #events-searchbar{
@@ -104,6 +103,7 @@ body {
 	display: block;
 	padding: 10px 0px 10px 0px;
 	background-color: #EBF5ED;
+	text-align: center;
 }
 
 #events-tabs a:link{ color:#316EA0; }
@@ -161,13 +161,21 @@ body {
     padding: 3%;
 }
 
+.event:hover {
+    background-color: #FFFFFF;
+}
+
+.event-focused{
+	background-color: #FFFFFF;
+}
+
 #my-account-menu{
 	width: 200px;
 	height: 300px;
 	position: absolute;
 	background-color: #EBF5ED;
 	right: 0px;
-	z-index: 1;
+	z-index: 2;
 }
 
 .my-account-menu-item {
@@ -182,6 +190,14 @@ body {
 
 #createEvent {
     overflow: hidden;
+/* Re-center button */
+#re-center {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    right: 37px;
+    top: 135px;
+    z-index: 1;
 }
 
 /* Map Styles */

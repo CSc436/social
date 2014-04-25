@@ -82,6 +82,7 @@
         <div id="my-account-menu" class="sliding-object">
             <a href="#" class="my-account-menu-item" id="logout-button">Logout</a>
         </div>
+        <div id="re-center"><img src="img/centerMap.jpg" id="re-center-img"></div>
 		
         <div id="map-canvas"/>
 	</div>
