@@ -2,6 +2,8 @@ var current = new google.maps.LatLng(40.69847032728747, -73.9514422416687);
 var addEventOpen = false;
 var keywordsarray = new Array();
 var markers = new Array();
+var searchMarkers = new Array();
+
 var infowindow = null;
 var bounds;
 var circle;
@@ -14,6 +16,7 @@ var currentMarker = null;
 	function initialize() {
 		var mapOptions = {
 			center: new google.maps.LatLng(-34.397, 150.644),
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			zoom: 15,
 			disableDefaultUI: true,
 			panControl: true,
@@ -27,7 +30,7 @@ var currentMarker = null;
 			}
 		};
 		map = new google.maps.Map(document.getElementById("map-canvas"),
-			mapOptions);
+			mapOptions);	
 		bounds = new google.maps.LatLngBounds();
 		//add listener for dragging the map to reload events
 		google.maps.event.addListener(map,'dragend',function(){
@@ -128,6 +131,65 @@ var currentMarker = null;
 		});
 	});
 
+	/*SearchBox stuff*/ 
+  // Create the search box and link it to the UI element.
+  var input = /** @type {HTMLInputElement} */(
+      document.getElementById('filter-address'));
+  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  var searchBox = new google.maps.places.SearchBox(
+    /** @type {HTMLInputElement} */(input));
+
+  // Listen for the event fired when the user selects an item from the
+  // pick list. Retrieve the matching places for that item.
+  google.maps.event.addListener(searchBox, 'places_changed', function() {
+    var places = searchBox.getPlaces();
+    console.log("places have been changed!");
+
+    for (var i = 0, searchMarker; searchMarker = searchMarkers[i]; i++) {
+      searchMarker.setMap(null);
+    }
+
+    // For each place, get the icon, place name, and location.
+    searchMarkers = [];
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0, place; place = places[i]; i++) {
+      var image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a searchMarker for each place.
+      var searchMarker = new google.maps.Marker({
+        map: map,
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+      });
+
+      searchMarkers.push(searchMarker);
+
+      bounds.extend(place.geometry.location);
+    }
+    if(places.length == 1){
+    	circle = new google.maps.Circle({radius: 1000, center: places[0].geometry.location});
+    			map.fitBounds(circle.getBounds());
+    }
+    else{
+    	console.log(places);
+    	map.fitBounds(bounds);
+	}
+  });
+
+  // Bias the SearchBox results towards places that are within the bounds of the
+  // current map's viewport.
+  google.maps.event.addListener(map, 'bounds_changed', function() {
+    var bounds = map.getBounds();
+    searchBox.setBounds(bounds);
+  });
 
 }
 
@@ -148,6 +210,7 @@ function placeMarker(location) {
 							"Description: <input id='desc' type='textarea' name='description' value=''><br>" +
 							"Keywords: <input id='keywords' type='textarea' name='keywords' value=''><br>" +
 	 						"<small>enter to add a keyword</small><div id='kw'></div><br>" +
+	 						"<div id='kw'></div>" + 
 							"Category: <select id='category'>" +
 								"<option value='sports'>sports</option>" +
 								"<option value='music'>music</option>" +
@@ -259,103 +322,127 @@ function processClick() {
 }
 
 //return map settings to normal
-	function normalMap() {
-		google.maps.event.clearListeners(map, 'click');
-		controlDiv.style.display = "none";
-		map.setOptions({ draggableCursor: null, dragginCursor: null});
-		$('#add-event').css("font-weight","normal");
-		//addEventOpen = false;
+function normalMap() {
+	google.maps.event.clearListeners(map, 'click');
+	controlDiv.style.display = "none";
+	map.setOptions({ draggableCursor: null, dragginCursor: null});
+	$('#add-event').css("font-weight","normal");
+	//addEventOpen = false;
+}
+
+
+
+function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
+	var e = data[message]["Email"];
+	var t = data[message]["Title"];
+	var d = data[message]["Description"];
+	var c = data[message]["CategoryName"];
+	var id = data[message]["EventID"];
+	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
+	
+	if(currentMarker != null && currentMarker.eventID == id){
+		$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+		return;
+	}
+	    
+    // Add event to sidebar list
+    $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+
+	var image = 'img/newEvent.png';
+	var marker = new google.maps.Marker({
+		position: pos,
+		map: map,
+		title: data[message]["Title"],
+		icon: image,
+		eventID: id
+	});
+		
+	markers.push(marker);
+
+	var contentstring = 	"<div class='event-content'>"+
+					"<input type ='hidden' name='user' value='"+e+"' >" +
+					"Event Title: <input type='textarea' name='title' value='"+t+"' disabled ><br>"+
+					"Description: <input type='textarea' name='description' value='"+d+"' disabled ><br>"+
+					"Category: <select disabled>"+
+					"<option value='sports'>"+c+"</option>" + 
+					"</select><br>";
+
+	for(var key in keywords) {
+		// console.log(keywords[key]["word"]);
+		contentstring = contentstring + "<kbd>" + keywords[key]["word"] + "</kbd> "
 	}
 
+	// contentstring = contentstring + "<br><kbd>" + "abcd"+ "</kbd> <br><br>"
+	if ( e === curUser) {
+		contentstring = contentstring + 
+		"<br><button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
+		"</div>";
+	}
+	else {
+		var result = $.grep(userEvents, function(e) {return e[0] == id; });
+		if (result.length > 0) {
+			contentstring = contentstring + 
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
+			"</div>";
+		}
+		else {
+			contentstring = contentstring + 
+			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
+			"</div>";	
+		}
+	}
+	
+	var iWindow;
+	iWindow = new google.maps.InfoWindow({
+   		content: contentstring
+   	});
+
+	(function(mark,info) {
+		google.maps.event.addListener(mark, 'click', function() {
+			if(addEventOpen)
+				return;
+			
+			if(infowindow != null){
+				infowindow.close();
+			}
+			infowindow = info;
+			currentMarker = mark;
+			info.open(map,mark);
+		// $("#attendbtn").click(function() {console.log("test");});
+		});
+	})(marker,iWindow);
+
+	google.maps.event.addListener(iWindow,'closeclick',function(){
+		currentMarker = null;
+		infowindow = null;
+	});
+}
 
 
 function processLoadEvent(curUser, data, userEvents) {
-			for(var message in data){
-				var e = data[message]["Email"];
-				var t = data[message]["Title"];
-				var d = data[message]["Description"];
-				var c = data[message]["CategoryName"];
-				var id = data[message]["EventID"];
-				var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
-				// console.log(data[message]);
+	for(var message in data){
+		// console.log(data[message]);
 
-                // Add event to sidebar list
-                $("#events-list").append('<div class="event" id="event-'+id+'"><span><b>'+t+'</b></span></br><span>'+d+'</span></div>');
-                
-				if(currentMarker != null && currentMarker.eventID == id) {
-					continue;
-				}
-
-				var image = 'img/newEvent.png';
- 				var marker = new google.maps.Marker({
-      				position: pos,
-      				map: map,
-      				title: data[message]["Title"],
-      				icon: image,
-					eventID: id
- 	   			});
-				
-				markers.push(marker);
-
-   				var contentstring = 	"<div class='event-content'>"+
-							"<input type ='hidden' name='user' value='"+e+"' >" +
-							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled='disabled' ><br>"+
-						"Description: <input type='textarea' name='description' value='"+d+"' disabled='disabled' ><br>"+
-						"Category: <select disabled>"+
-							"<option value='sports'>"+c+"</option>"+
-							"<option value='music'>music</option>"+
-						"</select>";
-
- 	   			if ( e === curUser) {
- 	   				contentstring = contentstring + 
-							"<button type='button' id='attendcountbtn' style='float: right' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
-							"</div>";
- 	   			}
- 	   			else {
- 	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				
- 	   				if (result.length > 0) {
-	 	   				contentstring = contentstring + 
-							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
-							"</div>";
-					}
-					else {
-						contentstring = contentstring + 
-						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
-							"</div>";	
-					}
-				}
-
-				var iWindow;
-				iWindow = new google.maps.InfoWindow({
-		 	   		content: contentstring
-		 	   	});
-
-
-				(function(mark,info) {
-					google.maps.event.addListener(mark, 'click', function() {
-						if(addEventOpen)
-							return;
-					
-						if(infowindow != null){
-							infowindow.close();
-						}
-						infowindow = info;
-						currentMarker = mark;
-						info.open(map,mark);
-						$("#attendbtn").click(function() {console.log("test");});
-		  			});
-				})(marker,iWindow);
-
-				google.maps.event.addListener(iWindow,'closeclick',function(){
-		   			currentMarker = null;
-					infowindow = null;
-				});
-			}
-		}
+		(function(msg){
+			var id = data[msg]["EventID"];
+			// console.log("loading");
+			$.ajax( {
+				url:"getEventKeywords.php",
+				type: "POST",
+				data: {eventID: id},
+				success: function(keywords) {
+					// console.log(keywords);
+					LoadSingleEvent(curUser, data, userEvents, msg, keywords);
+				}, 
+				error: function(keywords) {
+					console.log("FAILED to find keywords");
+				}, dataType: "json"
+			});
+		})(message);	
+	}
+}
 
 function btnunattend(e) {
-	console.log("unclick");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
@@ -407,7 +494,6 @@ function processAttendeeList(message) {
 }
 
 function btnclick(e) {
-	console.log("click");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
@@ -426,25 +512,34 @@ function btnclick(e) {
 }
 
 // Previous filter settings for loading events.
-var previousEventFilterSettings = {
+var eventFilterSettings = {
 	ownerFilter: null,
 	categoryFilter: null,
 	descriptionFilter: null,
 	startDateFilter: null
 }
 
+function setFilterSettings(ownerFilter, descriptionFilter, categoryFilter, startDateFilter){
+	eventFilterSettings = {
+			ownerFilter: ownerFilter,
+			categoryFilter: categoryFilter,
+			descriptionFilter: descriptionFilter,
+			startDateFilter: startDateFilter
+		}
+}
+
 function loadEventsFromDB(usePreviousSettings, ownerFilter, descriptionFilter, categoryFilter, startDateFilter){
 
 	// Use previous filter settings.
 	if(typeof usePreviousSettings !== 'undefined' && usePreviousSettings != null && usePreviousSettings == true){
-		ownerFilter = previousEventFilterSettings["ownerFilter"];
-		categoryFilter = previousEventFilterSettings["categoryFilter"];
-		descriptionFilter = previousEventFilterSettings["descriptionFilter"];
-		startDateFilter = previousEventFilterSettings["startDateFilter"];
+		ownerFilter = eventFilterSettings["ownerFilter"];
+		categoryFilter = eventFilterSettings["categoryFilter"];
+		descriptionFilter = eventFilterSettings["descriptionFilter"];
+		startDateFilter = eventFilterSettings["startDateFilter"];
 	}
 	// Keep track of these new filter settings.
 	else{
-		previousEventFilterSettings = {
+		eventFilterSettings = {
 			ownerFilter: ownerFilter,
 			categoryFilter: categoryFilter,
 			descriptionFilter: descriptionFilter,
@@ -566,34 +661,45 @@ function submitForm(e){
  	}
  
  	if ($(document.activeElement).attr("id") == "keywords") {
- 		kw = $(document.activeElement).val();
- 		keywordsarray.push(kw.toUpperCase());
- 		// $("kw").innerHTML = keywordsarray[0];
- 		$(document.activeElement).val("");
+ 		//adding keywords
+ 		kw = $(document.activeElement).val().trim().toUpperCase();
+ 		console.log(kw);
+ 		if (keywordsarray.indexOf(kw) < 0 && kw != "") {
+ 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <kbd onclick=\"return kwclick(this)\">" + kw+ "</kbd> ");
+ 			keywordsarray.push(kw.toUpperCase());
+ 			var title = $("#title").val();
+ 			var desc = $("#desc").val();
+ 			infowindow.setContent(contentstring);
+ 			//setContent() takes `1` unit of time, so this must wait 1 time unit
+ 			setTimeout('$("#keywords").focus()',1);
+ 			$("#title").val(title);
+ 			$("#desc").val(desc);
+ 				
+ 		}
+ 		else{
+ 			$(document.activeElement).val("");	
+ 		}
  		return false;
  	}
-	// var user = $_SESSION['loggedin'];
-	// console.log(user);
-	// console.log("user");
-	// marker.setMap(null);
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	// console.log(keywordsarray);
-	// console.log(current);
-	// console.log(coord.lat());
-	// console.log(coord.lng());
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
 		return false;
 	}
 
+		
+	if ($("#keywords").val() != "") {
+		keywordsarray.push($("#keywords").val().trim().toUpperCase());
+	}
+	console.log(keywordsarray);
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), kewords:keywordsarray},
+		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -605,6 +711,21 @@ function submitForm(e){
 	keywordsarray.length=0;
 	loadEventsFromDB();
 	return false;
+}
+
+function kwclick(e) {
+	var text = $(e)[0].innerHTML;
+	var outer = $(e)[0].outerHTML;
+	// console.log($(e)[0].outerHTML);
+	var i = keywordsarray.indexOf(text);
+	keywordsarray.splice(i, 1);
+	console.log(keywordsarray);
+	// e.remove();
+	// console.log(outer);
+	var contentstring = infowindow.content.replace(outer, " ");
+	// console.log(contentstring);
+	infowindow.setContent(contentstring);
+
 }
 
 function submitSuccess(data) {
