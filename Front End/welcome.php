@@ -7,14 +7,9 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-	<link rel="stylesheet" type="text/css" href="social.css">
 	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="social.css">
 
-	<style type="text/css">
-	html { height: 100% }
-	body { height: 100%; margin: 0; padding: 0 }
-	#map-canvas { height: 100% }
-	</style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
 	<script type="text/javascript"

@@ -1,3 +1,17 @@
+html { 
+    height: 100%;
+}
+
+body { 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
+}
+
+#map-canvas { 
+    height: 100%; 
+}
+
 #wrapper {
     position: relative;
     height: 100%;
@@ -96,6 +110,11 @@
 #events-tabs a:visited{ color:#316EA0; }
 #events-tabs a:hover{ color:#316EA0; }
 #events-tabs a:active{ color:#316EA0; }
+
+.event-content{
+    text-align: center;
+    background-color: #eee;
+}
 
 .event-tab{
 	display: inline-block;

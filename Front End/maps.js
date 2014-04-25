@@ -386,43 +386,61 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		
 	markers.push(marker);
 
-	var contentstring = 	"<div class='event-content'>"+
-					"<input type ='hidden' name='user' value='"+e+"' >" +
-					"Event Title: <input type='textarea' name='title' value='"+t+"' disabled ><br>"+
-					"Description: <input type='textarea' name='description' value='"+d+"' disabled ><br>"+
-					"Category: <select disabled>"+
-					"<option value='sports'>"+c+"</option>" + 
-					"</select><br>";
+	var contentstring = 	'<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Title:</label>" + 
+										"<p class='form-control event-content'>"+t+"</p>" +
+									'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' +
+										"<label class='control-label'>Description:</label>" +
+										"<p class='form-control event-content'>"+d+"</p>" +
+									'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'> Category:</label>"+ 
+										"<p class='form-control event-content'>"+c+"</p>" +
+									"</div>" +
+								"</div><div class='form-group'><div class='col-md-12'><br>";
 
 	for(var key in keywords) {
 		// console.log(keywords[key]["word"]);
-		contentstring = contentstring + "<kbd>" + keywords[key]["word"] + "</kbd> "
+		contentstring = contentstring + "<button class='btn btn-info btn-xs'>" + keywords[key]["word"] + "</button> ";
 	}
-
+		contentstring = contentstring + "</div></div>";
 
 
 	if ( e === curUser) {
 		contentstring = contentstring + 
-		"<br><button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
+		'<div class="col-md-12"><br>' + 
+		"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
+		"</div>"+
 		"</div>";
 	}
 	else {
 		var result = $.grep(userEvents, function(e) {return e[0] == id; });
 		if (result.length > 0) {
 			contentstring = contentstring + 
-			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
+			'<div class="col-md-12"><br>' + 
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
+			"</div>" +
 			"</div>";
 		}
 		else {
 			contentstring = contentstring + 
-			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
+			'<div class="col-md-12"><br>' + 
+			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
+			"</div"+
 			"</div>";	
 		}
 	}
 
 	var iWindow;
 	iWindow = new google.maps.InfoWindow({
-   		content: contentstring
+   		content: contentstring,
+   		maxWidth: 500
    	});
 
 	(function(mark,info) {
