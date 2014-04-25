@@ -231,10 +231,17 @@ function placeMarker(location) {
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Keywords:</label>" +
 										"<input id='keywords' type='text' class='form-control' name='keywords' value=''>" +
-										"<small>enter to add a keyword</small><div id='kw'></div><br>" +
+										"<small>enter to add a keyword</small>"+
 									"</div>" +
 							"</div>" +
-							"<input type='submit'>" +
+							'<div class="form-group">'+
+								'<div class="col-md-12">' +
+									"<div id='kw'></div>" +
+								"</div>" +
+							"</div>"+
+							'<div class="col-md-12">' + 
+								"<input class='btn btn-primary form-control btn-block' type='submit'>" +
+							"</div>" +
 							"</form>";
 
 	current = location;
@@ -686,7 +693,7 @@ function submitForm(e){
  		kw = $(document.activeElement).val().trim().toUpperCase();
  		console.log(kw);
  		if (keywordsarray.indexOf(kw) < 0 && kw != "") {
- 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <kbd onclick=\"return kwclick(this)\">" + kw+ "</kbd> ");
+ 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <button type='button' class='btn btn-info btn-sm' onclick=\"return kwclick(this)\">" + kw+ "</button> ");
  			keywordsarray.push(kw.toUpperCase());
  			var title = $("#title").val();
  			var desc = $("#desc").val();
