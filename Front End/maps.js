@@ -340,13 +340,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	var id = data[message]["EventID"];
 	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
 	
-	if(currentMarker != null && currentMarker.eventID == id){
-		$("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
-		return;
-	}
-	    
-    // Add event to sidebar list
-    $("#events-list").append('<div class="event"><span>'+t+'</span></br><span>'+d+'</span></div>');
+	// Add event to sidebar list
+                $("#events-list").append('<div class="event" id="event-'+id+'"><span><b>'+t+'</b></span></br><span>'+d+'</span></div>');
 
 	var image = 'img/newEvent.png';
 	var marker = new google.maps.Marker({
@@ -392,90 +387,6 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		}
 	}
 
-<<<<<<< HEAD
-function processLoadEvent(curUser, data, userEvents) {
-			for(var message in data){
-				var e = data[message]["Email"];
-				var t = data[message]["Title"];
-				var d = data[message]["Description"];
-				var c = data[message]["CategoryName"];
-				var id = data[message]["EventID"];
-				var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
-				// console.log(data[message]);
-
-                // Add event to sidebar list
-                $("#events-list").append('<div class="event" id="event-'+id+'"><span><b>'+t+'</b></span></br><span>'+d+'</span></div>');
-                
-				if(currentMarker != null && currentMarker.eventID == id) {
-					continue;
-				}
-
-				var image = 'img/newEvent.png';
- 				var marker = new google.maps.Marker({
-      				position: pos,
-      				map: map,
-      				title: data[message]["Title"],
-      				icon: image,
-					eventID: id
- 	   			});
-				
-				markers.push(marker);
-
-   				var contentstring = 	"<div class='event-content'>"+
-							"<input type ='hidden' name='user' value='"+e+"' >" +
-							"Event Title: <input type='textarea' name='title' value='"+t+"' disabled='disabled' ><br>"+
-						"Description: <input type='textarea' name='description' value='"+d+"' disabled='disabled' ><br>"+
-						"Category: <select disabled>"+
-							"<option value='sports'>"+c+"</option>"+
-							"<option value='music'>music</option>"+
-						"</select>";
-
- 	   			if ( e === curUser) {
- 	   				contentstring = contentstring + 
-							"<button type='button' id='attendcountbtn' style='float: right' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm'>Get Attendees</button>"+
-							"</div>";
- 	   			}
- 	   			else {
- 	   				var result = $.grep(userEvents, function(e) {return e[0] == id; });
- 	   				
- 	   				if (result.length > 0) {
-	 	   				contentstring = contentstring + 
-							"<button type='button' id='attendbtn' style='float: right' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm'>Cancel</button>"+
-							"</div>";
-					}
-					else {
-						contentstring = contentstring + 
-						"<button type='button' id='attendbtn' style='float: right' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm'>Attend</button>"+
-							"</div>";	
-					}
-				}
-
-				var iWindow;
-				iWindow = new google.maps.InfoWindow({
-		 	   		content: contentstring
-		 	   	});
-
-
-				(function(mark,info) {
-					google.maps.event.addListener(mark, 'click', function() {
-						if(addEventOpen)
-							return;
-					
-						if(infowindow != null){
-							infowindow.close();
-						}
-						infowindow = info;
-						currentMarker = mark;
-						info.open(map,mark);
-						$("#attendbtn").click(function() {console.log("test");});
-		  			});
-				})(marker,iWindow);
-
-				google.maps.event.addListener(iWindow,'closeclick',function(){
-		   			currentMarker = null;
-					infowindow = null;
-				});
-=======
 	var iWindow;
 	iWindow = new google.maps.InfoWindow({
    		content: contentstring
@@ -488,7 +399,6 @@ function processLoadEvent(curUser, data, userEvents) {
 			
 			if(infowindow != null){
 				infowindow.close();
->>>>>>> master
 			}
 			infowindow = info;
 			currentMarker = mark;
