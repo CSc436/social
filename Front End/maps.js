@@ -406,6 +406,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		// $("#attendbtn").click(function() {console.log("test");});
 		});
 	})(marker,iWindow);
+    
+    marker['infoWindow'] = iWindow;
 
 	google.maps.event.addListener(iWindow,'closeclick',function(){
 		currentMarker = null;
@@ -746,7 +748,11 @@ $(document).ready(function () {
                     map.setCenter(markers[i]['position']);
                     currentMarker = markers[i];
                     // Open info window.
-                    
+                    if (infowindow != null) {
+                        infowindow.close();   
+                    }
+                    markers[i]['infoWindow'].open(map, markers[i]);
+                    infowindow = markers[i]['infoWindow'];
                 }
                 //console.log(markers[i]['eventID']);
             }
