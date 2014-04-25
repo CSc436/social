@@ -386,7 +386,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 			"</div>";	
 		}
 	}
-
+    
 	var iWindow;
 	iWindow = new google.maps.InfoWindow({
    		content: contentstring
