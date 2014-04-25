@@ -89,6 +89,7 @@
 	display: block;
 	padding: 10px 0px 10px 0px;
 	background-color: #EBF5ED;
+	text-align: center;
 }
 
 #events-tabs a:link{ color:#316EA0; }
@@ -143,6 +144,10 @@
 
 .event:hover {
     background-color: #FFFFFF;
+}
+
+.event-focused{
+	background-color: #FFFFFF;
 }
 
 #my-account-menu{
