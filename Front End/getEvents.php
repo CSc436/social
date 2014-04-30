@@ -33,7 +33,7 @@
 		//$queryString.=" AND event.StartDate=':startdate'";
 	}
 	
-	$queryString.=";";
+	$queryString.=" ORDER BY Title;";
 	$query = $db->prepare($queryString);
 	
 	// Execute the query.

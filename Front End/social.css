@@ -1,3 +1,17 @@
+html { 
+    height: 100%;
+}
+
+body { 
+    height: 100%; 
+    margin: 0; 
+    padding: 0; 
+}
+
+#map-canvas { 
+    height: 100%; 
+}
+
 #wrapper {
     position: relative;
     height: 100%;
@@ -31,6 +45,13 @@
     width: 5%;
 }
 
+#search-box {
+    float: right;
+    list-style: none;
+    width: 20%;
+    margin-top: 5px;
+}
+
 .menu-item {
     margin: 10px;
 	text-decoration: none;
@@ -39,29 +60,61 @@
 
 /* Sidebar Styles */
 #sidebar-main {
-    background-color: #EBF5ED;
+    background-color: #FFFFFF;
     position: absolute;
 	left: 0;
     height: 100%;
     width: 40%;
     z-index: 1;
-	text-align: center;
 }
 
 #events-searchbar{
-	margin-top: 10px;
+	width: 100%;
+	display: block;
+	padding: 10px 40px 0px 40px;
+	text-align: left;
+}
+
+#filter-title{
+	width: 100%;
+}
+
+#filter-category{
+	margin: 5px 0px 0px 0px;
+	width: 30%;
+	height: 25px;
+}
+
+#filter-radius{
+	margin: 5px 0px 0px 0px;
+	width: 15%;
+	height: 25px;
+}
+
+#filter-address{
+    width:100%;
+}
+
+#filter-submit{
+	
 }
 
 #events-tabs{
 	display: block;
 	padding: 10px 0px 10px 0px;
-	background-color: #EBF5ED;
+	background-color: #FFFFFF;
+	text-align: center;
 }
 
 #events-tabs a:link{ color:#316EA0; }
 #events-tabs a:visited{ color:#316EA0; }
 #events-tabs a:hover{ color:#316EA0; }
 #events-tabs a:active{ color:#316EA0; }
+
+.event-content{
+    text-align: center;
+    background-color: #eee;
+}
 
 .event-tab{
 	display: inline-block;
@@ -79,7 +132,7 @@
 .event-tab:hover{ background-color: #EBF5ED; }
 
 .event-tab-active{
-	background-color: #EBF5ED;
+	background-color: #FFFFFF;
 }
 
 #events-wrapper{
@@ -89,7 +142,7 @@
 /* Event List Styles */
 #event-list {
     width: 18%;
-    background-color: #404040;
+    background-color: #FFFFFF;
     position: absolute;
     top: 0px;
     left: 19%;
@@ -108,13 +161,21 @@
     padding: 3%;
 }
 
+.event:hover {
+    background-color: #C0C0C0;
+}
+
+.event-focused{
+	background-color: #C0C0C0;
+}
+
 #my-account-menu{
 	width: 200px;
 	height: 300px;
 	position: absolute;
 	background-color: #EBF5ED;
 	right: 0px;
-	z-index: 1;
+	z-index: 2;
 }
 
 .my-account-menu-item {
@@ -124,6 +185,19 @@
     border-color: #4398DE;
     border-width: 1px;
     text-decoration: none;
+}
+
+
+#createEvent {
+    overflow: hidden;
+/* Re-center button */
+#re-center {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    right: 37px;
+    top: 135px;
+    z-index: 1;
 }
 
 /* Map Styles */
