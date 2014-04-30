@@ -45,29 +45,30 @@
 			<a href="#" class="menu-link"><div id="add-event" class="menu-item">Create Event</div></a>
             <!--<div id="logo" class="menu-item"></div>-->
             <div id="search-box">
-            	<input type="text" id="filter-address" placeholder="Current Location" tabindex=4/>
+            	<input type="text" id="filter-address" placeholder="Current Location"/>
             </div>
             <a href="#" class="menu-link"><div id="list-toggle" class="menu-item">Event List</div></a>
         </div>
 		<div id="sidebar-main" class="sliding-object">
 			<div id="events-searchbar">
 				<form id="events-searchbar-form" method="POST">
-					<input type="text" name="filter-title" id="filter-title" placeholder="Search" tabindex=1 />
+					<input type="text" name="filter-title" id="filter-title" placeholder="Search"/>
 					<label for="filter-category">Category: </label>
-					<select id="filter-category" tabindex=2>
+					<select id="filter-category">
 						<option value="">All Categories</option>
 						<?php
 							include("getCategories.php");
 						?>
 					</select>
 					<label for="filter-radius">Within:</label>
-					<select id="filter-radius" tabindex=3>
+					<select id="filter-radius">
 						<option value=5>5 Miles</option>
 						<option value=10>10 Miles</option>
 						<option value=25>25 Miles</option>
 						<option value=50>50 Miles</option>
 					</select>
-					<input type="submit" id="filter-submit" value="Search" tabindex=5>
+					<label for="filter-radius">Of current view.</label>
+					<input type="submit" id="filter-submit" value="Search">
 				</form>
 			</div>
 			<div id="events-tabs">

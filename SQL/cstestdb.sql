@@ -95,12 +95,17 @@ CREATE TABLE `event` (
   CONSTRAINT `event_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
   CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
   CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+<<<<<<< HEAD
 ) ENGINE=InnoDB AUTO_INCREMENT=14043 DEFAULT CHARSET=latin1;
+=======
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `event`
 --
+<<<<<<< HEAD
 SET GLOBAL event_scheduler = 1;
 DELIMITER $$
 CREATE EVENT expiredDelete
@@ -113,6 +118,8 @@ DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
 END$$
 DELIMITER ;
 
+=======
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
 
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
@@ -234,8 +241,13 @@ CREATE TABLE `notifications` (
   `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
   `Email` varchar(50) NOT NULL,
   `EventID` int(11) NOT NULL,
+<<<<<<< HEAD
   `Seen` bit(1) NOT NULL,
   `Description` varchar(140) NOT NULL,
+=======
+  `Description` varchar(140) NOT NULL,
+  `Seen` bit(1) NOT NULL,
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
   PRIMARY KEY (`NotificationID`),
   KEY `Email` (`Email`),
   KEY `EventID` (`EventID`),
@@ -293,4 +305,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2014-04-29 20:40:33
+=======
+-- Dump completed on 2014-04-29 18:52:48
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4

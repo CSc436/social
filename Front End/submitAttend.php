@@ -1,5 +1,6 @@
 <?php
 	include '..\backend\connect.php';
+	include '../backend/notifications/generateNotification.php';
 	session_name("loggedin");
 	session_start();
 
@@ -30,5 +31,18 @@
 	$result = $select_query->fetch();
 
 	echo json_encode($result);
+	
+	// Get information about the event being attended.
+	$event_query = $db->prepare("
+		SELECT Title, Email FROM event WHERE EventId=:eventid;
+	");
+	
+	$params = array( ":eventid" => htmlspecialchars(2) );
+	
+	$event_query->execute($params);
+	
+	$result = $event_query->fetchAll();
 
+	// Generate a notification about the RSVP.
+	generateNotification($db, $result[0]['Email'], $_POST['eventID'], $_POST['email'] . " is attending your event: " . $result[0]['Title'] . "");
 ?>
