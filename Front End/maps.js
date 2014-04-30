@@ -834,4 +834,20 @@ $(document).ready(function () {
     });
 });
 
+ /*
+  getCurrentUser
+  Will fetch the current users email address, and use the name as a parameter to
+  a callback function success. If the ajax call fails then the callback function fail is called.
+ */
+ function getCurrentUser(success,fail)
+ {
+ 		$.ajax({
+ 			url: "checkloggedin.php",
+ 			type: "POST",
+ 			success:success,
+ 			error:fail, 
+ 			dataType: "json"
+ 		});
+ }
+
 google.maps.event.addDomListener(window, 'load', initialize);

@@ -165,7 +165,9 @@ function toggleLoginButton(state){
 
 	// Switch from login to my account.
 	if(state == 1){
-		$("#my-account").html("My Account");
+		//$("#my-account").html("My Account");
+		getCurrentUser(function setAccountLabel(message){$("#my-account").html(message["message"]);},
+					function setDefaultLabel(message){$("#my-account").html("My Account");});
 		$("#my-account").attr('onclick','').unbind('click');
 		$("#my-account").click(function (){
 			toggleMyAccountMenu();
