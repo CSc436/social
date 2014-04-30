@@ -81,10 +81,12 @@ CREATE TABLE `event` (
   `Title` varchar(140) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Timestamp` datetime NOT NULL,
+  `ChosenTime` datetime NOT NULL,
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `CategoryID` int(11) NOT NULL,
   `FlagCount` int(2) NOT NULL,
+  `LocationString` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`EventID`),
   UNIQUE KEY `EventID_UNIQUE` (`EventID`),
   KEY `Email` (`Email`),
@@ -93,12 +95,31 @@ CREATE TABLE `event` (
   CONSTRAINT `event_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
   CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
   CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+<<<<<<< HEAD
+) ENGINE=InnoDB AUTO_INCREMENT=14043 DEFAULT CHARSET=latin1;
+=======
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `event`
 --
+<<<<<<< HEAD
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
+DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
+END$$
+DELIMITER ;
+
+=======
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
 
 LOCK TABLES `event` WRITE;
 /*!40000 ALTER TABLE `event` DISABLE KEYS */;
@@ -192,8 +213,8 @@ DROP TABLE IF EXISTS `locale`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locale` (
   `LocationID` int(11) NOT NULL AUTO_INCREMENT,
-  `longitude` float NOT NULL,
-  `latitude` float NOT NULL,
+  `longitude` float(8,5) NOT NULL,
+  `latitude` float(8,5) NOT NULL,
   PRIMARY KEY (`LocationID`),
   UNIQUE KEY `LocationID_UNIQUE` (`LocationID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
@@ -220,8 +241,13 @@ CREATE TABLE `notifications` (
   `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
   `Email` varchar(50) NOT NULL,
   `EventID` int(11) NOT NULL,
+<<<<<<< HEAD
+  `Seen` bit(1) NOT NULL,
+  `Description` varchar(140) NOT NULL,
+=======
   `Description` varchar(140) NOT NULL,
   `Seen` bit(1) NOT NULL,
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
   PRIMARY KEY (`NotificationID`),
   KEY `Email` (`Email`),
   KEY `EventID` (`EventID`),
@@ -267,7 +293,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('d@d.com','d','Dee','Dee','mrusicgntomu1ospc111hiwowzifympp','f93ed7f76e036405095830c7b6a787c2c1323007531acc73ed783b3b524f09c8',11111,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -280,4 +305,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
+-- Dump completed on 2014-04-29 20:40:33
+=======
 -- Dump completed on 2014-04-29 18:52:48
+>>>>>>> 887bdd425ccd4be2b3d236acea39e2be39859ba4
