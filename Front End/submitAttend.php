@@ -32,17 +32,14 @@
 
 	echo json_encode($result);
 	
-	// Get information about the event being attended.
+	// Get information about the event being attended so we can generate a notification.
 	$event_query = $db->prepare("
 		SELECT Title, Email FROM event WHERE EventId=:eventid;
 	");
-	
-	$params = array( ":eventid" => htmlspecialchars(2) );
-	
+	$params = array( ":eventid" => htmlspecialchars($_POST['eventID']) );
 	$event_query->execute($params);
-	
-	$result = $event_query->fetchAll();
+	$eventInfo = $event_query->fetchAll();
 
 	// Generate a notification about the RSVP.
-	generateNotification($db, $result[0]['Email'], $_POST['eventID'], $_POST['email'] . " is attending your event: " . $result[0]['Title'] . "");
+	generateNotification($db, $eventInfo[0]['Email'], $_POST['eventID'], $_POST['email'] . " is attending your event: " . $eventInfo[0]['Title'] . "");
 ?>

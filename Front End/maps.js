@@ -500,7 +500,6 @@ function btnunattend(e) {
 			handleNotLoggedIn();
 		}, dataType: "json"
 	});
-
 }
 
 

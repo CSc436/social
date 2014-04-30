@@ -3,6 +3,8 @@ $(document).ready(function () {
     $("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 	$("#sidebar-main").css('top', $("#top-menu").height());
 	$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
+	$("#notifications-dropdown").css('top', 0 - $("#notifications-dropdown").height());
+	//$("#notifications-dropdown").css('right', $(window).width() - $("#notification-icon").offset().left + $("#notification-icon").outerWidth());
 	
 	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
     
@@ -68,6 +70,10 @@ $(document).ready(function () {
 		}
     });
 	
+	$("#notification-icon").click(function() {
+		toggleNotifications();
+	});
+	
 	// all-events tab clicked.
 	$("#all-events-tab").click(function(){
 		switchTabs("#all-events-tab");
@@ -106,6 +112,7 @@ $(window).resize(function(){
 	}
 	
 	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
+	//$("#notifications-dropdown").css('right', $(window).width() - $("#notification-icon").offset().left + $("#notification-icon").outerWidth());
 });
 
 messageIsDisplayed = false;
@@ -161,6 +168,21 @@ function toggleMyAccountMenu(state){
 	}
 }
 
+function toggleNotifications(){
+
+	// Restore the menu.
+	if($("#notifications-dropdown").position()['top'] < 0){
+		$("#notifications-dropdown").css('top', $("#top-menu").height());
+		
+		// Update the notifications;
+		getNotifications();
+	}
+	// Hide the menu.
+	else{
+		$("#notifications-dropdown").css('top', 0 - $("#notifications-dropdown").height());
+	}
+}
+
 function toggleLoginButton(state){
 
 	// Switch from login to my account.
@@ -191,4 +213,47 @@ function switchTabs(tab){
 	$(currentActiveTab).removeClass("event-tab-active");
 	currentActiveTab = tab;
 	$(currentActiveTab).addClass("event-tab-active");
+}
+
+function clearNotifications(){
+	$("#notifications-dropdown").html("");
+}
+
+function processNotification(notifID, description, eventID, seen){
+	var notif = "<div class='notification'>" + description + "</div>";
+	console.log(notifID + ", " + description + ", " + eventID + ", " + seen);
+	$("#notifications-dropdown").append(notif);
+}
+
+function getNotifications(){
+
+	clearNotifications();
+
+	// Check if the user is logged in.
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(email) {
+			console.log(email['message']);
+			
+			// Get all of this user's notifications;
+			$.get(
+				'../backend/notifications/getNotifications.php',
+				{email: email['message']},
+				function(notifs) {
+					
+					// Process each notification.
+					for(var key in notifs){
+						var notif = notifs[key];
+						processNotification(notif['NotificationID'], notif['Description'], notif['EventID'], notif['Seen']);
+					}
+				},
+				"json"
+			);
+		},
+		error:function(message) {
+			// Not logged in. Do nothing.
+		},
+		dataType: "json"
+	});
 }

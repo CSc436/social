@@ -179,9 +179,9 @@ body {
 	width: 200px;
 	height: 300px;
 	position: absolute;
-	background-color: #EBF5ED;
 	right: 0px;
-	z-index: 2;
+	z-index: 1;
+	background-color: #FFFFFF;
 }
 
 .my-account-menu-item {
@@ -193,6 +193,22 @@ body {
     text-decoration: none;
 }
 
+#notifications-dropdown{
+	width: 200px;
+	height: 300px;
+	position: absolute;
+	right: 90px;
+	z-index: 1;
+	background-color: #FFFFFF;
+	overflow-y: scroll;
+}
+
+.notification{
+	display: block;
+	border-top: 2px solid #316EA0;
+	border-bottom: 2px solid #316EA0;
+	margin-bottom: 5px;
+}
 
 #createEvent {
     overflow: hidden;
