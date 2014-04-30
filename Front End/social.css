@@ -129,7 +129,7 @@ body {
 	background-color: #F5FAF6;
 }
 
-.event-tab:hover{ background-color: #EBF5ED; }
+.event-tab:hover{ background-color: #FFFFFF; }
 
 .event-tab-active{
 	background-color: #FFFFFF;
@@ -160,6 +160,12 @@ body {
     border-width: 1px;
     padding: 3%;
 }
+
+.event-link{ text-decoration: none; }
+.event-link:link{ color:#316EA0; text-decoration: none; }
+.event-link:visited{ color:#316EA0; text-decoration: none; }
+.event-link:hover{ color:#316EA0; text-decoration: none; }
+.event-link:active{ color:#316EA0; text-decoration: none; }
 
 .event:hover {
     background-color: #C0C0C0;
