@@ -218,15 +218,15 @@ DROP TABLE IF EXISTS `notifications`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `notifications` (
   `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
-  `User` varchar(50) NOT NULL,
-  `Event` int(11) NOT NULL,
+  `Email` varchar(50) NOT NULL,
+  `EventID` int(11) NOT NULL,
+  `Description` varchar(140) NOT NULL,
   `Seen` bit(1) NOT NULL,
-  `Descrption` varchar(140) NOT NULL,
   PRIMARY KEY (`NotificationID`),
-  KEY `User` (`User`),
-  KEY `Event` (`Event`),
-  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`User`) REFERENCES `user` (`Email`),
-  CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`)
+  KEY `Email` (`Email`),
+  KEY `EventID` (`EventID`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
+  CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
