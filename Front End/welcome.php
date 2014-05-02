@@ -86,7 +86,7 @@
 		<div id="notifications-dropdown" class="sliding-object">
 			
 		</div>
-        <div id="re-center"><img src="img/centerMap.jpg" id="re-center-img"></div>
+        <div id="re-center"><a href=#><img src="img/centerMap.jpg" id="re-center-img"></a></div>
 		
         <div id="map-canvas"/>
 	</div>

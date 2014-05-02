@@ -287,7 +287,7 @@ function processUnAttend(eventID, msg) {
 			// console.log("success unclick");
 			contentstring = infowindow.content.replace("return btnunattend(", "return btnclick(");
 			contentstring = contentstring.replace("btn-danger", "btn-primary");
-			contentstring = contentstring.replace(">Cancel<", ">Attend<");
+			contentstring = contentstring.replace(">Cancel Attend<", ">Attend<");
 			// console.log(contentstring);
 			infowindow.setContent(contentstring);
 			// loadEventsFromDB();
@@ -316,7 +316,7 @@ function processAttend(eventId, msg) {
 			// console.log("click success")
 			contentstring = infowindow.content.replace("return btnclick(", "return btnunattend(");
 			contentstring = contentstring.replace("btn-primary", "btn-danger");
-			contentstring = contentstring.replace(">Attend<", ">Cancel<");
+			contentstring = contentstring.replace(">Attend<", ">Cancel Attend<");
 			infowindow.setContent(contentstring);
 			// $("attendbtn").attr("disabled", "disabled");
 		},
@@ -446,7 +446,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		if (result.length > 0) {
 			contentstring = contentstring + 
 			'<div class="col-md-12"><br>' + 
-			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel Attend</button>"+
 			"</div>" +
 			"</div>";
 		}
