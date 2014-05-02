@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `cstestdb` /*!40100 DEFAULT CHARACTER SET latin1 
 USE `cstestdb`;
 -- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
--- Host: localhost    Database: cstestdb
+-- Host: 127.0.0.1    Database: cstestdb
 -- ------------------------------------------------------
 -- Server version	5.6.16
 
@@ -29,8 +29,8 @@ CREATE TABLE `attending` (
   `Event` int(11) NOT NULL,
   PRIMARY KEY (`Email`,`Event`),
   KEY `Event_idx` (`Event`),
-  CONSTRAINT `Event` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `Email` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `Email` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `Event` FOREIGN KEY (`Event`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -46,6 +46,17 @@ UNLOCK TABLES;
 --
 -- Table structure for table `category`
 --
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
+DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
+END$$
+DELIMITER ;
 
 DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -56,7 +67,7 @@ CREATE TABLE `category` (
   PRIMARY KEY (`CategoryID`),
   UNIQUE KEY `CategoryID_UNIQUE` (`CategoryID`),
   UNIQUE KEY `CategoryName_UNIQUE` (`CategoryName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,6 +76,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
+INSERT INTO `category` VALUES (1,'music');
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,18 +92,21 @@ CREATE TABLE `event` (
   `Title` varchar(140) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Timestamp` datetime NOT NULL,
+  `ChosenTime` datetime NOT NULL,
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `CategoryID` int(11) NOT NULL,
+  `FlagCount` int(2) NOT NULL,
+  `LocationString` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`EventID`),
   UNIQUE KEY `EventID_UNIQUE` (`EventID`),
   KEY `Email` (`Email`),
   KEY `LocationID` (`LocationID`),
   KEY `fk_CategoryID` (`CategoryID`),
-  CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `event_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
-  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  CONSTRAINT `fk_CategoryID` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
+  CONSTRAINT `LocationID` FOREIGN KEY (`LocationID`) REFERENCES `locale` (`LocationID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=14043 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,7 +128,7 @@ DROP TABLE IF EXISTS `eventkeyword`;
 CREATE TABLE `eventkeyword` (
   `EventID` int(11) NOT NULL,
   `KeywordID` int(11) NOT NULL,
-  PRIMARY KEY (`EventID`, `KeywordID`),
+  PRIMARY KEY (`EventID`,`KeywordID`),
   KEY `KeywordID_idx` (`KeywordID`),
   CONSTRAINT `EventID` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `KeywordID` FOREIGN KEY (`KeywordID`) REFERENCES `keyword` (`KeywordID`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -189,20 +204,63 @@ DROP TABLE IF EXISTS `locale`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `locale` (
   `LocationID` int(11) NOT NULL AUTO_INCREMENT,
-  `longitude` float NOT NULL,
-  `latitude` float NOT NULL,
+  `longitude` float(8,5) NOT NULL,
+  `latitude` float(8,5) NOT NULL,
   PRIMARY KEY (`LocationID`),
   UNIQUE KEY `LocationID_UNIQUE` (`LocationID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `locale`
 --
 
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
+DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
+END$$
+DELIMITER ;
+
 LOCK TABLES `locale` WRITE;
 /*!40000 ALTER TABLE `locale` DISABLE KEYS */;
+INSERT INTO `locale` VALUES (1,-110.94400,32.23610);
 /*!40000 ALTER TABLE `locale` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notifications` (
+  `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
+  `Email` varchar(50) NOT NULL,
+  `EventID` int(11) NOT NULL,
+  `Seen` bit(1) NOT NULL,
+  `Description` varchar(140) NOT NULL,
+  PRIMARY KEY (`NotificationID`),
+  KEY `Email` (`Email`),
+  KEY `EventID` (`EventID`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`Email`) REFERENCES `user` (`Email`),
+  CONSTRAINT `notifications_ibfk_2` FOREIGN KEY (`EventID`) REFERENCES `event` (`EventID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -233,7 +291,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -246,4 +303,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-06 21:06:17
+-- Dump completed on 2014-05-01 18:45:02
