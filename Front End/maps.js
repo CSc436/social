@@ -426,6 +426,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	}
 		contentstring = contentstring + "</div></div>";
 
+	console.log(e);
 
 	if ( e === curUser) {
 		contentstring = contentstring + 
@@ -477,6 +478,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 
 
 function processLoadEvent(curUser, data, userEvents) {
+	console.log(data);
+
 	for(var message in data){
 		// console.log(data[message]);
 		
