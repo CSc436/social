@@ -251,6 +251,9 @@ body {
 
 #createEvent {
     overflow: hidden;
+    width: 325px;
+}
+
 /* Re-center button */
 #re-center {
     position: fixed;
