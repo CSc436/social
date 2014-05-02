@@ -268,6 +268,8 @@ function getNotifications(){
 				'../backend/notifications/getNotifications.php',
 				{email: email['message']},
 				function(notifs) {
+				
+					clearNotifications();
 					
 					// Sort the notifications so that the unseen ones are first.
 					notifs.sort(function(x, y) { return x['Seen'] - y['Seen'] } )
