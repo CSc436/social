@@ -60,7 +60,7 @@ body {
 
 /* Sidebar Styles */
 #sidebar-main {
-    background-color: #EBF5ED;
+    background-color: #FFFFFF;
     position: absolute;
 	left: 0;
     height: 100%;
@@ -102,7 +102,7 @@ body {
 #events-tabs{
 	display: block;
 	padding: 10px 0px 10px 0px;
-	background-color: #EBF5ED;
+	background-color: #FFFFFF;
 	text-align: center;
 }
 
@@ -132,7 +132,7 @@ body {
 .event-tab:hover{ background-color: #EBF5ED; }
 
 .event-tab-active{
-	background-color: #EBF5ED;
+	background-color: #FFFFFF;
 }
 
 #events-wrapper{
@@ -142,7 +142,7 @@ body {
 /* Event List Styles */
 #event-list {
     width: 18%;
-    background-color: #404040;
+    background-color: #FFFFFF;
     position: absolute;
     top: 0px;
     left: 19%;
@@ -162,11 +162,11 @@ body {
 }
 
 .event:hover {
-    background-color: #FFFFFF;
+    background-color: #C0C0C0;
 }
 
 .event-focused{
-	background-color: #FFFFFF;
+	background-color: #C0C0C0;
 }
 
 #my-account-menu{
