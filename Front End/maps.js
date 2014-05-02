@@ -433,6 +433,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	}
 	contentstring = contentstring + "</div></div>";
 
+	console.log(e);
 
 	if ( e === curUser) {
 		contentstring = contentstring + 
@@ -445,25 +446,16 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		if (result.length > 0) {
 			contentstring = contentstring + 
 			'<div class="col-md-12"><br>' + 
-			"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
-			"</div>"+
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
+			"</div>" +
 			"</div>";
 		}
 		else {
-			if (result.length > 0) {
-				contentstring = contentstring + 
-				'<div class="col-md-12"><br>' + 
-				"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
-				"</div>" +
-				"</div>";
-			}
-			else {
-				contentstring = contentstring + 
-				'<div class="col-md-12"><br>' + 
-				"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
-				"</div"+
-				"</div>";	
-			}
+			contentstring = contentstring + 
+			'<div class="col-md-12"><br>' + 
+			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
+			"</div"+
+			"</div>";	
 		}
 	}
 	contentstring = contentstring + "</div>"
@@ -493,6 +485,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 
 
 function processLoadEvent(curUser, data, userEvents) {
+	console.log(data);
+
 	for(var message in data){
 		// console.log(data[message]);
 		

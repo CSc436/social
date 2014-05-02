@@ -46,17 +46,6 @@ UNLOCK TABLES;
 --
 -- Table structure for table `category`
 --
-SET GLOBAL event_scheduler = 1;
-DELIMITER $$
-CREATE EVENT expiredDelete
-ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
-DO
-BEGIN 
-DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
-DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
-DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
-END$$
-DELIMITER ;
 
 DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

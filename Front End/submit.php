@@ -50,9 +50,9 @@
 
     $add_event = $db->prepare("
         INSERT INTO `event`
-            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`, `locationString`, `FlagCount`)
+            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`, `locationString`, `FlagCount`, `ChosenTime`)
         VALUES
-            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0)
+            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0, 0)
     ");
 
     // echo json_encode($_SESSION['loggedin']);
