@@ -372,89 +372,95 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
         return;
     }
 
-	var image = 'img/newEvent.png';
-	var marker = new google.maps.Marker({
-		position: pos,
-		map: map,
-		title: data[message]["Title"],
-		icon: image,
-		eventID: id
-	});
+	var result = $.grep(userEvents, function(e) {return e[0] == id; });
+
+	if(!(result.length > 0) && $('#my-attending-tab').hasClass('event-tab-active')){
+		return;
+	}
+	else{
+		var image = 'img/newEvent.png';
+		var marker = new google.maps.Marker({
+			position: pos,
+			map: map,
+			title: data[message]["Title"],
+			icon: image,
+			eventID: id
+		});
 		
-	markers.push(marker);
+		markers.push(marker);
 
-	var contentstring = 	'<div class="form-group">'+
-									'<div class="col-md-12">' + 
-										"<label class='control-label'>Event Title:</label>" + 
-										"<p class='form-control event-content'>"+t+"</p>" +
+		var contentstring = 	'<div class="form-group">'+
+										'<div class="col-md-12">' + 
+											"<label class='control-label'>Event Title:</label>" + 
+											"<p class='form-control event-content'>"+t+"</p>" +
+										'</div>' +
 									'</div>' +
-								'</div>' +
-								'<div class="form-group">'+
-									'<div class="col-md-12">' +
-										"<label class='control-label'>Description:</label>" +
-										"<p class='form-control event-content'>"+d+"</p>" +
+									'<div class="form-group">'+
+										'<div class="col-md-12">' +
+											"<label class='control-label'>Description:</label>" +
+											"<p class='form-control event-content'>"+d+"</p>" +
+										'</div>' +
 									'</div>' +
-								'</div>' +
-								'<div class="form-group">'+
-									'<div class="col-md-12">' + 
-										"<label class='control-label'> Category:</label>"+ 
-										"<p class='form-control event-content'>"+c+"</p>" +
-									"</div>" +
-								"</div><div class='form-group'><div class='col-md-12'><br>";
+									'<div class="form-group">'+
+										'<div class="col-md-12">' + 
+											"<label class='control-label'> Category:</label>"+ 
+											"<p class='form-control event-content'>"+c+"</p>" +
+										"</div>" +
+									"</div><div class='form-group'><div class='col-md-12'><br>";
 
-	for(var key in keywords) {
-		// console.log(keywords[key]["word"]);
-		contentstring = contentstring + "<button class='btn btn-info btn-xs'>" + keywords[key]["word"] + "</button> ";
-	}
-		contentstring = contentstring + "</div></div>";
+		for(var key in keywords) {
+			// console.log(keywords[key]["word"]);
+			contentstring = contentstring + "<button class='btn btn-info btn-xs'>" + keywords[key]["word"] + "</button> ";
+		}
+			contentstring = contentstring + "</div></div>";
 
 
-	if ( e === curUser) {
-		contentstring = contentstring + 
-		'<div class="col-md-12"><br>' + 
-		"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
-		"</div>"+
-		"</div>";
-	}
-	else {
-		var result = $.grep(userEvents, function(e) {return e[0] == id; });
-		if (result.length > 0) {
+		if ( e === curUser) {
 			contentstring = contentstring + 
 			'<div class="col-md-12"><br>' + 
-			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
-			"</div>" +
+			"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
+			"</div>"+
 			"</div>";
 		}
 		else {
-			contentstring = contentstring + 
-			'<div class="col-md-12"><br>' + 
-			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
-			"</div"+
-			"</div>";	
+			if (result.length > 0) {
+				contentstring = contentstring + 
+				'<div class="col-md-12"><br>' + 
+				"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
+				"</div>" +
+				"</div>";
+			}
+			else {
+				contentstring = contentstring + 
+				'<div class="col-md-12"><br>' + 
+				"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
+				"</div"+
+				"</div>";	
+			}
 		}
-	}
-    
-	var iWindow;
-	iWindow = new google.maps.InfoWindow({
-   		content: contentstring,
-   		maxWidth: 500
-   	});
-	
-	marker['infoWindow'] = iWindow;
-
-	(function(mark,info) {
-		google.maps.event.addListener(mark, 'click', function() {
+	    
+		var iWindow;
+		iWindow = new google.maps.InfoWindow({
+	   		content: contentstring,
+	   		maxWidth: 500
+	   	});
 		
-			if(addEventOpen)
-				return;
-			
-			focusEvent(mark);
-		});
-	})(marker,iWindow);
+		marker['infoWindow'] = iWindow;
 
-	google.maps.event.addListener(iWindow,'closeclick',function(){
-		unfocusEvent(marker);
-	});
+		(function(mark,info) {
+			google.maps.event.addListener(mark, 'click', function() {
+			
+				if(addEventOpen)
+					return;
+				
+				focusEvent(mark);
+			});
+		})(marker,iWindow);
+
+		google.maps.event.addListener(iWindow,'closeclick',function(){
+			unfocusEvent(marker);
+		});
+}
 }
 
 
@@ -463,7 +469,12 @@ function processLoadEvent(curUser, data, userEvents) {
 		// console.log(data[message]);
 		
 		// Add event to sidebar list
-		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["Description"]+'</span></div>');
+	var result = $.grep(userEvents, function(e) {return e[0] == data[message]["EventID"]; });
+
+	if(!(result.length > 0) && $('#my-attending-tab').hasClass('event-tab-active')){
+		continue;
+	}
+	$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["Description"]+'</span></div>');
 
 		(function(msg){
 			var id = data[msg]["EventID"];
@@ -480,7 +491,7 @@ function processLoadEvent(curUser, data, userEvents) {
 					console.log("FAILED to find keywords");
 				}, dataType: "json"
 			});
-		})(message);	
+		})(message);
 	}
 }
 

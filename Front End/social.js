@@ -77,6 +77,10 @@ $(document).ready(function () {
 		switchTabs("#my-events-tab");
 		loadEventsFromDB(false, ":self");
 	});
+	$("#my-attending-tab").click(function(){
+		switchTabs("#my-attending-tab");
+		loadEventsFromDB();
+	});
 	
 	// Intercept the form submit and use AJAX instead.
 	$("#events-searchbar-form").submit(function(e){
