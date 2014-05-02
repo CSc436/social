@@ -46,17 +46,6 @@ UNLOCK TABLES;
 --
 -- Table structure for table `category`
 --
-SET GLOBAL event_scheduler = 1;
-DELIMITER $$
-CREATE EVENT expiredDelete
-ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
-DO
-BEGIN 
-DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
-DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
-DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
-END$$
-DELIMITER ;
 
 DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -92,7 +81,8 @@ CREATE TABLE `event` (
   `Title` varchar(140) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Timestamp` datetime NOT NULL,
-  `ChosenTime` datetime NOT NULL,
+  `ChosenTime` varchar(20) NOT NULL,
+  `ChosenDate` varchar(20) NOT NULL,
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `CategoryID` int(11) NOT NULL,
@@ -216,6 +206,17 @@ CREATE TABLE `locale` (
 -- Dumping data for table `locale`
 --
 
+SET GLOBAL event_scheduler = 1;
+DELIMITER $$
+CREATE EVENT expiredDelete
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
+DO
+BEGIN 
+DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
+DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
+DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
+END$$
+DELIMITER ;
 
 LOCK TABLES `locale` WRITE;
 /*!40000 ALTER TABLE `locale` DISABLE KEYS */;
@@ -234,8 +235,8 @@ CREATE TABLE `notifications` (
   `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
   `Email` varchar(50) NOT NULL,
   `EventID` int(11) NOT NULL,
-  `Description` varchar(140) NOT NULL,
   `Seen` bit(1) NOT NULL,
+  `Description` varchar(140) NOT NULL,
   PRIMARY KEY (`NotificationID`),
   KEY `Email` (`Email`),
   KEY `EventID` (`EventID`),
@@ -281,7 +282,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -293,4 +293,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-01 18:45:02
+-- Dump completed on 2014-05-01 19:10:41

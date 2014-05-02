@@ -10,6 +10,7 @@ body {
 
 #map-canvas { 
     height: 100%; 
+    top: 35px;
 }
 
 #wrapper {
@@ -29,7 +30,7 @@ body {
 	position: absolute;
     width: 100%;
     height: 35px;
-	z-index: 2;
+	z-index: 5;
 	background-color: #4398DE;
 }
 
@@ -126,7 +127,7 @@ body {
 	border-top: 2px solid #316EA0;
 	border-left: 2px solid #316EA0;
 	border-right: 2px solid #316EA0;
-	background-color: #F5FAF6;
+	background-color: #C0C0C0;
 }
 
 .event-tab:hover{ background-color: #FFFFFF; }
@@ -161,12 +162,6 @@ body {
     padding: 3%;
 }
 
-.event-link{ text-decoration: none; }
-.event-link:link{ color:#316EA0; text-decoration: none; }
-.event-link:visited{ color:#316EA0; text-decoration: none; }
-.event-link:hover{ color:#316EA0; text-decoration: none; }
-.event-link:active{ color:#316EA0; text-decoration: none; }
-
 .event:hover {
     background-color: #C0C0C0;
 }
@@ -177,14 +172,11 @@ body {
 
 #my-account-menu{
 	width: 200px;
-	height: 100px;
+	height: 300px;
 	position: absolute;
-	right: 0px;
-	z-index: 1;
 	background-color: #FFFFFF;
-	border-left: 1px solid #316EA0;
-	border-right: 1px solid #316EA0;
-	border-bottom: 1px solid #316EA0;
+	right: 0px;
+	z-index: 3;
 }
 
 .my-account-menu-item {
@@ -196,71 +188,18 @@ body {
     text-decoration: none;
 }
 
-#notifications-dropdown{
-	width: 200px;
-	height: 300px;
-	position: absolute;
-	right: 90px;
-	z-index: 1;
-	background-color: #FFFFFF;
-	overflow-y: scroll;
-	border-left: 1px solid #316EA0;
-	border-right: 1px solid #316EA0;
-	border-bottom: 1px solid #316EA0;
-}
-
-.notification{
-	display: block;
-	min-height: 20%;
-	border-top: 2px solid #316EA0;
-	border-right: 2px solid #316EA0;
-	border-bottom: 2px solid #316EA0;
-	border-left: 8px solid #316EA0;
-	margin-bottom: 1px;
-	padding: 3px 5px 3px 5px;
-	font: 12px helvetica;
-	text-decoration: none;
-}
-
-.notification-seen{
-	border-top: 2px solid #C3DAED;
-	border-right: 2px solid #C3DAED;
-	border-bottom: 2px solid #C3DAED;
-	border-left: 8px solid #C3DAED;
-	color: #C3DAED;
-}
-
-.notification:hover{
-	border-top: 2px solid #1E4260;
-	border-right: 2px solid #1E4260;
-	border-bottom: 2px solid #1E4260;
-	border-left: 8px solid #1E4260;
-}
-
-.notification-seen:hover{
-	border-top: 2px solid #75A9D5;
-	border-right: 2px solid #75A9D5;
-	border-bottom: 2px solid #75A9D5;
-	border-left: 8px solid #75A9D5;
-}
-
-.notification-link:link { text-decoration: none; }
-.notification-link:visited { text-decoration: none; }
-.notification-link:hover { text-decoration: none; }
-.notification-link:active { text-decoration: none; }
 
 #createEvent {
     overflow: hidden;
-    width: 325px;
 }
 
-/* Re-center button */
+/* Re-center button */    
 #re-center {
     position: fixed;
     width: 20px;
     height: 20px;
     right: 37px;
-    top: 135px;
+    top: 170px;
     z-index: 1;
 }
 
@@ -269,4 +208,9 @@ body {
    /* left: 20%;
     width: 80%; */
     position: fixed;
+}
+
+/* Info window */
+.datepicker .datepicker-dropdown {
+    z-index: 7;
 }

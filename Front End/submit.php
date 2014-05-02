@@ -37,8 +37,8 @@
 	$get_locID_query= $db->prepare("
 		SELECT `locationID` FROM `locale`
 		WHERE
-			ROUND(longitude, 5) = ROUND(:xcoord, 5) AND
-			ROUND(latitude, 5) = ROUND(:ycoord, 5)
+			ROUND(longitude, 4) = ROUND(:xcoord, 4) AND
+			ROUND(latitude, 4) = ROUND(:ycoord, 4)
 		");
 
 	$get_locID_query->execute(array(
@@ -50,19 +50,20 @@
 
     $add_event = $db->prepare("
         INSERT INTO `event`
-            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`, `locationString`, `FlagCount`)
+            (`title`, `email`, `timestamp`, `chosenTime`, `chosenDate`, `FlagCount`, `locationID`, `description`, `categoryID`)
         VALUES
-            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0)
+            (:title, :email, CURRENT_TIMESTAMP, :time, :date, 0, :locid, :desc, :catID)
     ");
 
     // echo json_encode($_SESSION['loggedin']);
     $add_event->execute(array(
         ':title' => $_POST['title'],
         ':email' => $_SESSION['loggedin'],
+        ':time' => $_POST['time'],
+        ':date' => $_POST['date'],
         ':locid' => $locID[0],
         ':desc' => $_POST['desc'],
-        ':catID' => $catID[0],
-        ':locstring' => $_POST['location']
+        ':catID' => $catID[0]
     ));
 
 

@@ -3,7 +3,6 @@ var addEventOpen = false;
 var keywordsarray = new Array();
 var markers = new Array();
 var searchMarkers = new Array();
-var geocoder;
 
 var infowindow = null;
 var bounds;
@@ -30,7 +29,6 @@ var currentMarker = null;
 				style: google.maps.ZoomControlStyle.SMALL
 			}
 		};
-		geocoder = new google.maps.Geocoder();
 		map = new google.maps.Map(document.getElementById("map-canvas"),
 			mapOptions);	
 		bounds = new google.maps.LatLngBounds();
@@ -58,7 +56,7 @@ var currentMarker = null;
 					icon: image
 				});
 				loadEventsFromDB(true);
-				circle = new google.maps.Circle({radius: 500, center: initialLocation});
+				circle = new google.maps.Circle({radius: 4828, center: initialLocation});
     			map.fitBounds(circle.getBounds());/*sets a radius around current location that will fit in viewport*/
 				//getGeocode(initialLocation, marker);
 			}, function() {
@@ -82,6 +80,16 @@ var currentMarker = null;
     circle = new Circle({radius: 32186, center: initialLocation});
     map.fitBounds(circle.getBounds());
   }
+
+  	//gets geocode nfo and displays in an infowindow
+  	// function getGeocode(location, marker) {
+  		//geocoder = new google.maps.Geocoder();
+  		// var infowindow = new google.maps.InfoWindow();
+  		// geocoder.geocode({'latLng': location}, function(results, status) {
+    //     	infowindow.setContent(results[1].formatted_address);
+    //     	infowindow.open(map, marker);
+    //     });
+    // }
 
 	//create the X control
 	controlDiv = document.createElement('div');
@@ -110,9 +118,14 @@ var currentMarker = null;
 			url: "checkloggedin.php",
 			type: "POST",
 			success:function(message) {
+				console.log("success");
+				console.log(message);
+				console.log(message["message"]);
 				processClick();
 			},
 			error:function(message) {
+				console.log("fail");
+				console.log(message);
 				handleNotLoggedIn();
 			}, dataType: "json"
 		});
@@ -196,13 +209,25 @@ function placeMarker(location) {
 								'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Event Title:</label>" + 
-										"<input id='title' class='form-control' type='text' name='title' value=''>" +
+										"<input id='title' class='form-control' type='text' name='title' value='' required>" +
+									'</div>' +
+								'</div>' +
+                                '<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Date:</label>" + 
+										"<input id='event-date' class='form-control' type='text' name='date' value='' required>" +
+									'</div>' +
+								'</div>' +
+                                '<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Time:</label>" + 
+                                        "<input id='event-time' class='form-control' type='text' name='time' value='' required>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
 									'<div class="col-md-12">' +
 										"<label class='control-label'>Description:</label>" +
-										"<input id='desc' class='form-control' type='text' name='description' value=''>" +
+										"<input id='desc' class='form-control' type='text' name='description' value='' required>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
@@ -214,13 +239,6 @@ function placeMarker(location) {
 										"</select>" +
 									"</div>" +
 								"</div>" +
-								'<div class="form-group">'+
-									'<div class="col-md-12">' +
-										"<label class='control-label'>Address:</label>" +
-										"<input id='addr' class='form-control' type='text' name='address' value=''>" +
-										"<small>enter to update location</small>"+
-									'</div>' +
-								'</div>' +
 							'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Keywords:</label>" +
@@ -242,32 +260,23 @@ function placeMarker(location) {
 	infowindow = new google.maps.InfoWindow({
 	   		content: contentstring,
 	   		maxWidth: 500
-   	});
-   	infowindow.open(map,marker);
+	   	});
+	   	infowindow.open(map,marker);
+        
+        // Enable date and time pickers.
+        //$("#event-time").timepicker({ "scrollDefaultNow": true });
+        //$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true});
+        setTimeout('$("#event-time").timepicker({ "scrollDefaultNow": true })',100);
+        setTimeout('$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true})',100);
 	
-	geocoder.geocode({'latLng': location}, function(results, status) {
-        	$("#addr").val(results[0].formatted_address);
-    });
-
-
 	google.maps.event.addListener(infowindow,'closeclick',function(){
 			currentMarker = null;
+			console.log("close");
 			marker.setMap(null); //removes the marker
 			addEventOpen = false;
-	});
+		});
 	// console.log(currentMark);
-}
 
-function updateLocation() {
-	var addr = $("#addr").val();
-	geocoder.geocode({'address': addr, 'bounds': map.getBounds()}, function(results, status) {
-        	$("#addr").val(results[0].formatted_address);
-        	currentMarker.setPosition(results[0].geometry.location);
-        	map.panTo(results[0].geometry.location);
-        	console.log(results[0].geometry.location);
-        	current = results[0].geometry.location;
-    });
-	
 }
 
 function handleNotLoggedIn() {
@@ -345,7 +354,6 @@ function processClick() {
 		//clicking the x
 		google.maps.event.addDomListener(controlDiv, 'click', function() {
 	    	normalMap();
-	    	addEventOpen = false;
 	  	});
 
 		//placing the pin
@@ -376,41 +384,33 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	var c = data[message]["CategoryName"];
 	var id = data[message]["EventID"];
 	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
-	var location = data[message]["LocationString"];
-	// console.log(data[message]);
     
     if (currentMarker != null && id == currentMarker['eventID']) {
         focusEvent(currentMarker);
         return;
     }
 
-	var result = $.grep(userEvents, function(e) {return e[0] == id; });
-
-	if(!(result.length > 0) && $('#my-attending-tab').hasClass('event-tab-active')){
-		return;
-	}
-	else{
-		var image = 'img/newEvent.png';
-		var marker = new google.maps.Marker({
-			position: pos,
-			map: map,
-			title: data[message]["Title"],
-			icon: image,
-			eventID: id
-		});
+	var image = 'img/newEvent.png';
+	var marker = new google.maps.Marker({
+		position: pos,
+		map: map,
+		title: data[message]["Title"],
+		icon: image,
+		eventID: id
+	});
 		
-		markers.push(marker);
+	markers.push(marker);
 
-	var contentstring = 	'<div id ="viewEvent"> <div class="form-group">'+
+	var contentstring = 	'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Event Title:</label>" + 
 										"<p class='form-control event-content'>"+t+"</p>" +
 									'</div>' +
-									'<div class="form-group">'+
-										'<div class="col-md-12">' +
-											"<label class='control-label'>Description:</label>" +
-											"<p class='form-control event-content'>"+d+"</p>" +
-										'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' +
+										"<label class='control-label'>Description:</label>" +
+										"<p class='form-control event-content'>"+d+"</p>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
@@ -418,20 +418,13 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 										"<label class='control-label'> Category:</label>"+ 
 										"<p class='form-control event-content'>"+c+"</p>" +
 									"</div>" +
-								"</div>" + 
-								'<div class="form-group">'+
-									'<div class="col-md-12">' +
-										"<label class='control-label'>Address:</label>" +
-										"<p class='form-control event-content' id = 'addr' >"+location+"</p>" +
-									'</div>' +
-								'</div>' +
-								"<div class='form-group'><div class='col-md-12'><br>";
+								"</div><div class='form-group'><div class='col-md-12'><br>";
 
 	for(var key in keywords) {
 		// console.log(keywords[key]["word"]);
 		contentstring = contentstring + "<button class='btn btn-info btn-xs'>" + keywords[key]["word"] + "</button> ";
 	}
-	contentstring = contentstring + "</div></div>";
+		contentstring = contentstring + "</div></div>";
 
 
 	if ( e === curUser) {
@@ -442,31 +435,22 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		"</div>";
 	}
 	else {
+		var result = $.grep(userEvents, function(e) {return e[0] == id; });
 		if (result.length > 0) {
 			contentstring = contentstring + 
 			'<div class="col-md-12"><br>' + 
-			"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
-			"</div>"+
+			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
+			"</div>" +
 			"</div>";
 		}
 		else {
-			if (result.length > 0) {
-				contentstring = contentstring + 
-				'<div class="col-md-12"><br>' + 
-				"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel</button>"+
-				"</div>" +
-				"</div>";
-			}
-			else {
-				contentstring = contentstring + 
-				'<div class="col-md-12"><br>' + 
-				"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
-				"</div"+
-				"</div>";	
-			}
+			contentstring = contentstring + 
+			'<div class="col-md-12"><br>' + 
+			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
+			"</div"+
+			"</div>";	
 		}
 	}
-	contentstring = contentstring + "</div>"
     
 	var iWindow;
 	iWindow = new google.maps.InfoWindow({
@@ -475,20 +459,20 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
    	});
 	
 	marker['infoWindow'] = iWindow;
-		(function(mark,info) {
-			google.maps.event.addListener(mark, 'click', function() {
-			
-				if(addEventOpen)
-					return;
-				
-				focusEvent(mark);
-			});
-		})(marker,iWindow);
 
-		google.maps.event.addListener(iWindow,'closeclick',function(){
-			unfocusEvent(marker);
+	(function(mark,info) {
+		google.maps.event.addListener(mark, 'click', function() {
+		
+			if(addEventOpen)
+				return;
+			
+			focusEvent(mark);
 		});
-}
+	})(marker,iWindow);
+
+	google.maps.event.addListener(iWindow,'closeclick',function(){
+		unfocusEvent(marker);
+	});
 }
 
 
@@ -497,13 +481,7 @@ function processLoadEvent(curUser, data, userEvents) {
 		// console.log(data[message]);
 		
 		// Add event to sidebar list
-		var result = $.grep(userEvents, function(e) {return e[0] == data[message]["EventID"]; });
-
-		if(!(result.length > 0) && $('#my-attending-tab').hasClass('event-tab-active')){
-			continue;
-		}
-		
-		$("#events-list").append('<a href=# class="event-link"><div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["Description"]+'</span></div></a>');
+		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["ChosenDate"]+' '+data[message]["ChosenTime"]+'</span><br /><span>'+data[message]["Description"]+'</span></div>');
 
 		(function(msg){
 			var id = data[msg]["EventID"];
@@ -520,7 +498,7 @@ function processLoadEvent(curUser, data, userEvents) {
 					console.log("FAILED to find keywords");
 				}, dataType: "json"
 			});
-		})(message);
+		})(message);	
 	}
 }
 
@@ -540,6 +518,7 @@ function btnunattend(e) {
 			handleNotLoggedIn();
 		}, dataType: "json"
 	});
+
 }
 
 
@@ -733,12 +712,7 @@ function checkNotEmpty(title, desc, cat) {
 }
 
 function submitForm(e){
-	// console.log("submit");
 	// console.log(currentMark);
-
-	if ($(document.activeElement).attr("id") === "addr") {
-		updateLocation();
-	}
 	var kw;
  	//if enter is presse in the title or description field, do nothing
  	if ($(document.activeElement).attr("type") !=  "submit" && $(document.activeElement).attr("id") != "keywords") {
@@ -749,19 +723,18 @@ function submitForm(e){
  	if ($(document.activeElement).attr("id") == "keywords") {
  		//adding keywords
  		kw = $(document.activeElement).val().trim().toUpperCase();
+ 		console.log(kw);
  		if (keywordsarray.indexOf(kw) < 0 && kw != "") {
- 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"return kwclick(this)\">" + kw+ "</button> ");
+ 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <button type='button' class='btn btn-info btn-sm' onclick=\"return kwclick(this)\">" + kw+ "</button> ");
  			keywordsarray.push(kw.toUpperCase());
  			var title = $("#title").val();
  			var desc = $("#desc").val();
- 			var loc = $("#addr").val();
  			infowindow.setContent(contentstring);
  			//setContent() takes `1` unit of time, so this must wait 1 time unit
  			setTimeout('$("#keywords").focus()',1);
  			$("#title").val(title);
  			$("#desc").val(desc);
- 			$("#addr").val(loc);
-
+ 				
  		}
  		else{
  			$(document.activeElement).val("");	
@@ -769,10 +742,11 @@ function submitForm(e){
  		return false;
  	}
 	var title = $("#title").val();
+    var date = $("#event-date").val();
+    var time = $("#event-time").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
-	var locationStr = $("#addr").val();
 	
 	var proceed = checkNotEmpty(title, desc);
 	if (!proceed){
@@ -787,7 +761,7 @@ function submitForm(e){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray, location:locationStr},
+		data: {title: title, time: time, date: date, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -817,19 +791,6 @@ function focusEvent(marker){
 	infowindow.open(map, marker);
 }
 
-function focusEventGivenID(eventID){
-	
-	// Find the marker for the event.
-	for(marker in markers){
-		
-		// Focus the marker if we find it.
-		if(markers[marker]['eventID'] == eventID){
-			focusEvent(markers[marker]);
-			break;
-		}
-	}
-}
-
 function unfocusEvent(marker){
 
 	// Update the marker in the list view.
@@ -849,23 +810,16 @@ function unfocusEvent(marker){
 function kwclick(e) {
 	var text = $(e)[0].innerHTML;
 	var outer = $(e)[0].outerHTML;
+	// console.log($(e)[0].outerHTML);
 	var i = keywordsarray.indexOf(text);
 	keywordsarray.splice(i, 1);
+	console.log(keywordsarray);
 	// e.remove();
 	// console.log(outer);
-
-	console.log(infowindow.content);
-	var title = $("#title").val();
-	var desc = $("#desc").val();
-	var loc = $("#addr").val();
-
 	var contentstring = infowindow.content.replace(outer, " ");
 	// console.log(contentstring);
 	infowindow.setContent(contentstring);
-	setTimeout('$("#keywords").focus()',1);
-	$("#title").val(title);
-	$("#desc").val(desc);
-	$("#addr").val(loc);
+
 }
 
 function submitSuccess(data) {
@@ -888,7 +842,7 @@ $(document).ready(function () {
             var eventId = parseInt(num);
             for (var i=0; i<markers.length; i++) {
                 if (markers[i]['eventID'] == eventId) {
-                    map.setCenter(markers[i]['position']);
+                    map.panTo(markers[i]['position']);
 					focusEvent(markers[i]);
                 }
             }
@@ -896,7 +850,7 @@ $(document).ready(function () {
     });
     
     $("#re-center-img").click(function() {
-        map.setCenter(initialLocation); 
+        map.panTo(initialLocation); 
     });
 });
 
