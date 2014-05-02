@@ -177,11 +177,14 @@ body {
 
 #my-account-menu{
 	width: 200px;
-	height: 300px;
+	height: 100px;
 	position: absolute;
 	right: 0px;
 	z-index: 1;
 	background-color: #FFFFFF;
+	border-left: 1px solid #316EA0;
+	border-right: 1px solid #316EA0;
+	border-bottom: 1px solid #316EA0;
 }
 
 .my-account-menu-item {
@@ -201,14 +204,50 @@ body {
 	z-index: 1;
 	background-color: #FFFFFF;
 	overflow-y: scroll;
+	border-left: 1px solid #316EA0;
+	border-right: 1px solid #316EA0;
+	border-bottom: 1px solid #316EA0;
 }
 
 .notification{
 	display: block;
+	min-height: 20%;
 	border-top: 2px solid #316EA0;
+	border-right: 2px solid #316EA0;
 	border-bottom: 2px solid #316EA0;
-	margin-bottom: 5px;
+	border-left: 8px solid #316EA0;
+	margin-bottom: 1px;
+	padding: 3px 5px 3px 5px;
+	font: 12px helvetica;
+	text-decoration: none;
 }
+
+.notification-seen{
+	border-top: 2px solid #C3DAED;
+	border-right: 2px solid #C3DAED;
+	border-bottom: 2px solid #C3DAED;
+	border-left: 8px solid #C3DAED;
+	color: #C3DAED;
+}
+
+.notification:hover{
+	border-top: 2px solid #1E4260;
+	border-right: 2px solid #1E4260;
+	border-bottom: 2px solid #1E4260;
+	border-left: 8px solid #1E4260;
+}
+
+.notification-seen:hover{
+	border-top: 2px solid #75A9D5;
+	border-right: 2px solid #75A9D5;
+	border-bottom: 2px solid #75A9D5;
+	border-left: 8px solid #75A9D5;
+}
+
+.notification-link:link { text-decoration: none; }
+.notification-link:visited { text-decoration: none; }
+.notification-link:hover { text-decoration: none; }
+.notification-link:active { text-decoration: none; }
 
 #createEvent {
     overflow: hidden;

@@ -770,6 +770,19 @@ function focusEvent(marker){
 	infowindow.open(map, marker);
 }
 
+function focusEventGivenID(eventID){
+	
+	// Find the marker for the event.
+	for(marker in markers){
+		
+		// Focus the marker if we find it.
+		if(markers[marker]['eventID'] == eventID){
+			focusEvent(markers[marker]);
+			break;
+		}
+	}
+}
+
 function unfocusEvent(marker){
 
 	// Update the marker in the list view.

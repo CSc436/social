@@ -47,6 +47,7 @@ $(document).ready(function () {
 				closeMsg();
 				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
+				unfocusEvent(currentMarker);
 				loadEventsFromDB();
 			}
 		);
@@ -219,10 +220,36 @@ function clearNotifications(){
 	$("#notifications-dropdown").html("");
 }
 
+function markNotificationSeen(notifID){
+
+	$("#notif-" + notifID).addClass("notification-seen");
+	
+	// Ajax call to the mark php script.
+	$.post(
+		'../backend/notifications/markNotificationSeen.php',
+		{notifid: notifID},
+		function(message) { 
+		}
+	);
+}
+
 function processNotification(notifID, description, eventID, seen){
-	var notif = "<div class='notification'>" + description + "</div>";
-	console.log(notifID + ", " + description + ", " + eventID + ", " + seen);
+
+	// Style differently if the notification has been seen.
+	var seenClass = (seen == 1)? "notification-seen" : "";
+	var notif = "<a href=# class='notification-link'><div id='notif-" + notifID + "' class='notification " + seenClass + "'>" + description + "</div></a>";
 	$("#notifications-dropdown").append(notif);
+	
+	// Attach an on-click to the notification.
+	$("#notif-" + notifID).click(function() {
+	
+		// Focus the event attached to this notification if it has one.
+		if(eventID >= 0)
+			focusEventGivenID(eventID);
+			
+		// Mark this event as 'seen'
+		markNotificationSeen(notifID);
+	});
 }
 
 function getNotifications(){
@@ -241,6 +268,9 @@ function getNotifications(){
 				'../backend/notifications/getNotifications.php',
 				{email: email['message']},
 				function(notifs) {
+					
+					// Sort the notifications so that the unseen ones are first.
+					notifs.sort(function(x, y) { return x['Seen'] - y['Seen'] } )
 					
 					// Process each notification.
 					for(var key in notifs){
