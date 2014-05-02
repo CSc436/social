@@ -57,6 +57,10 @@
 								
 								// Change the "login" button to "logout".
 								toggleLoginButton(1);
+								
+								// Close any opened events.
+								unfocusEvent();
+								
 								loadEventsFromDB();
 								getNotifications();
 							}

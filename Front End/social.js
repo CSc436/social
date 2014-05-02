@@ -37,6 +37,9 @@ $(document).ready(function () {
 		
 		// Processing message.
 		displayMsg("Logging Out...", "");
+		
+		// Close any opened events.
+		unfocusEvent();
 	
 		// Call the logout script.
 		$.get(

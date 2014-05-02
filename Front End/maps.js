@@ -824,7 +824,7 @@ function focusEventGivenID(eventID){
 	}
 }
 
-function unfocusEvent(marker){
+function unfocusEvent(){
 
 	// Update the marker in the list view.
 	if (currentMarker != null) {
