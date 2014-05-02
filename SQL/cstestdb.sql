@@ -215,17 +215,6 @@ CREATE TABLE `locale` (
 -- Dumping data for table `locale`
 --
 
-SET GLOBAL event_scheduler = 1;
-DELIMITER $$
-CREATE EVENT expiredDelete
-ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 DAY
-DO
-BEGIN 
-DELETE from eventkeyword WHERE (eventID = event.eventID) AND (datediff(CURDATE(), event.ChosenTime()) > 5); 
-DELETE from attending WHERE (event= event.eventID) AND datediff(CURDATE(), event.ChosenTime()) > 5;
-DELETE from event WHERE datediff(CURDATE(), event.ChosenTime()) > 5;
-END$$
-DELIMITER ;
 
 LOCK TABLES `locale` WRITE;
 /*!40000 ALTER TABLE `locale` DISABLE KEYS */;

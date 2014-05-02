@@ -217,7 +217,7 @@ function placeMarker(location) {
 								'<div class="form-group">'+
 									'<div class="col-md-12">' +
 										"<label class='control-label'>Address:</label>" +
-										"<input id='addr' class='form-control' type='text' name='address' value=''>" +
+										"<input id='addr' class='form-control' type='text' name='address' value='' required>" +
 										"<small>enter to update location</small>"+
 									'</div>' +
 								'</div>' +
@@ -701,19 +701,6 @@ function loadEventsFromDB(usePreviousSettings, ownerFilter, descriptionFilter, c
 	return false;
 }
 
-function checkNotEmpty(title, desc, cat) {
-	//TODO: Make pretty
-	if (title === "") {
-		displayMsg("No Title", "Please give your event a title.");
-		return false;
-	}
-	if (desc === "") {
-		displayMsg("No Description", "Please name your event.");
-		return false;
-	}
-	return true;
-}
-
 function submitForm(e){
 	// console.log("submit");
 	// console.log(currentMark);
@@ -755,11 +742,6 @@ function submitForm(e){
 	var cat = $("#category").val();
 	var coord = current;
 	var locationStr = $("#addr").val();
-	
-	var proceed = checkNotEmpty(title, desc);
-	if (!proceed){
-		return false;
-	}
 
 		
 	if ($("#keywords").val() != "") {
