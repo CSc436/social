@@ -731,18 +731,19 @@ function submitForm(e){
  	if ($(document.activeElement).attr("id") == "keywords") {
  		//adding keywords
  		kw = $(document.activeElement).val().trim().toUpperCase();
- 		console.log(kw);
  		if (keywordsarray.indexOf(kw) < 0 && kw != "") {
- 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <button type='button' class='btn btn-info btn-sm' onclick=\"return kwclick(this)\">" + kw+ "</button> ");
+ 			contentstring = infowindow.content.replace("<div id='kw'>", "<div id='kw'> <button type=\"button\" class=\"btn btn-info btn-sm\" onclick=\"return kwclick(this)\">" + kw+ "</button> ");
  			keywordsarray.push(kw.toUpperCase());
  			var title = $("#title").val();
  			var desc = $("#desc").val();
+ 			var loc = $("#addr").val();
  			infowindow.setContent(contentstring);
  			//setContent() takes `1` unit of time, so this must wait 1 time unit
  			setTimeout('$("#keywords").focus()',1);
  			$("#title").val(title);
  			$("#desc").val(desc);
- 				
+ 			$("#addr").val(loc);
+
  		}
  		else{
  			$(document.activeElement).val("");	
@@ -817,16 +818,23 @@ function unfocusEvent(marker){
 function kwclick(e) {
 	var text = $(e)[0].innerHTML;
 	var outer = $(e)[0].outerHTML;
-	// console.log($(e)[0].outerHTML);
 	var i = keywordsarray.indexOf(text);
 	keywordsarray.splice(i, 1);
-	console.log(keywordsarray);
 	// e.remove();
 	// console.log(outer);
+
+	console.log(infowindow.content);
+	var title = $("#title").val();
+	var desc = $("#desc").val();
+	var loc = $("#addr").val();
+
 	var contentstring = infowindow.content.replace(outer, " ");
 	// console.log(contentstring);
 	infowindow.setContent(contentstring);
-
+	setTimeout('$("#keywords").focus()',1);
+	$("#title").val(title);
+	$("#desc").val(desc);
+	$("#addr").val(loc);
 }
 
 function submitSuccess(data) {
