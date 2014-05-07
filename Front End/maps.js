@@ -250,6 +250,9 @@ function placeMarker(location) {
    	});
    	infowindow.open(map,marker);
 	
+    setTimeout('$("#event-time").timepicker({ "scrollDefaultNow": true })',100);
+    setTimeout('$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true})',100);
+    
 	geocoder.geocode({'latLng': location}, function(results, status) {
         	$("#addr").val(results[0].formatted_address);
     });

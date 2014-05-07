@@ -16,6 +16,10 @@
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1xyTkrjYqcS9qWjjgVt6uHEcbmuYysAE&sensor=true&libraries=places">
 	</script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js" rel="script"></script>
+    <script type="text/javascript" src="timepicker/jquery.timepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="timepicker/jquery.timepicker.css">
+    <script type="text/javascript" src="timepicker/lib/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" type="text/css" href="timepicker/lib/bootstrap-datepicker.css">
     <script src="social.js"></script>
     <script src="maps.js"></script>
 </head>

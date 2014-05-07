@@ -50,7 +50,7 @@
 
     $add_event = $db->prepare("
         INSERT INTO `event`
-            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`, `locationString`, `FlagCount`, `ChosenTime`)
+            (`title`, `email`, `timestamp`, `chosenTime`, `chosenDate`,`locationID`, `description`, `categoryID`, `locationString`, `FlagCount`)
         VALUES
             (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0, 0)
     ");
@@ -59,6 +59,8 @@
     $add_event->execute(array(
         ':title' => $_POST['title'],
         ':email' => $_SESSION['loggedin'],
+        ':time' => $_POST['time'],
+        ':date' => $_POST['date'],
         ':locid' => $locID[0],
         ':desc' => $_POST['desc'],
         ':catID' => $catID[0],
