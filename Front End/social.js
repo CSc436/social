@@ -3,6 +3,8 @@ $(document).ready(function () {
     $("#sidebar-main").css('left', 0 - $("#sidebar-main").width());
 	$("#sidebar-main").css('top', $("#top-menu").height());
 	$("#my-account-menu").css('top', 0 - $("#my-account-menu").height());
+	$("#notifications-dropdown").css('top', 0 - $("#notifications-dropdown").height());
+	//$("#notifications-dropdown").css('right', $(window).width() - $("#notification-icon").offset().left + $("#notification-icon").outerWidth());
 	
 	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
     
@@ -48,6 +50,7 @@ $(document).ready(function () {
 				closeMsg();
 				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
+				unfocusEvent(currentMarker);
 				loadEventsFromDB();
 			}
 		);
@@ -71,6 +74,10 @@ $(document).ready(function () {
 		}
     });
 	
+	$("#notification-icon").click(function() {
+		toggleNotifications();
+	});
+	
 	// all-events tab clicked.
 	$("#all-events-tab").click(function(){
 		switchTabs("#all-events-tab");
@@ -79,6 +86,10 @@ $(document).ready(function () {
 	$("#my-events-tab").click(function(){
 		switchTabs("#my-events-tab");
 		loadEventsFromDB(false, ":self");
+	});
+	$("#my-attending-tab").click(function(){
+		switchTabs("#my-attending-tab");
+		loadEventsFromDB();
 	});
 	
 	// Intercept the form submit and use AJAX instead.
@@ -109,6 +120,7 @@ $(window).resize(function(){
 	}
 	
 	$("#events-wrapper").css('height', $(window).height()-$("#events-wrapper").position().top-40);
+	//$("#notifications-dropdown").css('right', $(window).width() - $("#notification-icon").offset().left + $("#notification-icon").outerWidth());
 });
 
 messageIsDisplayed = false;
@@ -164,6 +176,21 @@ function toggleMyAccountMenu(state){
 	}
 }
 
+function toggleNotifications(){
+
+	// Restore the menu.
+	if($("#notifications-dropdown").position()['top'] < 0){
+		$("#notifications-dropdown").css('top', $("#top-menu").height());
+		
+		// Update the notifications;
+		getNotifications();
+	}
+	// Hide the menu.
+	else{
+		$("#notifications-dropdown").css('top', 0 - $("#notifications-dropdown").height());
+	}
+}
+
 function toggleLoginButton(state){
 
 	// Switch from login to my account.
@@ -194,4 +221,78 @@ function switchTabs(tab){
 	$(currentActiveTab).removeClass("event-tab-active");
 	currentActiveTab = tab;
 	$(currentActiveTab).addClass("event-tab-active");
+}
+
+function clearNotifications(){
+	$("#notifications-dropdown").html("");
+}
+
+function markNotificationSeen(notifID){
+
+	$("#notif-" + notifID).addClass("notification-seen");
+	
+	// Ajax call to the mark php script.
+	$.post(
+		'../backend/notifications/markNotificationSeen.php',
+		{notifid: notifID},
+		function(message) { 
+		}
+	);
+}
+
+function processNotification(notifID, description, eventID, seen){
+
+	// Style differently if the notification has been seen.
+	var seenClass = (seen == 1)? "notification-seen" : "";
+	var notif = "<a href=# class='notification-link'><div id='notif-" + notifID + "' class='notification " + seenClass + "'>" + description + "</div></a>";
+	$("#notifications-dropdown").append(notif);
+	
+	// Attach an on-click to the notification.
+	$("#notif-" + notifID).click(function() {
+	
+		// Focus the event attached to this notification if it has one.
+		if(eventID >= 0)
+			focusEventGivenID(eventID);
+			
+		// Mark this event as 'seen'
+		markNotificationSeen(notifID);
+	});
+}
+
+function getNotifications(){
+
+	clearNotifications();
+
+	// Check if the user is logged in.
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(email) {
+			console.log(email['message']);
+			
+			// Get all of this user's notifications;
+			$.get(
+				'../backend/notifications/getNotifications.php',
+				{email: email['message']},
+				function(notifs) {
+				
+					clearNotifications();
+					
+					// Sort the notifications so that the unseen ones are first.
+					notifs.sort(function(x, y) { return x['Seen'] - y['Seen'] } )
+					
+					// Process each notification.
+					for(var key in notifs){
+						var notif = notifs[key];
+						processNotification(notif['NotificationID'], notif['Description'], notif['EventID'], notif['Seen']);
+					}
+				},
+				"json"
+			);
+		},
+		error:function(message) {
+			// Not logged in. Do nothing.
+		},
+		dataType: "json"
+	});
 }
