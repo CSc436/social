@@ -481,7 +481,7 @@ function processLoadEvent(curUser, data, userEvents) {
 		// console.log(data[message]);
 		
 		// Add event to sidebar list
-		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["ChosenDate"]+' '+data[message]["ChosenTime"]+'</span><br /><span>'+data[message]["Description"]+'</span></div>');
+		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["ChosenDate"]+' at '+data[message]["ChosenTime"]+'</span><br /><span>'+data[message]["Description"]+'</span></div>');
 
 		(function(msg){
 			var id = data[msg]["EventID"];
