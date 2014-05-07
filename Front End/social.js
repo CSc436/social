@@ -51,6 +51,7 @@ $(document).ready(function () {
 				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
 				unfocusEvent(currentMarker);
+				setFilterSettings(null, null, null, null);
 				loadEventsFromDB();
 			}
 		);
@@ -166,7 +167,11 @@ function closeMsg(){
 	messageIsDisplayed = false;
 }
 
-function toggleMyAccountMenu(state){
+function toggleMyAccountMenu(){
+
+	// Close the notifications menu.
+	if($("#notifications-dropdown").position()['top'] >= 0)
+		toggleNotifications();
 
 	// Restore the menu.
 	if($("#my-account-menu").position()['top'] < 0){
@@ -179,6 +184,10 @@ function toggleMyAccountMenu(state){
 }
 
 function toggleNotifications(){
+
+	// Close the account menu.
+	if($("#my-account-menu").position()['top'] >= 0)
+		toggleMyAccountMenu();
 
 	// Restore the menu.
 	if($("#notifications-dropdown").position()['top'] < 0){
