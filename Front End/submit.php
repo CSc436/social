@@ -1,5 +1,7 @@
 <?php
 	include '..\backend\connect.php';
+	session_name("loggedin");
+	session_start();
 
 	$add_category = $db->prepare("
 		INSERT IGNORE INTO `category` (`CategoryName`)
@@ -35,8 +37,8 @@
 	$get_locID_query= $db->prepare("
 		SELECT `locationID` FROM `locale`
 		WHERE
-			ROUND(longitude, 4) = ROUND(:xcoord, 4) AND
-			ROUND(latitude, 4) = ROUND(:ycoord, 4)
+			ROUND(longitude, 5) = ROUND(:xcoord, 5) AND
+			ROUND(latitude, 5) = ROUND(:ycoord, 5)
 		");
 
 	$get_locID_query->execute(array(
@@ -48,18 +50,19 @@
 
     $add_event = $db->prepare("
         INSERT INTO `event`
-            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`)
+            (`title`, `email`, `timestamp`, `locationID`, `description`, `categoryID`, `locationString`, `FlagCount`, `ChosenTime`)
         VALUES
-            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID)
+            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0, 0)
     ");
 
-
+    // echo json_encode($_SESSION['loggedin']);
     $add_event->execute(array(
         ':title' => $_POST['title'],
-        ':email' => "bar@bar.com",
+        ':email' => $_SESSION['loggedin'],
         ':locid' => $locID[0],
         ':desc' => $_POST['desc'],
-        ':catID' => $catID[0]
+        ':catID' => $catID[0],
+        ':locstring' => $_POST['location']
     ));
 
 

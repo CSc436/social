@@ -81,8 +81,12 @@ CREATE TABLE `event` (
   `Title` varchar(140) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `Timestamp` datetime NOT NULL,
+<<<<<<< HEAD
   `ChosenTime` varchar(20) NOT NULL,
   `ChosenDate` varchar(20) NOT NULL,
+=======
+  `ChosenTime` datetime NOT NULL,
+>>>>>>> origin/master
   `LocationID` int(11) NOT NULL,
   `Description` varchar(255) DEFAULT NULL,
   `CategoryID` int(11) NOT NULL,
@@ -206,6 +210,7 @@ CREATE TABLE `locale` (
 -- Dumping data for table `locale`
 --
 
+
 LOCK TABLES `locale` WRITE;
 /*!40000 ALTER TABLE `locale` DISABLE KEYS */;
 INSERT INTO `locale` VALUES (1,-110.94400,32.23610);
@@ -223,8 +228,13 @@ CREATE TABLE `notifications` (
   `NotificationID` int(2) NOT NULL AUTO_INCREMENT,
   `Email` varchar(50) NOT NULL,
   `EventID` int(11) NOT NULL,
+<<<<<<< HEAD
   `Seen` bit(1) NOT NULL,
   `Description` varchar(140) NOT NULL,
+=======
+  `Description` varchar(140) NOT NULL,
+  `Seen` bit(1) NOT NULL,
+>>>>>>> origin/master
   PRIMARY KEY (`NotificationID`),
   KEY `Email` (`Email`),
   KEY `EventID` (`EventID`),
@@ -270,7 +280,10 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+<<<<<<< HEAD
 INSERT INTO `user` VALUES ('bar@bar.com','Bar','Bar','Bar','1234567','1234567',0,0),('d@d.com','d','Dee','Dee','mrusicgntomu1ospc111hiwowzifympp','f93ed7f76e036405095830c7b6a787c2c1323007531acc73ed783b3b524f09c8',11111,0),('foo@foo.com','Foo','Foo','Foo','1234567','1234567',0,0),('test@test.com','Test User','Test','User','1234567','1234567',0,0);
+=======
+>>>>>>> origin/master
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -283,4 +296,8 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+<<<<<<< HEAD
 -- Dump completed on 2014-05-01 19:10:41
+=======
+-- Dump completed on 2014-05-01 18:45:02
+>>>>>>> origin/master
