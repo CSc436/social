@@ -196,13 +196,25 @@ function placeMarker(location) {
 								'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Event Title:</label>" + 
-										"<input id='title' class='form-control' type='text' name='title' value=''>" +
+										"<input id='title' class='form-control' type='text' name='title' value='' required>" +
+									'</div>' +
+								'</div>' +
+                                '<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Date:</label>" + 
+										"<input id='event-date' class='form-control' type='text' name='date' value='' required>" +
+									'</div>' +
+								'</div>' +
+                                '<div class="form-group">'+
+									'<div class="col-md-12">' + 
+										"<label class='control-label'>Event Time:</label>" + 
+                                        "<input id='event-time' class='form-control' type='text' name='time' value='' required>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
 									'<div class="col-md-12">' +
 										"<label class='control-label'>Description:</label>" +
-										"<input id='desc' class='form-control' type='text' name='description' value=''>" +
+										"<input id='desc' class='form-control' type='text' name='description' value='' required>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
@@ -214,13 +226,13 @@ function placeMarker(location) {
 										"</select>" +
 									"</div>" +
 								"</div>" +
-								'<div class="form-group">'+
-									'<div class="col-md-12">' +
-										"<label class='control-label'>Address:</label>" +
+                            '<div class="form-group">'+
+								'<div class="col-md-12">' +
+								        "<label class='control-label'>Address:</label>" +
 										"<input id='addr' class='form-control' type='text' name='address' value=''>" +
 										"<small>enter to update location</small>"+
-									'</div>' +
 								'</div>' +
+				            '</div>' +
 							'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Keywords:</label>" +
@@ -245,6 +257,9 @@ function placeMarker(location) {
    	});
    	infowindow.open(map,marker);
 	
+    setTimeout('$("#event-time").timepicker({ "scrollDefaultNow": true })',100);
+    setTimeout('$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true})',100);
+    
 	geocoder.geocode({'latLng': location}, function(results, status) {
         	$("#addr").val(results[0].formatted_address);
     });
@@ -496,7 +511,8 @@ function processLoadEvent(curUser, data, userEvents) {
 			continue;
 		}
 		
-		$("#events-list").append('<a href=# class="event-link"><div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["Description"]+'</span></div></a>');
+		// Add event to sidebar list
+		$("#events-list").append('<div class="event" id="event-'+data[message]["EventID"]+'"><span><b>'+data[message]["Title"]+'</b></span></br><span>'+data[message]["ChosenDate"]+' at '+data[message]["ChosenTime"]+'</span><br /><span>'+data[message]["Description"]+'</span></div>');
 
 		(function(msg){
 			var id = data[msg]["EventID"];
@@ -762,6 +778,8 @@ function submitForm(e){
  		return false;
  	}
 	var title = $("#title").val();
+    var date = $("#event-date").val();
+    var time = $("#event-time").val();
 	var desc = $("#desc").val();
 	var cat = $("#category").val();
 	var coord = current;
@@ -780,7 +798,7 @@ function submitForm(e){
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
-		data: {title: title, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray, location:locationStr},
+		data: {title: title, time: time, date: date, desc: desc, category:cat, x:coord.lng(), y:coord.lat(), keywords:keywordsarray, location:locationStr},
 		success:function(message) {
 			submitSuccess(message);
 		},
@@ -937,7 +955,7 @@ $(document).ready(function () {
             var eventId = parseInt(num);
             for (var i=0; i<markers.length; i++) {
                 if (markers[i]['eventID'] == eventId) {
-                    map.setCenter(markers[i]['position']);
+                    map.panTo(markers[i]['position']);
 					focusEvent(markers[i]);
                 }
             }
