@@ -453,9 +453,11 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		else {
 			contentstring = contentstring + 
 			'<div class="col-md-12"><br>' + 
-			"<br><button type='button' id='attendbtn' onclick='return btnclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Attend</button>"+
-			"</div"+
-			"</div>";	
+			"<button type='button' id='attendbtn' onclick='return btnclick(" + id + ")'  class='btn btn-primary btn-sm form-control'>Attend</button><br><br>"+ 
+			"<button type='button' id='flagbtn'   onclick='return flagclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Flag Inappropriate</button>"+
+			"</div>"+
+			"</div>";
+
 		}
 	}
 	contentstring = contentstring + "</div>"
@@ -586,6 +588,26 @@ function btnclick(e) {
 	});
 }
 
+function flagclick(e) {
+	var r = confirm("Are you sure you want to flag this?");
+	if (r == true) {
+		displayMsg("Event flagged", "You have flagged this event", "OK"),
+		$.ajax({
+			url: "flagInappropriate.php",
+			type: "POST",
+			data: {eventID: currentMarker['eventID']},
+
+			success:function(message) {	
+			
+			},
+			error:function(message){
+			}, dataType: "json"
+		});
+	} 
+	else {
+    
+}
+}
 // Previous filter settings for loading events.
 var eventFilterSettings = {
 	ownerFilter: null,
