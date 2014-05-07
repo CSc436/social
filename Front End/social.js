@@ -113,6 +113,9 @@ $(document).ready(function () {
 	});
 	
 	getNotifications();
+	
+	// Get the user's notifications every 30 secs.
+	setInterval(function(){getNotifications()}, 30000);
 });
 
 // On window resize, do...
@@ -283,7 +286,15 @@ function processNotification(notifID, description, eventID, seen){
 	});
 }
 
+var notifLock = false;
+
 function getNotifications(){
+
+	// Notifications already being processed.
+	if(notifLock)
+		return;
+		
+	notifLock = true;
 
 	clearNotifications();
 
@@ -310,6 +321,9 @@ function getNotifications(){
 						processNotification(notif['NotificationID'], notif['Description'], notif['EventID'], notif['Seen']);
 						$("#notification-icon").html("Notifications (" + unseenNotifs + ")");
 					}
+					
+					// Release the notif lock.
+					notifLock = false;
 				},
 				"json"
 			);
