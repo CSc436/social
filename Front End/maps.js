@@ -980,6 +980,23 @@ function submitSuccess(data) {
 	loadEventsFromDB();
 }
 
+function getCurrentUser(success,fail)
+{
+        $.ajax({
+                url: "checkloggedin.php",
+                type: "POST",
+                success: success,
+                error:fail,
+                dataType: "json"
+        });
+}
+
+
+
+
+
+
+
 $(document).ready(function () {
     // Center on event on map when clicked in the sidebar.
     $("#events-wrapper").on('click', '.event', function() {
