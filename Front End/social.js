@@ -51,6 +51,7 @@ $(document).ready(function () {
 				displayMsg("Logout Successful!", "", "OK");
 				toggleLoginButton(0);
 				unfocusEvent(currentMarker);
+				setFilterSettings(null, null, null, null);
 				loadEventsFromDB();
 			}
 		);
@@ -110,6 +111,11 @@ $(document).ready(function () {
 		circle = new google.maps.Circle({radius: (1609*($("#filter-radius").val())), center: map.getCenter()});
     			map.fitBounds(circle.getBounds());
 	});
+	
+	getNotifications();
+	
+	// Get the user's notifications every 30 secs.
+	setInterval(function(){getNotifications()}, 30000);
 });
 
 // On window resize, do...
@@ -164,7 +170,11 @@ function closeMsg(){
 	messageIsDisplayed = false;
 }
 
-function toggleMyAccountMenu(state){
+function toggleMyAccountMenu(){
+
+	// Close the notifications menu.
+	if($("#notifications-dropdown").position()['top'] >= 0)
+		toggleNotifications();
 
 	// Restore the menu.
 	if($("#my-account-menu").position()['top'] < 0){
@@ -177,6 +187,10 @@ function toggleMyAccountMenu(state){
 }
 
 function toggleNotifications(){
+
+	// Close the account menu.
+	if($("#my-account-menu").position()['top'] >= 0)
+		toggleMyAccountMenu();
 
 	// Restore the menu.
 	if($("#notifications-dropdown").position()['top'] < 0){
@@ -223,20 +237,29 @@ function switchTabs(tab){
 	$(currentActiveTab).addClass("event-tab-active");
 }
 
+var unseenNotifs = 0;
+
 function clearNotifications(){
 	$("#notifications-dropdown").html("");
+	unseenNotifs = 0;
 }
 
 function markNotificationSeen(notifID){
 
+	// Already seen this notification.
+	if($("#notif-" + notifID).hasClass("notification-seen"))
+		return;
+
 	$("#notif-" + notifID).addClass("notification-seen");
+	
+	unseenNotifs--;
+	$("#notification-icon").html("Notifications (" + unseenNotifs + ")");
 	
 	// Ajax call to the mark php script.
 	$.post(
 		'../backend/notifications/markNotificationSeen.php',
 		{notifid: notifID},
-		function(message) { 
-		}
+		function(message) {}
 	);
 }
 
@@ -246,6 +269,10 @@ function processNotification(notifID, description, eventID, seen){
 	var seenClass = (seen == 1)? "notification-seen" : "";
 	var notif = "<a href=# class='notification-link'><div id='notif-" + notifID + "' class='notification " + seenClass + "'>" + description + "</div></a>";
 	$("#notifications-dropdown").append(notif);
+	
+	// Keep a tally of all unseen notifs.
+	if(seen == 0)
+		unseenNotifs++;
 	
 	// Attach an on-click to the notification.
 	$("#notif-" + notifID).click(function() {
@@ -259,7 +286,15 @@ function processNotification(notifID, description, eventID, seen){
 	});
 }
 
+var notifLock = false;
+
 function getNotifications(){
+
+	// Notifications already being processed.
+	if(notifLock)
+		return;
+		
+	notifLock = true;
 
 	clearNotifications();
 
@@ -268,7 +303,6 @@ function getNotifications(){
 		url: "checkloggedin.php",
 		type: "POST",
 		success:function(email) {
-			console.log(email['message']);
 			
 			// Get all of this user's notifications;
 			$.get(
@@ -285,7 +319,11 @@ function getNotifications(){
 					for(var key in notifs){
 						var notif = notifs[key];
 						processNotification(notif['NotificationID'], notif['Description'], notif['EventID'], notif['Seen']);
+						$("#notification-icon").html("Notifications (" + unseenNotifs + ")");
 					}
+					
+					// Release the notif lock.
+					notifLock = false;
 				},
 				"json"
 			);
