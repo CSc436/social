@@ -48,17 +48,26 @@
 							// Close the "processing" message.
 							closeMsg();
 							
-							// Display error message if the process returns an error.
+							// Display success message.
 							if(data[":code"] == 0){
 								displayMsg("Login Successful!", "Welcome, " + data[":data"]["Username"] + ".", "OK");
 								
+								$("#login_form_email").val("");
+								$("#login_form_password").val("");
+								
 								// Change the "login" button to "logout".
 								toggleLoginButton(1);
+								
+								// Close any opened events.
+								unfocusEvent();
+								
 								loadEventsFromDB();
 							}
-							// Display success message.
+							// Display error message if the process returns an error.
 							else{
-								displayMsg("I Can't Do That Dave....", data[":data"], "Close");
+								displayMsg("I Can't Do That Dave....", data[":data"], "Close", function(){
+									$("#login").css("visibility", "visible");
+								});
 							}
 						},
 						"json"

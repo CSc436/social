@@ -67,11 +67,21 @@
 							
 							// Display error message if the process returns an error.
 							if(data){
-								displayMsg("Uh Oh, Error!", data);
+								displayMsg("Uh Oh, Error!", data, "Close", function(){
+									$("#new_account").css("visibility", "visible");
+								});
 							}
 							// Display success message.
 							else{
-								displayMsg("Success!", "Your account has been created.");
+								displayMsg("Success!", "Your account has been created.", "OK", function(){
+									$("#login").css("visibility", "visible");
+									$("#new_account_form_email").val("");
+									$("#new_account_form_firstname").val("");
+									$("#new_account_form_lastname").val("");
+									$("#new_account_form_phone").val("");
+									$("#new_account_form_password1").val("");
+									$("#new_account_form_password2").val("");
+								});
 							}
 						},
 						"json"
