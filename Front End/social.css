@@ -114,6 +114,7 @@ body {
 .event-content{
     text-align: center;
     background-color: #eee;
+    height:auto;
 }
 
 .event-tab{
@@ -250,6 +251,11 @@ body {
 .notification-link:active { text-decoration: none; }
 
 #createEvent {
+    overflow: hidden;
+    width: 325px;
+}
+
+#viewEvent {
     overflow: hidden;
     width: 325px;
 }
