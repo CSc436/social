@@ -226,6 +226,13 @@ function placeMarker(location) {
 										"</select>" +
 									"</div>" +
 								"</div>" +
+                            '<div class="form-group">'+
+								'<div class="col-md-12">' +
+								        "<label class='control-label'>Address:</label>" +
+										"<input id='addr' class='form-control' type='text' name='address' value=''>" +
+										"<small>enter to update location</small>"+
+								'</div>' +
+				            '</div>' +
 							'<div class="form-group">'+
 									'<div class="col-md-12">' + 
 										"<label class='control-label'>Keywords:</label>" +
@@ -890,7 +897,7 @@ $(document).ready(function () {
             var eventId = parseInt(num);
             for (var i=0; i<markers.length; i++) {
                 if (markers[i]['eventID'] == eventId) {
-                    map.setCenter(markers[i]['position']);
+                    map.panTo(markers[i]['position']);
 					focusEvent(markers[i]);
                 }
             }

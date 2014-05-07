@@ -52,7 +52,7 @@
         INSERT INTO `event`
             (`title`, `email`, `timestamp`, `chosenTime`, `chosenDate`,`locationID`, `description`, `categoryID`, `locationString`, `FlagCount`)
         VALUES
-            (:title, :email, CURRENT_TIMESTAMP, :locid, :desc, :catID, :locstring, 0, 0)
+            (:title, :email, CURRENT_TIMESTAMP, :time, :date, :locid, :desc, :catID, :locstring, 0)
     ");
 
     // echo json_encode($_SESSION['loggedin']);
