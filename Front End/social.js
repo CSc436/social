@@ -110,6 +110,8 @@ $(document).ready(function () {
 		circle = new google.maps.Circle({radius: (1609*($("#filter-radius").val())), center: map.getCenter()});
     			map.fitBounds(circle.getBounds());
 	});
+	
+	getNotifications();
 });
 
 // On window resize, do...
@@ -223,20 +225,29 @@ function switchTabs(tab){
 	$(currentActiveTab).addClass("event-tab-active");
 }
 
+var unseenNotifs = 0;
+
 function clearNotifications(){
 	$("#notifications-dropdown").html("");
+	unseenNotifs = 0;
 }
 
 function markNotificationSeen(notifID){
 
+	// Already seen this notification.
+	if($("#notif-" + notifID).hasClass("notification-seen"))
+		return;
+
 	$("#notif-" + notifID).addClass("notification-seen");
+	
+	unseenNotifs--;
+	$("#notification-icon").html("Notifications (" + unseenNotifs + ")");
 	
 	// Ajax call to the mark php script.
 	$.post(
 		'../backend/notifications/markNotificationSeen.php',
 		{notifid: notifID},
-		function(message) { 
-		}
+		function(message) {}
 	);
 }
 
@@ -246,6 +257,10 @@ function processNotification(notifID, description, eventID, seen){
 	var seenClass = (seen == 1)? "notification-seen" : "";
 	var notif = "<a href=# class='notification-link'><div id='notif-" + notifID + "' class='notification " + seenClass + "'>" + description + "</div></a>";
 	$("#notifications-dropdown").append(notif);
+	
+	// Keep a tally of all unseen notifs.
+	if(seen == 0)
+		unseenNotifs++;
 	
 	// Attach an on-click to the notification.
 	$("#notif-" + notifID).click(function() {
@@ -268,7 +283,6 @@ function getNotifications(){
 		url: "checkloggedin.php",
 		type: "POST",
 		success:function(email) {
-			console.log(email['message']);
 			
 			// Get all of this user's notifications;
 			$.get(
@@ -285,6 +299,7 @@ function getNotifications(){
 					for(var key in notifs){
 						var notif = notifs[key];
 						processNotification(notif['NotificationID'], notif['Description'], notif['EventID'], notif['Seen']);
+						$("#notification-icon").html("Notifications (" + unseenNotifs + ")");
 					}
 				},
 				"json"
