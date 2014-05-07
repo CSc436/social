@@ -396,7 +396,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 			map: map,
 			title: data[message]["Title"],
 			icon: image,
-			eventID: id
+			eventID: id,
+			owner: e
 		});
 		
 		markers.push(marker);
@@ -437,6 +438,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		contentstring = contentstring + 
 		'<div class="col-md-12"><br>' + 
 		"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
+		"<button type='button' id='attendcountbtn' onclick='return removeSelectedEvent()' class='btn btn-danger btn-sm form-control'>Remove Event</button>"+
 		"</div>"+
 		"</div>";
 	}
@@ -835,6 +837,62 @@ function unfocusEvent(){
 	
 	infowindow = null;
 	currentMarker = null;
+}
+
+var removeEventLock = false;
+
+function removeSelectedEvent(){
+
+	// Prevent additional ajax calls until this one finishes.
+	if(removeEventLock)
+		return;
+	
+	// Confirm the deletion.
+	var c = confirm("Do you really want to delete event \"" + currentMarker['title'] + "\"?")
+	if(c != true)
+		return;
+		
+	removeEventLock = true;
+	
+	displayMsg("Processing...", "Deleting your event.", "Close");
+	
+	// Check if this user is logged in.
+	$.ajax({
+		url: "checkloggedin.php",
+		type: "POST",
+		success:function(message) {
+			
+			// Check if this user is the owner of the deleted event.
+			if(currentMarker['owner'] == message['message']){
+				
+				// Remove the event.
+				$.ajax({
+					url: "removeEvent.php",
+					type: "POST",
+					data: {eventid: currentMarker['eventID']},
+					success:function(data){
+					
+						// Remove the events and reload them.
+						unfocusEvent();
+						loadEventsFromDB();
+						displayMsg("Success!", "Your event has been removed.", "OK");
+						removeEventLock = false;
+					},
+					error:function(data){
+						displayMsg("Error!", "Your event could not be removed.", "OK");
+						removeEventLock = false;
+					}
+				});
+			}
+			else{
+				removeEventLock = false;
+			}
+		},
+		error:function(message) {
+			handleNotLoggedIn();
+			removeEventLock = false;
+		}, dataType: "json"
+	});
 }
 
 function kwclick(e) {
