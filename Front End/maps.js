@@ -131,7 +131,7 @@ var currentMarker = null;
   // pick list. Retrieve the matching places for that item.
   google.maps.event.addListener(searchBox, 'places_changed', function() {
     var places = searchBox.getPlaces();
-    console.log("places have been changed!");
+    // console.log("places have been changed!");
 
     for (var i = 0, searchMarker; searchMarker = searchMarkers[i]; i++) {
       searchMarker.setMap(null);
@@ -166,7 +166,7 @@ var currentMarker = null;
     			map.fitBounds(circle.getBounds());
     }
     else{
-    	console.log(places);
+    	// console.log(places);
     	map.fitBounds(bounds);
 	}
   });
@@ -279,7 +279,7 @@ function updateLocation() {
         	$("#addr").val(results[0].formatted_address);
         	currentMarker.setPosition(results[0].geometry.location);
         	map.panTo(results[0].geometry.location);
-        	console.log(results[0].geometry.location);
+        	// console.log(results[0].geometry.location);
         	current = results[0].geometry.location;
     });
 	
@@ -392,6 +392,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 	var id = data[message]["EventID"];
 	var pos = new google.maps.LatLng(data[message]["latitude"],data[message]["longitude"]);
 	var location = data[message]["LocationString"];
+	var date = data[message]["ChosenDate"];
+	var time = data[message]["ChosenTime"];
 	// console.log(data[message]);
     
     if (currentMarker != null && id == currentMarker['eventID']) {
@@ -419,14 +421,26 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 
 	var contentstring = 	'<div id ="viewEvent"> <div class="form-group">'+
 									'<div class="col-md-12">' + 
-										"<label class='control-label'>Event Title:</label>" + 
+										"<label class='control-label'>Title:</label>" + 
 										"<p class='form-control event-content'>"+t+"</p>" +
 									'</div>' +
-									'<div class="form-group">'+
+								'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' +
+										"<label class='control-label'>Date:</label>" +
+										"<p class='form-control event-content'>"+date+"</p>" +
+									'</div>' +
+								'</div>' +
+								'<div class="form-group">'+
 										'<div class="col-md-12">' +
-											"<label class='control-label'>Description:</label>" +
-											"<p class='form-control event-content'>"+d+"</p>" +
+											"<label class='control-label'>Time:</label>" +
+											"<p class='form-control event-content'>"+time+"</p>" +
 										'</div>' +
+									'</div>' +
+								'<div class="form-group">'+
+									'<div class="col-md-12">' +
+										"<label class='control-label'>Description:</label>" +
+										"<p class='form-control event-content'>"+d+"</p>" +
 									'</div>' +
 								'</div>' +
 								'<div class="form-group">'+
@@ -441,7 +455,8 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 										"<p class='form-control event-content' id = 'addr' >"+location+"</p>" +
 									'</div>' +
 								'</div>' +
-								"<div class='form-group'><div class='col-md-12'><br>";
+								"<div class='form-group'><div class='col-md-12'>" +
+								"<label class='control-label'>Keywords:</label><br>";
 
 	for(var key in keywords) {
 		// console.log(keywords[key]["word"]);
@@ -455,6 +470,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 		"<button type='button' id='attendcountbtn' onclick='return btnattendcount(" + id + ")' class='btn btn-primary btn-sm form-control'>Get Attendees</button>"+
 		"<button type='button' id='attendcountbtn' onclick='return removeSelectedEvent()' class='btn btn-danger btn-sm form-control'>Remove Event</button>"+
 		"</div>"+
+		'</div>' +
 		"</div>";
 	}
 	else {
@@ -463,6 +479,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 			'<div class="col-md-12"><br>' + 
 			"<br><button type='button' id='attendbtn' onclick='return btnunattend(" + id + ")' class='btn btn-danger btn-sm form-control'>Cancel Attend</button>"+
 			"</div>" +
+			'</div>' +
 			"</div>";
 		}
 		else {
@@ -471,6 +488,7 @@ function LoadSingleEvent(curUser, data, userEvents, message, keywords) {
 			"<button type='button' id='attendbtn' onclick='return btnclick(" + id + ")'  class='btn btn-primary btn-sm form-control'>Attend</button><br><br>"+ 
 			"<button type='button' id='flagbtn'   onclick='return flagclick(" + id + ")' class='btn btn-primary btn-sm form-control'>Flag Inappropriate</button>"+
 			"</div>"+
+			'</div>' +
 			"</div>";
 
 		}
@@ -604,12 +622,12 @@ function btnclick(e) {
 }
 
 function flagclick(e) {
-	console.log("flag");
+	// console.log("flag");
 	$.ajax({
 		url: "checkloggedin.php",
 		type: "POST",
 		success:function(message) {
-			console.log("sucess");
+			// console.log("sucess");
 			var r = confirm("Are you sure you want to flag this?");
 			if (r == true) {
 				displayMsg("Event flagged", "You have flagged this event", "OK"),
@@ -797,12 +815,18 @@ function submitForm(e){
  			var title = $("#title").val();
  			var desc = $("#desc").val();
  			var loc = $("#addr").val();
+ 			var time = $("#event-time").val();
+ 			var date = $("#event-date").val();
  			infowindow.setContent(contentstring);
  			//setContent() takes `1` unit of time, so this must wait 1 time unit
  			setTimeout('$("#keywords").focus()',1);
+ 			$("#event-time").timepicker({ "scrollDefaultNow": true });
+    		$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true});
  			$("#title").val(title);
  			$("#desc").val(desc);
  			$("#addr").val(loc);
+ 			$("#event-time").val(time);
+ 			$("#event-date").val(date);
 
  		}
  		else{
@@ -827,7 +851,7 @@ function submitForm(e){
 	if ($("#keywords").val() != "") {
 		keywordsarray.push($("#keywords").val().trim().toUpperCase());
 	}
-	console.log(keywordsarray);
+	// console.log(keywordsarray);
 	$.ajax( {
 		url: "submit.php",
 		type: "POST",
@@ -951,27 +975,29 @@ function kwclick(e) {
 	var outer = $(e)[0].outerHTML;
 	var i = keywordsarray.indexOf(text);
 	keywordsarray.splice(i, 1);
-	// e.remove();
-	// console.log(outer);
 
-	console.log(infowindow.content);
 	var title = $("#title").val();
 	var desc = $("#desc").val();
 	var loc = $("#addr").val();
+	var time = $("#event-time").val();
+ 	var date = $("#event-date").val();
 
 	var contentstring = infowindow.content.replace(outer, " ");
-	// console.log(contentstring);
 	infowindow.setContent(contentstring);
 	setTimeout('$("#keywords").focus()',1);
+	$("#event-time").timepicker({ "scrollDefaultNow": true });
+   	$("#event-date").datepicker({"format": "m-d-yyyy","autoclose": true});
 	$("#title").val(title);
 	$("#desc").val(desc);
 	$("#addr").val(loc);
+	$("#event-time").val(time);
+ 	$("#event-date").val(date);
 }
 
 function submitSuccess(data) {
-	 console.log(data);
+	 // console.log(data);
 	var res = JSON.parse(data);
-	console.log(res);
+	// console.log(res);
 	addEventOpen = false;
 	// infowindow."onclick".call()
 	// console.log(infowindow);
