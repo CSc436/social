@@ -52,6 +52,7 @@ $(document).ready(function () {
 				toggleLoginButton(0);
 				unfocusEvent(currentMarker);
 				setFilterSettings(null, null, null, null);
+				clearNotifications();
 				loadEventsFromDB();
 			}
 		);
@@ -290,15 +291,7 @@ function processNotification(notifID, description, eventID, seen){
 	});
 }
 
-var notifLock = false;
-
 function getNotifications(){
-
-	// Notifications already being processed.
-	if(notifLock)
-		return;
-		
-	notifLock = true;
 
 	clearNotifications();
 
@@ -307,14 +300,14 @@ function getNotifications(){
 		url: "checkloggedin.php",
 		type: "POST",
 		success:function(email) {
+		
+			clearNotifications();
 			
 			// Get all of this user's notifications;
 			$.get(
 				'../backend/notifications/getNotifications.php',
 				{email: email['message']},
 				function(notifs) {
-				
-					clearNotifications();
 					
 					// Sort the notifications so that the unseen ones are first.
 					notifs.sort(function(x, y) { return x['Seen'] - y['Seen'] } )
